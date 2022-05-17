@@ -10,23 +10,7 @@
 
 #/.htaccess
 
-/index.php
-
-/system
-
-/application/config/config.php
-
-/application/config/database.php
-
-/document
-
 /backup_files
-
-/db
-
-/assets
-
-/uploads
 
 application/logs
 

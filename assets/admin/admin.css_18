@@ -1,0 +1,235 @@
+/****************************SOUMYAJEET CSS****************************/
+
+
+
+
+/*++++++++++++++++new+++++++++++++*/
+label {
+    font-weight: 600!important;
+}
+label span {
+ color: #fe0000 !important;
+}
+.btn-info {
+    border-color: #016c1c!important;
+    background: #016c1c!important;
+    width: 120px;
+}
+.btn-success {
+    background-color: #fe0000!important;
+    border-color: #fe0000!important;
+    width: 120px;
+}
+.label-warning{ background-color: #979188 !important;}
+
+#lbltext{ color:#333!important;}
+.sorting{ font-size: 14px!important;}
+.sorting_asc { font-size: 14px!important;}
+
+table.dataTable thead > tr > th.sorting{ padding-right: 18px!important;}
+table.dataTable thead .sorting::after, table.dataTable thead .sorting_asc::after, table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_asc_disabled::after, table.dataTable thead .sorting_desc_disabled::after {
+
+    right: 3px!important;
+	font-size: 10px!important;
+  
+}
+
+
+
+.main-sidebar {
+               /* height: 724px!important;
+                overflow-x: hidden!important;
+                overflow-y: auto!important;
+                text-align:justify!important;*/
+            }
+
+.sidebar-menu {
+                height: 724px!important;
+                overflow-x: hidden!important;
+                overflow-y: auto!important;
+                text-align:justify!important;
+            }
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: darkseagreen darkslategray;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: darkslategray;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: darkgreen;
+  border-radius: 10px;
+  border: 3px solid  darkslategray;
+	
+}
+
+input[type="checkbox"], input[type="radio"] {
+    margin: 8px 0 0!important;
+
+}
+
+.modal-footer .btn-secondary {
+    border-color: #016c1c !important;
+    background: #016c1c !important;
+    width: 120px;
+	-webkit-box-shadow: none;
+    box-shadow: none;
+	color: #fff!important;
+}
+.modal-footer .btn-danger {
+   background-color: #fe0000 !important;
+   border-color: #fe0000 !important;
+    width: 120px;
+	-webkit-box-shadow: none;
+    box-shadow: none;
+	color: #fff!important;
+}
+
+/*++++++++++++++++new+++++++++++++*/
+
+
+
+.skin-blue .main-header .navbar {
+    background-color: #fe0000!important;
+}
+.skin-blue .main-header .logo {
+    background-color: #fe0000!important;
+  
+}
+.skin-blue .main-header .navbar .sidebar-toggle:hover {
+    background-color: #970101!important;
+}
+.skin-blue .sidebar-menu > li.header {
+    color: #ffffff!important;
+    background: #006c16!important;
+}
+.skin-blue .sidebar-menu > li > a {
+    border-left: 3px solid transparent;
+   background: #00871b!important;
+}
+.skin-blue .sidebar-menu > li.active > a {
+    border-left-color: #fe0000!important;
+}
+
+.skin-blue .sidebar-menu > li > .treeview-menu {
+    margin: 0 1px;
+    background: #07400d!important;
+}
+
+.text-blue {
+    color: #2aa63e !important;
+}
+.text-aqua {
+    color: #f05949 !important;
+}
+.pagination > .active > a {
+    background-color: #fe0000 !important;
+    border-color: #fe0000 !important;
+    color: #fff !important;
+}
+.fa-pencil {
+    color: #006c16 !important;
+}
+.fa-trash-o{ color: #fe0000!important;}
+
+
+
+
+
+.addIternary{
+
+    float: right;
+
+    margin: -120px;
+
+    margin-top: -25px;
+
+    margin-top: 30px;
+
+    cursor: pointer;
+
+    border: 1px solid #ccc;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    color: green;
+
+    /*color: #3c8dbc;*/
+
+}
+
+
+
+.addIternary > i > a{color: green;}
+
+
+
+.removeIternary{
+
+    float: right;
+
+    margin: -240px;
+
+    margin-top: -25px;
+
+    margin-top: 30px;
+
+    cursor: pointer;
+
+    border: 1px solid #ccc;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    color: red;
+
+}
+
+
+
+.removeIternary > i > a{color: red;}
+
+
+
+.deleteIternary{
+
+    float: right;
+
+    margin: -360px;
+
+    margin-top: -25px;
+
+    margin-top: 30px;
+
+    cursor: pointer;
+
+    border: 1px solid #ccc;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    color: red;
+
+}
+
+.deleteIternary > i > a{color: red;}
+
+
+
+.deleteDomImg{position: absolute; padding-left: 225px; font-size: 22px; color:red;cursor: pointer;}
+
+.relatedImg{margin-right: 15px; margin-bottom: 15px;}
+
+/****************************SOUMYAJEET CSS****************************/
