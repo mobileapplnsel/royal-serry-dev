@@ -1,0 +1,235 @@
+    <input id="baseUrl" type="hidden" value="<?= base_url() ?>">
+    <!-- jQuery 3 -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/fastclick/lib/fastclick.js"></script>
+    <!-- AdminLTE App -->
+    <script src="<?= base_url('assets/admin/') ?>dist/js/adminlte.min.js"></script>
+    <!-- Sparkline -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <!-- jvectormap  -->
+    <script src="<?= base_url('assets/admin/') ?>plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="<?= base_url('assets/admin/') ?>plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+    <!-- SlimScroll -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- ChartJS -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/chart.js/Chart.js"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="<?= base_url('assets/admin/') ?>dist/js/pages/dashboard2.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="<?= base_url('assets/admin/') ?>dist/js/demo.js"></script>
+    <!-- AdminLTE for Datatables -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="<?= base_url('assets/admin/') ?>bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- CK Editor -->
+    <script src="<?= base_url('assets/admin/') ?>bower_components/ckeditor/ckeditor.js"></script>
+    <!-- Bootstrap WYSIHTML5 -->
+    <script src="<?= base_url('assets/admin/') ?>plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+    <!-- iCheck -->
+    <!-- <script src="<?= base_url('assets/admin/') ?>plugins/iCheck/icheck.min.js"></script> -->
+    <!-- Select2 -->
+    <script src="<?= base_url('assets/admin/') ?>plugins/select2/select2.min.js"></script>
+    <!-- InputMask -->
+    <script src="<?= base_url('assets/admin/') ?>plugins/input-mask/jquery.inputmask.js"></script>
+    <script src="<?= base_url('assets/admin/') ?>plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script src="<?= base_url('assets/admin/') ?>plugins/input-mask/jquery.inputmask.extensions.js"></script>
+    <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+    <script src="<?= base_url('assets/admin/') ?>dist/js/jquery.toaster.js"></script>
+
+    <script src="<?= base_url('assets/admin/') ?>dist/js/developer.js"></script>
+	
+    <script>
+      /*$(function () {
+        $('input').iCheck({
+          checkboxClass: 'icheckbox_square-blue',
+          radioClass: 'iradio_square-blue',
+          increaseArea: '20%' // optional
+        });
+      });*/
+    </script>
+    <!-- page script -->
+    <script type="text/javascript">
+        $(function () {
+
+            $("#example1").DataTable();
+
+            $("#datatable-withoutpagination").DataTable({
+                 "paging": false,
+                 "lengthChange": false,
+                 "language": {
+                       "info": ""
+                }
+            });
+            
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+			
+			$('#ship_cat_id').on('change', function() {
+			  var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>', csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
+			  var type = this.value;
+				 $.ajax({
+					url:"<?php echo base_url(); ?>rate/getdocumentCategories",
+					method:"POST",
+					data:{[csrfName]: csrfHash, type: type},
+					success:function(data)
+					{
+					 $('#ship_subcat_id').empty().append(data);
+					}
+				   });
+			  
+			});
+			
+			
+			$('#rate_type').on('change', function() {
+				if(this.value == 'L'){
+					$('#location_div').show(300);
+				} else {
+					$('#location_div').hide(300);
+					$('#location_from').val('');
+					$('#location_to').val('');
+				}
+			});
+			
+//delete document
+$('#DocumentDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-document-id');
+    var url             =   baseUrl+'document/deletedocument/'+deleteId;
+    $(this).find('#deleteDocument').attr('href', url);
+});
+
+//delete category
+$('#categoryDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-category-id');
+    var url             =   baseUrl+'categories/deletecategory/'+deleteId;
+    $(this).find('#deletecategory').attr('href', url);
+});
+
+//delete rate
+$('#RateDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-rate-id');
+    var url             =   baseUrl+'rate/deleteRate/'+deleteId;
+    $(this).find('#rateseries').attr('href', url);
+});
+
+//delete User
+$('#UserDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-videotag-id');
+    var url             =   baseUrl+'users/deleteUser/'+deleteId;
+    $(this).find('#deleteuser').attr('href', url);
+});
+
+//delete Branch
+$('#videoTagDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-videotag-id');
+    var url             =   baseUrl+'branch/deleteBranch/'+deleteId;
+    $(this).find('#deletevideotag').attr('href', url);
+});
+
+//delete Package
+$('#PackageDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-package-id');
+    var url             =   baseUrl+'package/deletePackage/'+deleteId;
+    $(this).find('#deletePackage').attr('href', url);
+});
+
+//delete prohibited
+$('#ProhibitedDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-prohibited-id');
+    var url             =   baseUrl+'prohibited/deleteProhibited/'+deleteId;
+    $(this).find('#deleteProhibited').attr('href', url);
+});
+
+//delete Payment Option
+$('#PaymentoptionDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-paymentoption-id');
+    var url             =   baseUrl+'paymentoption/deletePaymentoption/'+deleteId;
+    $(this).find('#paymentoptseries').attr('href', url);
+});
+
+//delete Tax Rate
+$('#TaxDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-tax-id');
+    var url             =   baseUrl+'tax/deleteTax/'+deleteId;
+    $(this).find('#taxdeletemodel').attr('href', url);
+});
+
+//delete Tax Rate
+$('#BranchAreaDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-area-id');
+    var url             =   baseUrl+'branch/deleteBranchArea/'+deleteId;
+    $(this).find('#BranchAreamodel').attr('href', url);
+});
+
+//delete Tax Rate
+$('#UserAreaDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-area-id');
+    var url             =   baseUrl+'users/deleteUserArea/'+deleteId;
+    $(this).find('#UserAreamodel').attr('href', url);
+});
+
+//delete shift
+$('#ShiftDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-shift-id');
+    var url             =   baseUrl+'shift/deleteShift/'+deleteId;
+    $(this).find('#Shiftmodel').attr('href', url);
+});
+
+//delete shift allocation
+$('#UserShiftalloDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-shiftallo-id');
+    var url             =   baseUrl+'users/deleteShiftallocation/'+deleteId;
+    $(this).find('#ShiftAllocationmodel').attr('href', url);
+});
+
+//delete shift allocation
+$('#BannerDeleteModal').on('show.bs.modal', function (e) {
+    var baseUrl         =   $('#baseUrl').val();
+    var deleteId        =   $(e.relatedTarget).attr('data-banner-id');
+    var url             =   baseUrl+'banner/deleteBanner/'+deleteId;
+    $(this).find('#BannerImagemodel').attr('href', url);
+});
+			
+			
+});
+
+$(document).ready(function(){
+	select2Ajax('area_id','postal_codes_data_master','postal_code');
+});
+
+
+	</script>
+    
+<script>
+  $(function () {
+    // Replace the <textarea id="editor1"> with a CKEditor
+    // instance, using default configuration.
+    CKEDITOR.replace('editor1')
+    //bootstrap WYSIHTML5 - text editor
+    //$('.textarea').wysihtml5()
+  })
+</script>
+    </body>
+</html>

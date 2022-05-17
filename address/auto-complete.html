@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Solodev's Auto-Complete Address Form
+        </title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <style>
+            .container {
+	  margin-top: 20px;
+	}
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript">
+        </script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+        </script>
+        <script src="auto-complete.js" type="text/javascript">
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Address
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <input class="form-control" id="autocomplete" onfocus="geolocate()" placeholder="Enter your address" type="text">
+                        <br>
+                            <div id="address">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">
+                                            Street address
+                                        </label>
+                                        <input class="form-control" disabled="true" id="street_number">
+                                        </input>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">
+                                            Route
+                                        </label>
+                                        <input class="form-control" disabled="true" id="route">
+                                        </input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">
+                                            City
+                                        </label>
+                                        <input class="form-control field" disabled="true" id="locality">
+                                        </input>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">
+                                            State
+                                        </label>
+                                        <input class="form-control" disabled="true" id="administrative_area_level_1">
+                                        </input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">
+                                            Zip code
+                                        </label>
+                                        <input class="form-control" disabled="true" id="postal_code">
+                                        </input>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">
+                                            Country
+                                        </label>
+                                        <input class="form-control" disabled="true" id="country">
+                                        </input>
+                                    </div>
+                                </div>
+                            </div>
+                        </br>
+                    </input>
+                </div>
+            </div>
+        </div>
+        <!-- Note Add Your API Key Below -->
+        <!-- The Form Will Not Work Without a Registered API Key -->
+        <!-- https://developers.google.com/maps/documentation/javascript/get-api-key -->
+        <script async="" defer="" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAt4LSIfqh9KL_w3a9aQffOTrQ5n5neX0&libraries=places&callback=initAutocomplete">
+        </script>
+    </body>
+</html>

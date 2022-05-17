@@ -1,0 +1,764 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+require APPPATH.'/libraries/InitiateJWT.php';
+
+class Api extends CI_Controller{
+
+	public function __construct()
+    {
+    	parent::__construct();
+    	$this->objOfJwt		=	new InitiateJWT();
+    	header('Content-Type: application/json');
+    	$this->load->model('api_model');
+    }
+
+    public function LoginToken()
+    {
+ 		$tokenId    	=	base64_encode(mcrypt_create_iv(32));
+	    $issuedAt   	=	time();
+	    $notBefore  	=	$issuedAt + 10;             //Adding 10 seconds
+	    $expire     	=	$notBefore + 60;            // Adding 60 seconds
+	    //$serverName 	=	$config->get('serverName'); // Retrieve the server name from config file
+	    $serverName 	=	$_SERVER['HTTP_HOST']; // Retrieve the server name from config file
+
+    	$data = [
+        	'iat'  => $issuedAt,         // Issued at: time when the token was generated
+        	'jti'  => $tokenId,          // Json Token Id: an unique identifier for the token
+        	'iss'  => $serverName,       // Issuer
+        	'nbf'  => $notBefore,        // Not before
+        	'exp'  => $expire,           // Expire
+        	/*'data' => [                  // Data related to the signer user
+        		'userId'   => $rs['id'], // userid from the users table
+            	'userName' => $username, // User name
+        	]*/
+    	];
+
+    	/*$tokenData['uniqueid']		=	'5555';
+    	$tokenData['role']			=	'admin';
+    	$tokenData['developer']		=	'Soumyajeet';
+    	$tokenData['timeStamp']		=	Date('Y-m-d h:i:s');*/
+    	$jwtToken					=	$this->objOfJwt->GenerateToken($data);
+    	echo json_encode(array('Token' => $jwtToken));
+    }
+
+    public function AuthTokenData()
+    {
+    	$getTokenData		=	$this->input->request_headers('Authorisation');
+    	try{
+    		$jwtData		=	$this->objOfJwt->DecodeToken($getTokenData['Token']);
+    		echo json_encode($jwtData);
+    	}
+    	catch(Exception $e){
+    		http_response_code('401');
+    		// echo json_encode(array('status' => false, 'message' => $e->getMessage()));
+    		echo json_encode(array('status' => false, 'message' => 'Token id not valid'));
+    		exit();
+    	}
+    }
+
+    /*public function register_new_user()
+    {
+        //header("Access-Control-Allow-Origin: *");
+        //header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        //header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With,X-CSRF-TOKEN');
+        //header('Access-Control-Allow-Credentials: true');
+        
+        $data                           =   [];
+        $datai                          =   [];
+
+        $data['first_name']             =   $this->input->post('firstname', TRUE);
+        $data['last_name']              =   $this->input->post('lastname', TRUE);
+        $data['email']                  =   $this->input->post('email', TRUE);
+        $data['password']               =   $this->input->post('password', TRUE);
+        $data['country_code']           =   "+91";
+        $data['phone']                  =   $this->input->post('phone', TRUE);
+        $data['dob']                    =   $this->input->post('dob', TRUE);
+        $data['status']                 =   '1';
+        //Get the current UNIX timestamp.
+        $now                            =   time();
+        //Get the timestamp of the person's date of birth.
+        // $dob                            =   strtotime('1990-08-18');
+        $dob                            =   strtotime($this->input->post('dob', TRUE));
+        //Calculate the difference between the two timestamps.
+        $difference                     =   $now - $dob;         
+        //There are 31556926 seconds in a year.
+        $age                            =   floor($difference / 31556926);        
+        //Print it out.
+        $data['age']                    =   $age;
+
+        $insertNewUser                  =   $this->api_model->insert_new_user($data);
+
+        if($insertNewUser > 0){
+            $datai['usr_lat']               =   $insertNewUser;
+            $datai['user_id']               =   "23.777176";
+            $datai['usr_long']              =   "90.399452";
+            $datai['usr_type']              =   "F";
+            $datai['device_type']           =   "W";
+            $datai['otp']                   =   "1234";
+            $datai['notification_flag']     =   "Y";
+            $insertNewUserInfo              =   $this->api_model->insert_new_user_info($datai);
+        }
+
+        
+
+        if($insertNewUser > 0 && $insertNewUserInfo > 0){
+            $message    =   ['status' => 'success', 'message' => 'User Registered Sucessfully'];
+            echo json_encode($message);
+        }
+        else{
+            $message    =   ['status' => 'failure', 'message' => 'Something went wrong Please try Again'];
+            echo json_encode($message);
+        }
+
+    }*/
+	/******************* Start User Registration API *************/
+	public function register_new_user()
+    {
+		header('Content-Type: application/json');
+		if($this->input->post('firstname',TRUE) && $this->input->post('lastname',TRUE) && $this->input->post('email',TRUE) && $this->input->post('phone',TRUE) && $this->input->post('dob',TRUE) && $this->input->post('password',TRUE)){
+
+				$params_email_or_mobile_number_exist = array(
+					'CountryCode' => '+'.trim($this->input->post('CountryCode')),
+					'MobileNo' => $this->input->post('phone'),
+					'email' => $this->input->post('email')
+				);
+
+				$otp = '1234';
+				//$otp = rand(100000,999999);
+
+				$mobile_number_exist = $this->api_model->check_email_or_mobile_number_exist($params_email_or_mobile_number_exist);
+
+				if($mobile_number_exist == true){
+
+					/*$params_update = array(
+						'otp' => $otp
+					);
+
+					$update_user = $this->Api_model->update_user($params_email_or_mobile_number_exist, $params_update);*/
+
+					$data = array(
+						'statusCode' => '101',
+						'status' => 'warning',
+						'message' => 'User already exist!!',
+						'usrCountryCode' => '+'.trim($this->input->post('CountryCode')),
+						'usrMobileNo' => $this->input->post('phone'),
+						'usrEmail' => $this->input->post('email')
+					);
+
+					$json = json_encode($data);
+					echo $json;
+
+				}else{
+					
+					$now                            =   time();
+					//Get the timestamp of the person's date of birth.
+					// $dob                            =   strtotime('1990-08-18');
+					$dob                            =   strtotime($this->input->post('dob', TRUE));
+					//Calculate the difference between the two timestamps.
+					$difference                     =   $now - $dob;         
+					//There are 31556926 seconds in a year.
+					$age                            =   floor($difference / 31556926); 
+					if($age > 15)
+					{
+						$data                           =   [];
+						$datai                          =   [];
+				
+						$data['first_name']             =   $this->input->post('firstname', TRUE);
+						$data['last_name']              =   $this->input->post('lastname', TRUE);
+						$data['email']                  =   $this->input->post('email', TRUE);
+						$data['password']               =   md5($this->input->post('password', TRUE));
+						if($this->input->post('CountryCode',TRUE))
+						{
+							$data['country_code']           =   '+'.trim($this->input->post('CountryCode', TRUE));
+						} else {
+							$data['country_code']           =   "+91";
+						}
+						$data['phone']                  =   $this->input->post('phone', TRUE);
+						$data['dob']                    =   $this->input->post('dob', TRUE);
+						$data['status']                 =   '1';
+						//Get the current UNIX timestamp.
+						//$now                            =   time();
+						//Get the timestamp of the person's date of birth.
+						// $dob                            =   strtotime('1990-08-18');
+						//$dob                            =   strtotime($this->input->post('dob', TRUE));
+						//Calculate the difference between the two timestamps.
+						//$difference                     =   $now - $dob;         
+						//There are 31556926 seconds in a year.
+						//$age                            =   floor($difference / 31556926);        
+						//Print it out.
+						$data['age']                    =   $age;
+				
+						$insertNewUser                  =   $this->api_model->insert_new_user($data);
+				
+						if($insertNewUser > 0){
+							$datai['user_id']               =   $insertNewUser;
+							$datai['usr_lat']               =   "23.777176";
+							$datai['usr_long']              =   "90.399452";
+							$datai['usr_type']              =   "F";
+							if($this->input->post('device_type',TRUE))
+							{
+								$datai['device_type']           =   $this->input->post('device_type', TRUE);
+							} else {
+								$datai['device_type']           =   "W";
+							}
+							$datai['otp']                   =   $otp;
+							$datai['notification_flag']     =   "Y";
+							$insertNewUserInfo              =   $this->api_model->insert_new_user_info($datai);
+						}
+	
+						if($insertNewUser == 0){
+	
+							$data = array(
+								'statusCode' => '103',
+								'status' => 'error',
+								'message' => 'Something went wrong Please try Again'
+							);
+	
+							$json = json_encode($data);
+							echo $json;
+	
+						}else{
+							$data = array(
+								'statusCode' => '200',
+								'status' => 'success',
+								'message' => 'User Registered Sucessfully',
+								'otp' => $otp
+							);
+	
+							$json = json_encode($data);
+							echo $json;
+	
+						}
+	
+					} else {
+						$data = array(
+							'statusCode' => '101',
+							'status' => 'error',
+							'message' => 'Minimum Age 15 years.'
+						);
+		
+						$json = json_encode($data);
+						echo $json;
+					}
+				}
+
+
+			}else{
+
+				$data = array(
+					'statusCode' => '101',
+					'status' => 'warning',
+					'message' => 'Some Parameter Missing'
+				);
+
+				$json = json_encode($data);
+				echo $json;
+
+			}
+	}
+	/******************* End User Registration API *************/
+	
+	/******************* Start User Login API *************/
+	public function user_login() {
+		header('Content-Type: application/json');
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+		$login_ip = $this->input->ip_address();
+		$login_time = date('Y-m-d H:i:s');
+		if(!empty($username) && !empty($password)) {
+			$return = $this->api_model->validate_login($username, $password, $login_ip, $login_time);
+			if($return == 'not_found') {
+				$data['status'] = 'error';
+				$data['message'] = 'user not found';
+				$data['userdata'] = '';
+			} elseif($return == 'password_incorrect') {
+				$data['status'] = 'error';
+				$data['message'] = 'password incorrect';
+				$data['userdata'] = '';
+			} elseif($return == 'inactive') {
+				$data['status'] = 'error';
+				$data['message'] = 'user inactive';
+				$data['userdata'] = '';
+			} elseif ($return == 'cannot_validate') {
+				$data['status'] = 'warning';
+				$data['message'] = 'cannot login now';
+				$data['userdata'] = '';
+			} else {
+				$data['status'] = 'success';
+				$data['message'] = 'Login Successfully';
+				$data['userdata'] = $return;
+			}
+			$json = json_encode($data);
+			echo $json;
+		} else {
+			$data = array(
+				'statusCode' => '101',
+				'status' => 'warning',
+				'message' => 'Some Parameter Missing'
+			);
+
+			$json = json_encode($data);
+			echo $json;
+		}
+	}
+	/******************* End User Login API *************/
+	
+	//*************************************** User OTP Verification API (start) **********************************************//	
+	public function user_otp_verification()
+	{
+		header('Content-Type: application/json');
+
+			if($this->input->post('country_code',TRUE) && $this->input->post('phone',TRUE) && $this->input->post('otp',TRUE)){
+
+				$params = array(
+					'country_code' => '+'.trim($this->input->post('country_code')),
+					'phone' => $this->input->post('phone'),
+					'otp' => $this->input->post('otp')
+				);
+
+				$otp_status = $this->api_model->check_user_otp_status($params);
+
+				if($otp_status == true){
+
+					/*$params_update = array(
+						'usrUserName' => $this->input->post('usrUserName'),
+						'usrDeviceId' => $this->input->post('usrDeviceId'),
+						'usrTokenId' => $this->input->post('usrTokenId'),
+						'usrAppType' => $this->input->post('usrAppType'),
+						'usrAppVersion' => $this->input->post('usrAppVersion'),
+						'usrStatusId' => 2,
+						'usrStatusName' => 'active'
+					);
+
+					$update_user = $this->api_model->update_user($params, $params_update);*/
+
+					$userdata = $this->api_model->get_user_data($params);
+
+					if($userdata['profile_img'] == "" || $userdata['profile_img'] == null){
+						$user_profile_image = "";
+					}else{
+						$user_profile_image = $userdata['profile_img'];
+					}
+					
+							
+					$data = array(
+						'statusCode' => '200',
+						'status' => 'success',
+						'message' => 'Login Successfully',
+						'user_id' => $userdata['user_id'],
+						'country_code' => $userdata['country_code'],
+						'phone' => $userdata['phone'],
+						'first_name' => $userdata['first_name'],
+						'last_name' => $userdata['last_name'],
+						'email' => $userdata['email'],
+						'dob' => $userdata['dob'],
+						'age' => $userdata['age'],
+						'profile_img' => $user_profile_image
+					);
+
+					$json = json_encode($data);
+
+					echo $json;
+
+				}else{
+
+					$data = array(
+						'statusCode' => '103',
+						'status' => 'error',
+						'message' => 'OTP Verification Failed'
+					);
+					$json = json_encode($data);
+					echo $json;
+
+				}
+
+			}else{
+
+				$data = array(
+					'statusCode' => '101',
+					'status' => 'warning',
+					'message' => 'Some Parameter Missing'
+				);
+
+				$json = json_encode($data);
+				echo $json;
+
+			}
+
+
+	}
+	//*************************************** User OTP Verification API (end) **************************************************//
+	//*************************************** Resend User OTP API (start) **************************************************//	
+	public function resend_user_otp()
+	{
+		//$this->load->library('twilio');
+		header('Content-Type: application/json');
+		if($this->input->post('country_code',TRUE) && $this->input->post('phone',TRUE)){
+
+			$params = array(
+				'country_code' => '+'.trim($this->input->post('country_code')),
+				'phone' => $this->input->post('phone')
+			);
+
+			$otp = '4321';
+			//$otp = rand(1000,9999);
+
+			$mobile_number_exist = $this->api_model->check_mobile_number_exist($params);
+
+			if($mobile_number_exist == true){
+
+				$params_update = array(
+					'otp' => $otp
+				);
+
+				$update_user = $this->api_model->update_user_otp($params, $params_update);
+
+				/*********** SMS GATEWAY (start) ********************/
+				// twilio SMS gateway
+				/*$from = '+15405851192';
+				$to = $this->input->post('country_code').$this->input->post('phone');
+				$message = 'Welcome to Celebrity Production!  Your activation code is: '.$otp;
+
+				$response = $this->twilio->sms($from, $to, $message);*/
+				/*********** SMS GATEWAY (end) ********************/
+
+				$data = array(
+					'statusCode' => '200',
+					'status' => 'success',
+					'message' => 'OTP Send Successfully'
+				);
+
+				$json = json_encode($data);
+				echo $json;
+
+			}else{
+
+				$data = array(
+					'statusCode' => '103',
+					'status' => 'error',
+					'message' => 'Mobile number not exist'
+				);
+
+				$json = json_encode($data);
+				echo $json;
+
+			}
+
+		}else{
+
+			$data = array(
+				'statusCode' => '101',
+				'status' => 'warning',
+				'message' => 'Some Parameter Missing'
+			);
+
+			$json = json_encode($data);
+			echo $json;
+
+		}
+
+		
+
+	}
+	//*************************************** Resend User OTP API (end) **************************************************//
+	
+	//*************************************** All Banner List (start) **************************************************//
+	public function banner_lists() {
+		header('Content-Type: application/json');
+		if($this->api_model->get_mobile_banner_list() == false) {
+			$data['status'] = 'error';
+			$data['message'] = 'no banner found';
+			$data['advertisement_lists'] = '';
+		} else {
+			$data['status'] = 'success';
+			$data['message'] = '';
+			$data['advertisement_lists'] = $this->api_model->get_mobile_banner_list();
+		}
+		$json = json_encode($data);
+		echo $json;
+	}
+	//*************************************** All Banner List (end) **************************************************//
+	
+	//******************************************* Update User Profile Info API (start) ************************************//	
+	public function update_user_profile_info()
+	{
+		header('Content-Type: application/json');
+		if($this->input->post('usrId',TRUE) && $this->input->post('firstname',TRUE) && $this->input->post('lastname',TRUE) && $this->input->post('email',TRUE) && $this->input->post('phone',TRUE) && $this->input->post('dob',TRUE) && $this->input->post('CountryCode',TRUE)){
+			
+			$params_email_or_mobile_number_exist = array(
+					'CountryCode' => '+'.trim($this->input->post('CountryCode')),
+					'MobileNo' => $this->input->post('phone'),
+					'email' => $this->input->post('email'),
+					'usrId' => $this->input->post('usrId')
+				);
+				
+			$mobile_number_exist = $this->api_model->check_email_or_mobile_number_exist_other_people($params_email_or_mobile_number_exist);
+			$email_exist = $this->api_model->check_email_exist_other_people($params_email_or_mobile_number_exist);
+			if($mobile_number_exist == true || $email_exist == true){
+				$data = array(
+					'statusCode' => '101',
+					'status' => 'warning',
+					'message' => 'Email or Phone already exist!!',
+					'usrCountryCode' => '+'.trim($this->input->post('CountryCode')),
+					'usrMobileNo' => $this->input->post('phone'),
+					'usrEmail' => $this->input->post('email')
+				);
+
+				$json = json_encode($data);
+				echo $json;
+
+			}else{
+				
+				$data                           =   [];
+				$data['first_name']             =   $this->input->post('firstname', TRUE);
+				$data['last_name']              =   $this->input->post('lastname', TRUE);
+				$data['email']                  =   $this->input->post('email', TRUE);
+				if($this->input->post('CountryCode',TRUE))
+				{
+					$data['country_code']           =   '+'.trim($this->input->post('CountryCode', TRUE));
+				} else {
+					$data['country_code']           =   "+91";
+				}
+				$data['phone']                  =   $this->input->post('phone', TRUE);
+				$data['dob']                    =   $this->input->post('dob', TRUE);
+				//Get the current UNIX timestamp.
+				$now                            =   time();
+				//Get the timestamp of the person's date of birth.
+				// $dob                            =   strtotime('1990-08-18');
+				$dob                            =   strtotime($this->input->post('dob', TRUE));
+				//Calculate the difference between the two timestamps.
+				$difference                     =   $now - $dob;         
+				//There are 31556926 seconds in a year.
+				$age                            =   floor($difference / 31556926);        
+				//Print it out.
+				$data['age']                    =   $age;
+				
+				$update_user = $this->api_model->update_user_profile_info($this->input->post('usrId'), $data);
+				$userdata = $this->api_model->get_user_profile_info($this->input->post('usrId'));
+
+				if($userdata['profile_img'] == "" || $userdata['profile_img'] == null){
+					$user_profile_image = "";
+				}else{
+					$user_profile_image = base_url() .'uploads/profile_images/' .$userdata['profile_img'];
+				}
+				
+				$data = array(
+					'statusCode' => '200',
+					'status' => 'success',
+					'message' => 'Profile Info Updated Successfully',
+					'first_name' => $userdata['first_name'],
+					'last_name' => $userdata['last_name'],
+					'email' => $userdata['email'],
+					'country_code' => $userdata['country_code'],
+					'phone' => $userdata['phone'],
+					'age' => $userdata['age'],
+					'dob' => $userdata['dob'],
+					'created_at' => $userdata['created_at'],
+					'profile_img' => $user_profile_image
+				);
+
+				$json = json_encode($data);
+				echo $json;
+			}
+			
+			
+		} else {
+			$data = array(
+				'statusCode' => '101',
+				'status' => 'warning',
+				'message' => 'Some Parameter Missing'
+			);
+
+			$json = json_encode($data);
+			echo $json;
+		}
+	}
+	//******************************************* Update User Profile Info API (end) ************************************//	
+	
+	//******************************************* My Profile Info API (start) ************************************//	
+	public function my_profile() {
+		header('Content-Type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		$user_id = $this->input->post('user_id');
+		if(!empty($user_id)) {
+			$return = $this->api_model->my_profile($user_id);
+			if($return == 'user_not_found') {
+				$data['status'] = 'failed';
+				$data['message'] = 'user not found';
+				$data['my_details'] = '';
+			} elseif ($return == 'user_inactive') {
+				$data['status'] = 'warning';
+				$data['message'] = 'user inactive';
+				$data['my_details'] = '';
+			} else {
+				$data['status'] = 'success';
+				$data['message'] = '';
+				$data['my_details'] = $return;
+			}
+			$json = json_encode($data);
+			echo $json;
+		}
+	}
+	
+	//*******************************************My Profile Info API (end) ************************************//	
+	
+	//*******************************************Update Profile Image API (Start) ************************************//
+	public function change_profile_picture() {
+		header('Content-Type: application/json');
+		$user_id = $this->input->post('user_id');
+		if(!empty($user_id)) {
+			if($this->api_model->validate_user_id($user_id) == 'ok') {
+				$image = $this->input->post('profile_img');
+				$image_name = time() . rand(1000,9999999999) . $user_id . '.png';
+				$path = 'uploads/profile_images/' . $image_name;
+				if(file_put_contents($path,base64_decode($image))) {
+					if($this->api_model->update_profile_picture($user_id, $image_name)) {
+						$data['status'] = 'success';
+						$data['image_url'] = base_url() . 'uploads/profile_images/' . $image_name;
+						$data['message'] = '';
+					} else {
+						$data['status'] = 'failed';
+						$data['image_url'] = '';
+						$data['message'] = 'cannot update profile picture now';
+					}
+				} else {
+					$data['status'] = 'failed';
+					$data['image_url'] = '';
+					$data['message'] = 'file write failed';
+				}
+			} elseif($this->api_model->validate_user_id($user_id) == 'user_inactive') {
+				$data['status'] = 'failed';
+				$data['image_url'] = '';
+				$data['message'] = 'user inactive';
+			} elseif($this->api_model->validate_user_id($user_id) == 'user_not_found') {
+				$data['status'] = 'failed';
+				$data['image_url'] = '';
+				$data['message'] = 'user not found';
+			}
+			$json = json_encode($data);
+			echo $json;
+		}
+	}
+	//******************************************* Update Profile Image API (end) ************************************//
+	
+	
+	//******************************************* Forget Password API (start) ************************************//
+	public function forget_password() {
+		$this->load->library('email');
+		header('Content-Type: application/json');
+		$email_id = $this->input->post('email');
+		if(!empty($email_id)) {
+			$return = $this->api_model->email_id_check($email_id);
+			if($return == 'doesnt_exists') {
+				$data['status'] = 'failed';
+				$data['message'] = 'user does not exists';
+			} elseif($return == 'user_inactive') {
+				$data['status'] = 'failed';
+				$data['message'] = 'user inactive';
+			} else {
+				// Send an email with password reset link
+				$message = 'Dear ' . $return->first_name . ',' . "\n\n";
+				$message .= 'A Password Reset Request has been received for your Celebrity Production account. However, if this is not initiated by you then please ingore this mail. You can reset your password by clicking on the link below.' . "\n";
+				$message .= 'Your Password Reset Link:: https://localhost:3000/resetpassword/' . base64_encode($return->user_id) . "\n\n";
+				$message .= 'Best Regards,' . "\n";
+				$message .= 'Celebrity Production';
+
+				$this->email->from('support@solutionsfinder.com', 'Celebrity Production Support');
+				$this->email->to($email_id);
+				$this->email->reply_to('support@solutionsfinder.com', 'Celebrity Production');
+				$this->email->subject('Your Celebrity Production Account Password Reset Link');
+				$this->email->message($message);
+				if($this->email->send()) {
+					$data['status'] = 'success';
+					$data['message'] = 'Reset password link send to your mail';
+				} else {
+					$data['status'] = 'failed';
+					$data['message'] = 'mail cannot be sent';
+				}
+			}
+			$json = json_encode($data);
+			echo $json;
+		}
+	}
+	//******************************************* Forget Password API (end) ************************************//
+	
+	//******************************************* Subcription List API (start) ************************************//
+	public function subscription_lists() {
+		header('Content-Type: application/json');
+		if($this->api_model->subscription_list() == false) {
+			$data['status'] = 'failed';
+			$data['message'] = 'No subscriptions found';
+			$data['subscription_lists'] = '';
+		} else {
+			$data['status'] = 'success';
+			$data['message'] = '';
+			$data['subscription_lists'] = $this->api_model->subscription_list();
+		}
+		$json = json_encode($data);
+		echo $json;
+	}
+	//******************************************* Subcription List API (end) ************************************//
+	
+	
+	public function password_reset() {
+		header('Content-Type: application/json');
+		$user_id = base64_decode($this->input->post('user_id'));
+		$password = md5($this->input->post('password'));
+		
+		if(!empty($user_id) && !empty($password)) {
+			if($this->api_model->validate_user_id($user_id) == 'ok') {
+				if($this->api_model->password_reset($user_id, $password)) {
+					$data['status'] = 'success';
+					$data['message'] = 'Password reset successfully.';
+				} else {
+					$data['status'] = 'failed';
+					$data['message'] = 'Cannot reset password now!';
+				}
+			} elseif($this->api_model->validate_user_id($user_id) == 'user_inactive') {
+				$data['status'] = 'failed';
+				$data['message'] = 'user inactive';
+			} elseif($this->api_model->validate_user_id($user_id) == 'user_not_found') {
+				$data['status'] = 'failed';
+				$data['message'] = 'user not found';
+			}
+			$json = json_encode($data);
+			echo $json;
+		}
+	}
+	
+    public function banners()
+    {
+    	$banners   =   $this->api_model->get_banners();
+        echo $banners;
+    }
+
+    public function most_popular()
+    {
+        $popularMovies   =   $this->api_model->most_popular_movies();
+        echo $popularMovies;
+    }
+
+    public function block_buster()
+    {
+        $blockBusterMovies   =   $this->api_model->blockbuster_movies();
+        echo $blockBusterMovies;
+    }
+
+    public function get_play_data()
+    {
+		header('Content-Type: application/json');
+		$video_id 		=	$this->input->post('video_id');
+		if($this->api_model->get_video_details_by_id($video_id) == false) {
+			$data['status'] = 'error';
+			$data['message'] = 'no videos found';
+			$data['VideoDetails'] = '';
+		} else {
+			$data['status'] = 'success';
+			$data['message'] = '';
+			$data['VideoDetails'] = $this->api_model->get_video_details_by_id($video_id);
+		}
+		$json = json_encode($data);
+		echo $json;
+    }
+}

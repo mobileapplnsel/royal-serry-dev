@@ -1,0 +1,349 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/**
+ * Category_model class.
+ * 
+ * @extends CI_Model
+ */
+class User_model extends CI_Model
+{
+    public function __construct()
+    {		
+		parent::__construct();
+    }
+
+    public function getUsersList()
+    {
+		$this->db->select('u.*');
+        $this->db->from('users u');
+		$this->db->where('`user_type`', "NU");
+		//$this->db->join('users_info uf', 'u.user_id = uf.user_id');
+        $query  =   $this->db->get();
+        //$query = $this->db->last_query();
+        //echo $query;
+        //die();
+        $row = $query->num_rows();
+        if ($row > 0)
+        {
+            //return true;            
+            $row = $query->result();
+            return $row;            
+        }
+        else
+        {
+            //return false;
+            return $row;
+        }
+    }
+	
+	public function getBusinessUsersList()
+    {
+		$this->db->select('u.*');
+        $this->db->from('users u');
+		$this->db->where('`user_type`', "BU");
+		//$this->db->join('users_info uf', 'u.user_id = uf.user_id');
+        $query  =   $this->db->get();
+        //$query = $this->db->last_query();
+        //echo $query;
+        //die();
+        $row = $query->num_rows();
+        if ($row > 0)
+        {
+            //return true;            
+            $row = $query->result();
+            return $row;            
+        }
+        else
+        {
+            //return false;
+            return $row;
+        }
+    }
+	
+	public function getBranchUsersList()
+    {
+		$this->db->select('u.*, bu.branch_id, b.name as branch_name, b.email as branch_email');
+        $this->db->from('users u');
+		$this->db->where('`user_type`', "BO");
+		$this->db->join('branch_users bu', 'u.user_id = bu.user_id');
+		$this->db->join('branch b', 'bu.branch_id = b.branch_id');
+        $query  =   $this->db->get();
+        //$query = $this->db->last_query();
+        //echo $query;
+        //die();
+        $row = $query->num_rows();
+        if ($row > 0)
+        {
+            //return true;            
+            $row = $query->result();
+            return $row;            
+        }
+        else
+        {
+            //return false;
+            return $row;
+        }
+    }
+	
+	public function getDeliveryUsersList()
+    {
+		$this->db->select('u.*, bu.branch_id, b.name as branch_name, b.email as branch_email');
+        $this->db->from('users u');
+		$this->db->where('`user_type`', "PDB");
+		$this->db->join('branch_users bu', 'u.user_id = bu.user_id');
+		$this->db->join('branch b', 'bu.branch_id = b.branch_id');
+        $query  =   $this->db->get();
+        //$query = $this->db->last_query();
+        //echo $query;
+        //die();
+        $row = $query->num_rows();
+        if ($row > 0)
+        {
+            //return true;            
+            $row = $query->result();
+            return $row;            
+        }
+        else
+        {
+            //return false;
+            return $row;
+        }
+    }
+	
+	public function editBranchUser($id)
+    {
+        //$query  =   $this->db->get_where('branch', array('branch_id' => $id));
+		$this->db->select('u.*, bu.branch_id');
+        $this->db->from('users u');
+		$this->db->where('u.user_id', $id);
+		$this->db->join('branch_users bu', 'u.user_id = bu.user_id');
+		//$this->db->join('branch b', 'bu.branch_id = b.branch_id');
+        $query  =   $this->db->get();
+		
+        $row    =   $query->num_rows();
+        if ($row > 0)
+        {
+            //return true;
+            //$row['id']  =   $id;
+            $row        =   $query->result();
+            return  $row;            
+        }
+        else
+        {
+            //return false;
+            return $row;
+        }
+    }
+	
+	public function editUser($id)
+    {
+        //$query  =   $this->db->get_where('branch', array('branch_id' => $id));
+		$this->db->select('u.*');
+        $this->db->from('users u');
+		$this->db->where('u.user_id', $id);
+		//$this->db->join('branch_users bu', 'u.user_id = bu.user_id');
+		//$this->db->join('branch b', 'bu.branch_id = b.branch_id');
+        $query  =   $this->db->get();
+		
+        $row    =   $query->num_rows();
+        if ($row > 0)
+        {
+            //return true;
+            //$row['id']  =   $id;
+            $row        =   $query->result();
+            return  $row;            
+        }
+        else
+        {
+            //return false;
+            return $row;
+        }
+    }
+    
+	
+	 public function getBranchList()
+    {
+		$this->db->select('*');
+        $this->db->from('branch');
+		$this->db->where('`is_main_office`', '0');
+        $query  =   $this->db->get();
+        //$query = $this->db->last_query();
+        //echo $query;
+        //die();
+        $row = $query->num_rows();
+        if ($row > 0)
+        {
+            //return true;            
+            $row = $query->result();
+            return $row;            
+        }
+        else
+        {
+            //return false;
+            return $row;
+        }
+    }
+	
+	public function checkExistUser($email)
+    {
+        $query  =   $this->db->get_where('users', array('email' => $email));
+        $row = $query->num_rows();
+        if ($row > 0)
+        {
+            //return true;            
+           // $row = $query->result();
+            return $row;            
+        }
+        else
+        {
+            //return false;
+            return $row;
+        }
+    }
+	
+	public function addNewuser($data)
+    {
+        $this->db->insert('users', $data);
+        return $this->db->insert_id();
+    }
+	
+	public function adduserToBranch($data)
+    {
+        $this->db->insert('branch_users', $data);
+        return $this->db->insert_id();
+    }
+    
+	public function deleteuserFromBranch($id)
+    {
+        $this->db->delete('branch_users', array('user_id' => $id));      
+        return $this->db->affected_rows();
+    }
+
+    /*public function insertcategory($data)
+    {
+        $this->db->insert('categories', $data);
+        return $this->db->insert_id();
+    }*/
+
+    public function editCategory($id)
+    {
+        $query  =   $this->db->get_where('categories', array('cat_id' => $id));
+        $row    =   $query->num_rows();
+        if ($row > 0)
+        {
+            $row        =   $query->result();
+            return  $row;            
+        }
+        else
+        {
+            return $row;
+        }
+    }
+
+    public function getReplacedSingleImgName($id)
+    {
+        $this->db->select('`category_image`');
+        $this->db->from('categories');
+        $this->db->where('`cat_id`', $id);
+        $query  =   $this->db->get();
+        
+        $row    =   $query->num_rows();
+        if ($row > 0)
+        {           
+            $row    =   $query->result();
+            $row    =   $row[0]->category_image;
+            return $row;
+        }
+        else
+        {
+            return $row;
+        }
+    }
+
+    public function updateCategory($id, $data)
+    {
+        $this->db->set($data);
+        $this->db->where('cat_id',$id);
+        $this->db->update('categories',$data);
+        
+        /*$query = $this->db->last_query();
+        echo $query;*/
+        
+        return $this->db->affected_rows();
+    }
+
+    public function is_parent_category($id)
+    {
+        $query  =   $this->db->get_where('categories', array('parent_cat_id' => $id));
+        $row    =   $query->num_rows();
+        if ($row > 0)
+        {
+            $row        =   $query->result();
+            return  $row;            
+        }
+        else
+        {
+            return $row;
+        }
+    }
+
+    public function deleteCategory($id)
+    {
+        $this->db->delete('categories', array('cat_id' => $id));      
+        return $this->db->affected_rows();
+    }
+	
+	public function change_status($id, $status) {	
+	
+		$data = array(
+               'status' => $status
+            );
+		
+		$this->db->where('user_id', $id);
+		$query = $this->db->update('users', $data); 
+		if($query){
+			return true;	
+		}else{
+			return false;	
+		}	
+
+	}
+	
+	public function AddMember($data)
+    {
+
+        $res = $this->db->insert('users', $data);
+
+        if ($res == 1) {
+            return $this->db->insert_id();
+        } else {
+            return false;
+        }
+
+    }
+	
+	public function updateUser($id, $data)
+    {
+        $this->db->set($data);
+        $this->db->where('user_id',$id);
+        $this->db->update('users',$data);
+        
+        /*$query = $this->db->last_query();
+        echo $query;*/
+        
+        return $this->db->affected_rows();
+    }
+	
+	public function deleteUser($id)
+    {
+        $this->db->delete('users', array('user_id' => $id));
+        return $this->db->affected_rows();
+    }
+	
+	public function UserdeleteFromBranch($id)
+    {
+        $this->db->delete('branch_users', array('user_id' => $id));
+        return $this->db->affected_rows();
+    }
+}

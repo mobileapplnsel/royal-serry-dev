@@ -1,0 +1,151 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+/**
+ * Category_model class.
+ *
+ * @extends CI_Model
+ */
+class User_model extends CI_Model
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function getUsersList()
+    {
+        $this->db->select('u.*, uf.*');
+        $this->db->from('users u');
+        $this->db->join('users_info uf', 'u.user_id = uf.user_id');
+        $query = $this->db->get();
+        //$query = $this->db->last_query();
+        //echo $query;
+        //die();
+        $row = $query->num_rows();
+        if ($row > 0) {
+            //return true;
+            $row = $query->result();
+            return $row;
+        } else {
+            //return false;
+            return $row;
+        }
+    }
+
+    public function getBranchList()
+    {
+        $this->db->select('*');
+        $this->db->from('branch');
+        $this->db->where('`is_main_office`', '0');
+        $query = $this->db->get();
+        //$query = $this->db->last_query();
+        //echo $query;
+        //die();
+        $row = $query->num_rows();
+        if ($row > 0) {
+            //return true;
+            $row = $query->result();
+            return $row;
+        } else {
+            //return false;
+            return $row;
+        }
+    }
+
+    /*public function insertcategory($data)
+    {
+    $this->db->insert('categories', $data);
+    return $this->db->insert_id();
+    }*/
+
+    public function editCategory($id)
+    {
+        $query = $this->db->get_where('categories', array('cat_id' => $id));
+        $row   = $query->num_rows();
+        if ($row > 0) {
+            $row = $query->result();
+            return $row;
+        } else {
+            return $row;
+        }
+    }
+
+    public function getReplacedSingleImgName($id)
+    {
+        $this->db->select('`category_image`');
+        $this->db->from('categories');
+        $this->db->where('`cat_id`', $id);
+        $query = $this->db->get();
+
+        $row = $query->num_rows();
+        if ($row > 0) {
+            $row = $query->result();
+            $row = $row[0]->category_image;
+            return $row;
+        } else {
+            return $row;
+        }
+    }
+
+    public function updateCategory($id, $data)
+    {
+        $this->db->set($data);
+        $this->db->where('cat_id', $id);
+        $this->db->update('categories', $data);
+
+        /*$query = $this->db->last_query();
+        echo $query;*/
+
+        return $this->db->affected_rows();
+    }
+
+    public function is_parent_category($id)
+    {
+        $query = $this->db->get_where('categories', array('parent_cat_id' => $id));
+        $row   = $query->num_rows();
+        if ($row > 0) {
+            $row = $query->result();
+            return $row;
+        } else {
+            return $row;
+        }
+    }
+
+    public function deleteCategory($id)
+    {
+        $this->db->delete('categories', array('cat_id' => $id));
+        return $this->db->affected_rows();
+    }
+
+    public function change_status($id, $status)
+    {
+
+        $data = array(
+            'status' => $status,
+        );
+
+        $this->db->where('user_id', $id);
+        $query = $this->db->update('users', $data);
+        if ($query) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public function AddMember($data)
+    {
+
+        $res = $this->db->insert('users', $data);
+
+        if ($res == 1) {
+            return $this->db->insert_id();
+        } else {
+            return false;
+        }
+
+    }
+
+}

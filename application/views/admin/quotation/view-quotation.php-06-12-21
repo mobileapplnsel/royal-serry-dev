@@ -1,0 +1,468 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+//echo '<pre>'; print_r($quote_details);print_r($quote_from_details);print_r($quote_to_details);print_r($quote_item_details);echo '</pre>';
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+  $this->load->view('admin/include/header');
+  $subtotal = 0.00;
+  $discount = 0.00;
+  $total = 0.00;
+?>
+<style>
+.table {
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 1rem;
+	background-color: transparent;
+}
+.table th, .table td {
+	padding: 0.75rem;
+	vertical-align: top;
+	border-top: 1px solid #e9ecef;
+}
+.table thead th {
+	vertical-align: bottom;
+	border-bottom: 2px solid #e9ecef;
+}
+.table tbody + tbody {
+	border-top: 2px solid #e9ecef;
+}
+.table .table {
+	background-color: #fff;
+}
+.table-sm th, .table-sm td {
+	padding: 0.3rem;
+}
+.table-bordered {
+	border: 1px solid #e9ecef;
+}
+.table-bordered th, .table-bordered td {
+	border: 1px solid #e9ecef;
+}
+.table-bordered thead th, .table-bordered thead td {
+	border-bottom-width: 2px;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+	background-color: rgba(0, 0, 0, 0.05);
+}
+.table-hover tbody tr:hover {
+	background-color: rgba(0, 0, 0, 0.075);
+}
+.table-primary, .table-primary > th, .table-primary > td {
+	background-color: #b8daff;
+}
+.table-hover .table-primary:hover {
+	background-color: #9fcdff;
+}
+.table-hover .table-primary:hover > td, .table-hover .table-primary:hover > th {
+	background-color: #9fcdff;
+}
+.table-secondary, .table-secondary > th, .table-secondary > td {
+	background-color: #dddfe2;
+}
+.table-hover .table-secondary:hover {
+	background-color: #cfd2d6;
+}
+.table-hover .table-secondary:hover > td, .table-hover .table-secondary:hover > th {
+	background-color: #cfd2d6;
+}
+.table-success, .table-success > th, .table-success > td {
+	background-color: #c3e6cb;
+}
+.table-hover .table-success:hover {
+	background-color: #b1dfbb;
+}
+.table-hover .table-success:hover > td, .table-hover .table-success:hover > th {
+	background-color: #b1dfbb;
+}
+.table-info, .table-info > th, .table-info > td {
+	background-color: #bee5eb;
+}
+.table-hover .table-info:hover {
+	background-color: #abdde5;
+}
+.table-hover .table-info:hover > td, .table-hover .table-info:hover > th {
+	background-color: #abdde5;
+}
+.table-warning, .table-warning > th, .table-warning > td {
+	background-color: #ffeeba;
+}
+.table-hover .table-warning:hover {
+	background-color: #ffe8a1;
+}
+.table-hover .table-warning:hover > td, .table-hover .table-warning:hover > th {
+	background-color: #ffe8a1;
+}
+.table-danger, .table-danger > th, .table-danger > td {
+	background-color: #f5c6cb;
+}
+.table-hover .table-danger:hover {
+	background-color: #f1b0b7;
+}
+.table-hover .table-danger:hover > td, .table-hover .table-danger:hover > th {
+	background-color: #f1b0b7;
+}
+.table-light, .table-light > th, .table-light > td {
+	background-color: #fdfdfe;
+}
+.table-hover .table-light:hover {
+	background-color: #ececf6;
+}
+.table-hover .table-light:hover > td, .table-hover .table-light:hover > th {
+	background-color: #ececf6;
+}
+.table-dark, .table-dark > th, .table-dark > td {
+	background-color: #c6c8ca;
+}
+.table-hover .table-dark:hover {
+	background-color: #b9bbbe;
+}
+.table-hover .table-dark:hover > td, .table-hover .table-dark:hover > th {
+	background-color: #b9bbbe;
+}
+.table-active, .table-active > th, .table-active > td {
+	background-color: rgba(0, 0, 0, 0.075);
+}
+.table-hover .table-active:hover {
+	background-color: rgba(0, 0, 0, 0.075);
+}
+.table-hover .table-active:hover > td, .table-hover .table-active:hover > th {
+	background-color: rgba(0, 0, 0, 0.075);
+}
+.table .thead-dark th {
+	color: #fff;
+	background-color: #212529;
+	border-color: #32383e;
+}
+.table .thead-light th {
+	color: #495057;
+	background-color: #e9ecef;
+	border-color: #e9ecef;
+}
+.table-dark {
+	color: #fff;
+	background-color: #212529;
+}
+.table-dark th, .table-dark td, .table-dark thead th {
+	border-color: #32383e;
+}
+.table-dark.table-bordered {
+	border: 0;
+}
+.table-dark.table-striped tbody tr:nth-of-type(odd) {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+.table-dark.table-hover tbody tr:hover {
+	background-color: rgba(255, 255, 255, 0.075);
+}
+</style>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+  <?php
+            $this->load->view('admin/include/sidebar');
+        ?>
+  <div class="content-wrapper">
+    <?php if ($this->session->flashdata('error')) { ?>
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      <?= $this->session->flashdata('error'); ?>
+    </div>
+    <?php } ?>
+    <?php if ($this->session->flashdata('success')) { ?>
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      <?= $this->session->flashdata('success'); ?>
+    </div>
+    <?php } ?>
+    <section class="content-header">
+      <h1> View Quotation </h1>
+      <ol class="breadcrumb">
+        <li><a href="<?= base_url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="<?= base_url('admin/quotation-list') ?>"><i class="fa fa-dashboard"></i> Quotation List </a></li>
+        <li class="active">View Quotation</li>
+      </ol>
+    </section>
+    <div class="container">
+      <div class="col-md-11">
+        <h2></h2>
+        <?php //echo form_open(base_url('quotation/insertquotation'), array('id' => 'loginF', 'class' => 'contact-form', 'enctype' => 'multipart/form-data')); ?>
+        <div class="box box-primary">
+          <div class="box-header with-border"> View Quotation </div>
+          <div class="box-body">
+            <div class="form-group col-md-6 col-md-offset-3"></div>
+            
+            <div style=" padding-top: 50px; padding: 0; font-family: Segoe, 'Segoe UI', 'DejaVu Sans', 'Trebuchet MS', Verdana, 'sans-serif'; background: #f0e8e8;">
+              <div style=" max-width: 900px; margin: 0 auto; display: block; background: #006c16; height: 5px; padding: 0 20px;"></div>
+              <div style=" max-width: 900px; margin: 0 auto; display: block; background: #fff; padding: 20px;"> 
+                <!--top1-->
+                <div>
+                  <div style=" width: 30%; float: left;">
+                    <h1 style="font-size: 18px;font-weight: 200;text-transform: uppercase;letter-spacing: 14px;">Royal Serry</h1>
+                    <img src="<?php echo base_url(); ?>assets/frontend/images/logo.png" width="258" height="109" alt=""/>
+                    <div style="width: 100%; float: left;">
+                      <h6 style="font-size: 16px;line-height: 36px;padding: 0;margin: 0;font-weight: 500;"><strong>Customer Details:</strong></h6>
+                      <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;">Customer Name: <?php echo !empty($quote_from_details[0]['firstname'])?$quote_from_details[0]['firstname']:''; ?> <?php echo !empty($quote_from_details[0]['lastname'])?$quote_from_details[0]['lastname']:''; ?></p>
+                      <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;">Customer Email: <?php echo !empty($quote_from_details[0]['email'])?$quote_from_details[0]['email']:''; ?></p>
+                      <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;">Customer Phone: <?php echo !empty($quote_from_details[0]['telephone'])?$quote_from_details[0]['telephone']:''; ?></p>
+                    </div>
+                  </div>
+                  <!--right-->
+                  <div style=" width: 70%; float: left;">
+                    <div style=" width: 70%; float: right">
+                      <p style="font-size: 16px;line-height: 24px;padding: 0;margin: 0;"><strong>Quotation:</strong> #<?php echo $quote_details[0]['quote_no']; ?></p>
+                      <p style="font-size: 16px;line-height: 24px;padding: 0;margin: 0;"><strong>Date:</strong> <?php echo date('m-d-Y',strtotime($quote_details[0]['created_date'])); ?></p>
+                      <!-- <p style="font-size: 16px;line-height: 24px;padding: 0;margin: 0;"><strong>Valid Until:</strong>88</p>
+  <p style="font-size: 16px;line-height: 24px;padding: 0;margin: 0;"><strong>Customer Number:</strong>AURTH1587</p> --> 
+                    </div>
+                    <div style=" width: 100%; display: block; clear: both; height: 2px;"></div>
+                    <div style=" width: 70%; float: right">
+                      <div style="width: 50%; float: left;">
+                        <h6 style="font-size: 16px;line-height: 36px;padding: 0;margin: 0;font-weight: 500;">Pickup Address:</h6>
+                        <strong>Webz Poland</strong>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><?php echo !empty($quote_from_details[0]['address'])?$quote_from_details[0]['address']:''; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><?php echo !empty($quote_from_details[0]['address2'])?$quote_from_details[0]['address2']:''; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>City:</strong> <?php echo !empty($quote_from_details[0]['city_name'])?$quote_from_details[0]['city_name']:''; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>State:</strong> <?php echo !empty($quote_from_details[0]['state_name'])?$quote_from_details[0]['state_name']:''; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>Country:</strong> <?php echo !empty($quote_from_details[0]['country_name'])?$quote_from_details[0]['country_name']:''; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>Email:</strong> <?php echo !empty($quote_from_details[0]['email'])?$quote_from_details[0]['email']:''; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>Phone:</strong> <?php echo !empty($quote_from_details[0]['telephone'])?$quote_from_details[0]['telephone']:''; ?></p>
+                      </div>
+                      <div style="width: 50%; float: left;">
+                        <h6 style="font-size: 16px;line-height: 36px;padding: 0;margin: 0;font-weight: 500;">Delivery  Address:</h6>
+                        <strong>Webz Poland</strong>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><?php echo $quote_to_details[0]['address']; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><?php echo $quote_to_details[0]['address2']; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>City:</strong> <?php echo $quote_to_details[0]['city_name']; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>State:</strong> <?php echo $quote_to_details[0]['state_name']; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>Country:</strong> <?php echo $quote_to_details[0]['country_name']; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>Email:</strong> <?php echo $quote_to_details[0]['email']; ?></p>
+                        <p style="font-size: 14px;line-height: 20px;padding: 0;margin: 0;"><strong>Phone:</strong> <?php echo $quote_to_details[0]['telephone']; ?></p>
+                      </div>
+                    </div>
+                    <div style=" width: 100%; display: block; clear: both; height: 10px;"></div>
+                    <!--Shipment Type:-->
+                    <div style=" width: 70%; float: right">
+                      <div style="width: 50%; float: left;">
+                        <p style="font-size: 16px;line-height: 24px;padding: 0;margin: 0;"><strong>Shipment Type:</strong> <?php echo (($quote_details[0]['shipment_type'] ==1)? 'Domestic' : 'International'); ?></p>
+                      </div>
+                      <div style="width: 50%; float: left;">
+                        <p style="font-size: 16px;line-height: 24px;padding: 0;margin: 0;"><strong>Shipment Mode:</strong>
+                          <?php if($quote_details[0]['shipment_type'] ==1){ echo 'Road'; }else if($quote_details[0]['shipment_type'] ==2) { echo 'Rail';} elseif($quote_details[0]['shipment_type'] ==3){ echo 'Air';} else{ echo 'Ship';} ?>
+                        </p>
+                      </div>
+                    </div>
+                    <!--Shipment Type:--> 
+                  </div>
+                  <!--right-->
+                  <div style=" width: 100%; display: block; clear: both; height: 2px;"></div>
+                </div>
+                <!--top1-end-->
+                <div style=" width: 100%; display: block; clear: both; height: 40px; border-top: 1px solid #76b382; border-bottom: 1px solid #76b382; margin-top: 10px;"></div>
+                
+                <!--mid1-->
+                <div>
+                  <div class="table-responsive-sm">
+                    <table class="table table-striped">
+                      <thead style="font-size: 14px;">
+                        <tr>
+                          <th class="center">No.</th>
+                          <th>Item Type</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Description</th>
+                          <th>Qty</th>
+                          <th class="right">Rate</th>
+                          <th class="center">Insur.</th>
+                          <th class="right">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody style="font-size: 13px;">
+                        <?php
+  $total = 0;
+   foreach ($quote_item_details as $key => $value) {
+              $description = strlen($value['desc']) > 50 ? substr($value['desc'], 0, 50) . "..." : $value['desc'];
+
+              if ($value['road'] != '0.00') {
+                $rate = $value['road'];
+              } else if ($value['rail'] != '0.00') {
+                $rate = $value['rail'];
+              } else if ($value['air'] != '0.00') {
+                $rate = $value['air'];
+              } else if ($value['ship'] != '0.00') {
+                $rate = $value['ship'];
+              } else {
+                $rate = '0.00';
+              }
+
+              $qty = ($value['quantity'] > 0) ? $value['quantity'] : '1';
+              $total += ($rate * $qty) + $value['insur'];
+              $total = number_format((float)$total, 2, '.', '');
+
+              $subtotal += $total;
+              $subtotal = number_format((float)$subtotal, 2, '.', '');
+            ?>
+              <tr>
+                <td><?php echo $key + 1; ?></td>
+                <td><?php echo $value['item_name']; ?></td>
+                <td><?php echo $value['package']; ?></td>
+                <td><?php echo $value['category_name']; ?></td>
+                <td><?php echo $description; ?></td>
+                <td><?php echo $qty; ?></td>
+                <td><?php echo $rate; ?></td>
+                <td><?php echo $value['insur']; ?></td>
+                <td><?php echo $total; ?></td>
+
+              </tr>
+            <?php
+              $total = 0;
+            } ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!--mid1end-->
+                <div style=" width: 100%; display: block; clear: both; height: 40px; border-top: 1px solid #e22929; border-bottom: 1px solid #e22929; margin-top: 10px;"></div>
+                <!--bottom-->
+                <div style=" width: 60%; float: left;">
+                  <div style=" width: 80%; background: #f2f2f2; margin:5%;padding: 5%;min-height: 172px;"> Instruction: </div>
+                </div>
+                <div style=" width: 40%; float: left;margin-top: 2.5%;">
+                  <table class="table table-striped">
+                    <tbody style="font-size: 13px;">
+          <tr>
+            <td>Subtotal:</td>
+            <td>$<?php echo $subtotal; ?></td>
+          </tr>
+          <tr>
+            <td>Discount:</td>
+            <td>$<?php echo $discount; ?></td>
+          </tr>
+          <?php
+          if (!empty($tax)) {
+            // echo '<pre>';print_r($tax);
+
+            if (isset($tax[0]['type']) && !isset($tax[1]['type']) && $tax[0]['type'] == 'GA') {
+              //GA only
+          ?>
+              <tr>
+                <td><?php echo $tax[0]['type'] . ' Tax (' . $tax[0]['amount'] . '%)'; ?>:</td>
+                <td>
+                  <?php
+                  $discounted_total = ($subtotal - $discount);
+                  $added_ga_tax = ($discounted_total * $tax[0]['amount']) / 100;
+                  $grand_total = ($discounted_total + $added_ga_tax);
+
+                  echo  '$' . $added_ga_tax;
+                  ?>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Total:</td>
+                <td><?php echo  '$' . $grand_total; ?></td>
+              </tr>
+            <?php
+            } else if (isset($tax[0]['id']) && isset($tax[1]['id'])) {
+              //GA & RA
+            ?>
+              <!-- GA starts -->
+              <tr>
+                <td><?php echo $tax[0]['type'] . ' Tax (' . $tax[0]['amount'] . '%)'; ?>:</td>
+                <td>
+                  <?php
+                  $discounted_total = ($subtotal - $discount);
+                  $added_ga_tax = ($discounted_total * $tax[0]['amount']) / 100;
+                  $total_with_tax = ($discounted_total + $added_ga_tax);
+
+                  echo  '$' . $added_ga_tax;
+                  ?>
+                </td>
+              </tr>
+              <!-- GA ends -->
+
+              <!-- RA starts -->
+              <tr>
+                <td><?php echo $tax[1]['type'] . ' Tax (' . $tax[1]['amount'] . '%)'; ?>:</td>
+                <td>
+                  <?php
+                  $added_ra_tax = ($added_ga_tax * $tax[1]['amount']) / 100;
+                  $grand_total = ($total_with_tax + $added_ra_tax);
+
+                  echo  '$' . $added_ra_tax;
+                  ?>
+                </td>
+              </tr>
+              <!-- RA ends -->
+
+              <tr>
+                <td>Total:</td>
+                <td><?php echo  '$' . $grand_total; ?></td>
+              </tr>
+            <?php
+            } else {
+              //RA only
+            ?>
+              <tr>
+                <td>Total:</td>
+                <td>
+                  <?php
+                  $grand_total = ($subtotal - $discount);
+                  echo  '$' . $grand_total;
+                  ?>
+                </td>
+              </tr>
+            <?php
+            }
+          } else {
+            ?>
+            <tr>
+              <td>Total:</td>
+              <td>
+                <?php
+                $grand_total = ($subtotal - $discount);
+                echo  '$' . $grand_total;
+                ?>
+              </td>
+            </tr>
+          <?php
+          }
+          ?>
+
+
+
+
+        </tbody>
+                  </table>
+                </div>
+                
+                <!--bottom-end-->
+                <div style=" width: 100%; display: block; clear: both; height: 2px;"></div>
+              </div>
+              <div style=" max-width: 900px; margin: 0 auto; display: block; background: #fe0000; height: 8px; padding: 0 20px;"></div>
+            </div>
+          </div>
+          <div class="box-footer"> 
+            <!--<button type="submit" class="btn btn-success">Add Quotation</button>--> 
+            <a href="<?php echo base_url('admin/quotation-list'); ?>" class="btn btn-info pull-right">Back</a> </div>
+        </div>
+        <?php echo form_close(); ?> </div>
+    </div>
+  </div>
+  <?php
+   $this->load->view('admin/include/footer-content');
+        ?>
+  
+  <!-- Control Sidebar --> 
+  
+  <!-- /.control-sidebar --> 
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+<?php
+    $this->load->view('admin/include/footer');
+?>
