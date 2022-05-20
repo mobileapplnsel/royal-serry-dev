@@ -1,0 +1,117 @@
+// Admin Panel Javascript Operations.
+// base url
+function base_url() {
+    var pathparts = location.pathname.split('/');
+    if (location.host == 'localhost') {
+        var url = location.origin + '/' + pathparts[1].trim('/') + '/'; // http://localhost/myproject/
+    } else {
+        var url = 'https://dev.solutionsfinder.co.uk/royal-serry-dev/'; // http://stackoverflow.com
+    }
+    return url;
+}
+
+function select2Ajax(elm, table, field) {
+    $('#' + elm).select2({
+        placeholder: '-Select Area Postcode -',
+        delay: 250,
+        //tags: true,
+        multiple: true,
+        //tokenSeparators: [',', ' '],
+        minimumInputLength: 3,
+        minimumResultsForSearch: 1,
+        ajax: {
+            url: function(params) {
+                return base_url() + 'branch/getallareaListbysearchkey?field=' + field + '&tbl_name=' + table;
+            },
+            dataType: "json",
+            type: "GET",
+            data: function(params) {
+                return {
+                    text: params.term
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(obj) {
+                        return {
+                            id: obj.id,
+                            text: obj.text
+                        };
+                    })
+                };
+            }
+        }
+    });
+}
+
+
+function getallBranchAjax(elm, table, field, from_branch_id, to_branch_id) {
+	//alert(from_branch_id);alert(to_branch_id);
+    $('#' + elm).select2({
+        placeholder: '-Select Via Branch Name -',
+        delay: 250,
+        //tags: true,
+        multiple: true,
+        //tokenSeparators: [',', ' '],
+        minimumInputLength: 3,
+        minimumResultsForSearch: 1,
+        ajax: {
+            url: function(params) {
+                return base_url() + 'branch/getallBranchListbysearchkey?field=' + field + '&tbl_name=' + table + '&from_branch_id=' + from_branch_id + '&to_branch_id=' + to_branch_id;
+            },
+            dataType: "json",
+            type: "GET",
+            data: function(params) {
+                return {
+                    text: params.term
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(obj) {
+                        return {
+                            id: obj.id,
+                            text: obj.text
+                        };
+                    })
+                };
+            }
+        }
+    });
+}
+
+
+function userAreaselect2Ajax(elm, table, field, user_id) {
+    $('#' + elm).select2({
+        placeholder: '-Select Area Postcode -',
+        delay: 250,
+        //tags: true,
+        multiple: true,
+        //tokenSeparators: [',', ' '],
+        minimumInputLength: 3,
+        minimumResultsForSearch: 1,
+        ajax: {
+            url: function(params) {
+                return base_url() + 'users/getUserAreaListbyBranch?field=' + field + '&tbl_name=' + table + '&user_id=' + user_id;
+            },
+            dataType: "json",
+            type: "GET",
+            data: function(params) {
+                return {
+                    text: params.term
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(obj) {
+                        return {
+                            id: obj.id,
+                            text: obj.text
+                        };
+                    })
+                };
+            }
+        }
+    });
+}
+
