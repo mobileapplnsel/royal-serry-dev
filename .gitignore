@@ -19,6 +19,7 @@ application/logs
 node_modules/
 
 
+
 # Compiled Java class files
 
 *.class
@@ -99,6 +100,4 @@ Thumbs.db
 
 *.wmv
 
-
-application/config/database.php
 
