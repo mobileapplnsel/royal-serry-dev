@@ -129,12 +129,12 @@ $qty = 0;
 
                                 <div class="row">
                                     <div class="col-sm-12 col-md-6">
-                                        <p class="ds-title-new"><strong>Shipment Type: </strong><?php echo (!empty($quote_details) && $quote_details[0]['shipment_type'] == 1) ? 'Document' : 'Package'; ?></p>
+                                        <p class="ds-title-new"><strong>Parcel Type: </strong><?php echo (!empty($quote_details) && $quote_details[0]['shipment_type'] == 1) ? 'Document' : 'Package'; ?></p>
 
 
                                     </div>
                                     <div class="col-sm-12 col-md-6">
-                                        <p class="ds-title-new"><strong>Parcel Type: </strong><?php echo (!empty($quote_from_details) && $quote_details[0]['shipment_type'] == 1) ? 'Domestic' : 'International'; ?></p>
+                                        <p class="ds-title-new"><strong>Shipment Type: </strong><?php echo (!empty($quote_from_details) && $quote_details[0]['shipment_type'] == 1) ? 'Domestic' : 'International'; ?></p>
 
                                     </div>
 

@@ -261,9 +261,9 @@ class Api_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('quotation_master');
 		$this->db->where('customer_id', $id);
-		$this->db->where('quote_type', 0);
-		$this->db->where('status', 1);
+		$this->db->where_in('quote_type', array(0, 2));
 		//$this->db->or_where('quote_type', 2);
+		$this->db->where('status', 1);
 		$this->db->order_by('id', 'DESC');
 		$this->db->group_by('quote_no ');
 		$query  = $this->db->get();
@@ -304,9 +304,13 @@ class Api_model extends CI_Model
 
 	public function getpdBoyRequestQuotationList($user_id)
 	{
-		$this->db->select('pdbqr.*, qm.*');
+		$this->db->select('pdbqr.*, qm.*, qfa.firstname as from_firstname, qfa.lastname as from_lastname, qfa.address as from_address, qfa.address2 from_address2, qfa.telephone from_telephone, cm.name as country_name, stm.name as state_name, ctm.name as city_name, qfa.zip from_zip, qfa.latitude, qfa.longitude');
 		$this->db->from('pd_boy_quotation_req_tagging pdbqr');
 		$this->db->join('quotation_master qm', 'pdbqr.quotation_id = qm.id');
+		$this->db->join('quotation_from_address qfa', 'qm.id = qfa.quotation_id');
+		$this->db->join('countries_master cm', 'qfa.country = cm.id', 'left');
+		$this->db->join('states_master stm', 'qfa.state = stm.id', 'left');
+		$this->db->join('cities_master ctm', 'qfa.city = ctm.id', 'left');
 		$this->db->where('pdbqr.user_id', $user_id);
 		$this->db->where('pdbqr.status', '0');
 		$this->db->where('qm.status', 1);
@@ -314,6 +318,7 @@ class Api_model extends CI_Model
 		$this->db->group_by('pdbqr.quotation_id ');
 		$query  = $this->db->get();
 		$result = $query->result_array();
+		// echo $this->db->last_query();die;
 		if (!empty($result)) {
 			return $result;
 		} else {
@@ -431,6 +436,26 @@ class Api_model extends CI_Model
 		}
 	}
 
+	public function getProhibitedItems($params = null)
+	{
+		$this->db->select('prohibited.*');
+		$this->db->from('prohibited');
+
+		$this->db->where('status', '1');
+		$this->db->where('is_deleted', '0');
+		if ($params != null) {
+			$this->db->where($params);
+		}
+		$query  = $this->db->get();
+		$result = $query->result_array();
+		if (!empty($result)) {
+			return $result;
+		} else {
+			return 'not_found';
+		}
+	}
+
+
 	public function quotationDetails($id)
 	{
 		$this->db->select('*');
@@ -546,6 +571,19 @@ class Api_model extends CI_Model
 			$array_out = array();
 			$result = $query_tb->result_array();
 			foreach ($result as $key => $results) {
+
+				if ($results['road'] != '0.00') {
+					$rate = $results['road'];
+				} else if ($results['rail'] != '0.00') {
+					$rate = $results['rail'];
+				} else if ($results['air'] != '0.00') {
+					$rate = $results['air'];
+				} else if ($results['ship'] != '0.00') {
+					$rate = $results['ship'];
+				} else {
+					$rate = '0.00';
+				}
+
 				$array_out[] =
 					array(
 						"id" => $results['id'],
@@ -558,7 +596,7 @@ class Api_model extends CI_Model
 						"quantity" => $results['quantity'],
 						"rate" => is_null($results['rate']) ? '' : $results['rate'],
 						"insur" => $results['insur'],
-						"line_total" => $results['line_total'],
+						"line_total" => $rate,
 						"rate" => is_null($results['rate']) ? '' : $results['rate'],
 						"other_details_parcel" => is_null($results['other_details_parcel']) ? '' : $results['other_details_parcel'],
 						"referance_parcel" => is_null($results['referance_parcel']) ? '' : $results['referance_parcel'],
@@ -1732,12 +1770,12 @@ class Api_model extends CI_Model
 		$this->db->where('pbot.order_type', '1');
 
 		$this->db->where('pbot.status', '1');
-		$this->db->where('sm.created_date <',date('Y-m-d'));
+		$this->db->where('sm.created_date <', date('Y-m-d'));
 		$this->db->where('shipment_status.status_id', '2');
 		$this->db->group_by("sm.id");
 		$this->db->order_by("sm.id", "DESC");
 		$query  =   $this->db->get();
-		
+
 		// echo $this->db->last_query();die();
 		$row = $query->num_rows();
 		if ($row > 0) {
@@ -1847,6 +1885,10 @@ class Api_model extends CI_Model
 		$this->db->where('pbot.status', '0');
 		$this->db->where('sm.status', 1);
 		$this->db->where('sm.created_date <=', $todayDate);
+		$this->db->where('sfa.latitude is NOT NULL', NULL, FALSE);
+		$this->db->where('sfa.latitude != ""', NULL, FALSE);
+		$this->db->where('sfa.longitude is NOT NULL', NULL, FALSE);
+		$this->db->where('sfa.longitude != ""', NULL, FALSE);
 		$this->db->group_by('sm.shipment_no');
 		$this->db->order_by("sm.id", "DESC");
 		$query  =   $this->db->get();

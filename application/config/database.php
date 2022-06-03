@@ -122,7 +122,6 @@ $db['local'] = array(
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	//'database' => 'solutio9_royal_serry_new_db',
 	'database' => 'royal-serry',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

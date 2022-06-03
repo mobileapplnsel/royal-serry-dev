@@ -1347,7 +1347,7 @@ class Api extends CI_Controller
 		if ($return == 'not_found') {
 			$data['code'] = '201';
 			$data['status'] = 'failed';
-			$data['message'] = 'Request Quotetion List not found';
+			$data['message'] = 'Request Quotation List not found';
 			$data['quoteList'] = '';
 		} else {
 			$data['code'] = '200';
@@ -1427,6 +1427,30 @@ class Api extends CI_Controller
 			$data['status'] = 'success';
 			$data['message'] = '';
 			$data['locatioID'] = $return;
+		}
+		$json = json_encode($data);
+		echo $json;
+	}
+
+
+	public function getProhibitedItems()
+	{
+		header('Content-Type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		$prohibited_document = $this->api_model->getProhibitedItems(['shipping_category_id' => 1]);
+		$prohibited_parcel = $this->api_model->getProhibitedItems(['shipping_category_id' => 2]);
+
+
+		if ($prohibited_document == 'not_found' || $prohibited_parcel == 'not_found') {
+			$data['code'] = '201';
+			$data['status'] = 'failed';
+			$data['message'] = 'not found';
+			$data['respData'] = '';
+		} else {
+			$data['code'] = '200';
+			$data['status'] = 'success';
+			$data['message'] = '';
+			$data['respData'] = ['prohibited_document' => $prohibited_document, 'prohibited_parcel' => $prohibited_parcel];
 		}
 		$json = json_encode($data);
 		echo $json;
