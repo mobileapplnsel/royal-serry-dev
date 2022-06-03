@@ -3442,3 +3442,31 @@ $this->load->view('frontend/includes/header');
 
     }
 </script>
+<script type='text/javascript'>
+    $(document).ready(function(){
+     // Initialize 
+     $( "#firstname_to" ).autocomplete({
+        source: function( request, response ) {
+          // Fetch data
+          $.ajax({
+            url: "<?=base_url()?>recipients/list",
+            type: 'post',
+            dataType: "json",
+            data: {
+              search: request.term
+            },
+            success: function( data ) {
+              response( data );
+            }
+          });
+        },
+        select: function (event, ui) {
+          // Set selection
+          $('#firstname_to').val(ui.item.firstname); // display the selected text
+          $('#lastname_to').val(ui.item.lastname); // save selected id to input
+          return false;
+        }
+      });
+
+    });
+</script>
