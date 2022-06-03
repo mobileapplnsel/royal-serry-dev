@@ -2974,6 +2974,7 @@ $this->load->view('frontend/includes/header');
     // Validate To zip code by keypress // DEBASIS
     $('#zip_to').keyup(function() {
         if ($(this).val().length > 4) {
+            return true
             //do something
             //alert($(this).val());
             var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
