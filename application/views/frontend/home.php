@@ -941,7 +941,7 @@ $this->load->view('frontend/includes/header');
     </div>
 </div>
 <?php $this->load->view('frontend/includes/footer'); ?>
-
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
 
 <!--<script src="<?php //echo base_url();
                     ?>assets/frontend/js/shipment_form_val.js" type="text/javascript"></script>-->
