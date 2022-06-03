@@ -27,7 +27,7 @@
             <div class="col-sm-3">
                <h4 class="footer-title">Services</h4>
                <ul>
-                  <!--<li><a href="<?php echo base_url(); ?>air-freight">Air Freight</a></li>-->
+                  <li><a href="<?php echo base_url(); ?>air-freight">Air Freight</a></li>
                   <li><a href="<?php echo base_url(); ?>sea-freight">Sea Freight</a></li>
                   <li><a href="<?php echo base_url(); ?>land-transport">Land Transport</a></li>
                   <li><a href="<?php echo base_url(); ?>delivery">Delivery</a></li>

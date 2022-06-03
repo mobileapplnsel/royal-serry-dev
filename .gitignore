@@ -18,6 +18,7 @@ application/logs
 
 node_modules/
 
+application/config/database.php
 
 
 # Compiled Java class files

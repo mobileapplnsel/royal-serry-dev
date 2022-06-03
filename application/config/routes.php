@@ -323,6 +323,7 @@ $route['land-transport'] = 'CustomerController/land_transport';
 $route['delivery'] = 'CustomerController/groupage';
 $route['consultancy'] = 'CustomerController/consultancy';
 $route['value-added-services'] = 'CustomerController/value_added_services';
+$route['air-freight'] = 'CustomerController/air_freight';
 
 
 $route['login']                 = "CustomerController/login";
@@ -401,3 +402,5 @@ $route['admin/sharing-rule-update'] = 'Role/sharingRulesUpdate';
 
 
 $route['view-news/(:any)']     = "CustomerController/onGetNewsDetails/$1";
+$route['recipients/list'] = 'RecipientController/autocomplete';
+
