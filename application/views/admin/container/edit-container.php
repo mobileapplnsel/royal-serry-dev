@@ -108,8 +108,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         
                         <div class="form-group col-md-12">
-                            <label for="email">Via Branch Name<span>*</span> : </label>
-                            	<select class="form-control" name="branch_id[]" id="branch_id" multiple="multiple" required>
+                            <label for="email">Via Branch Name : </label>
+                            	<select class="form-control" name="branch_id[]" id="branch_id" multiple="multiple">
                                 <?php
                                     if(!empty($getViaBranchList)){
                                         foreach($getViaBranchList as $Branch){

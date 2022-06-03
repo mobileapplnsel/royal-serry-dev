@@ -119,7 +119,7 @@ if($quote_data != ''){
                             <input class="form-check-input" type="radio" name="charges_final" id="charges_final3" value="3" <?php echo (($transport_type == '3')? 'checked' : ''); ?> required>
                             <label class="form-check-label" for="charges_final">By Air</label>&nbsp;&nbsp;&nbsp;&nbsp;
                             <input class="form-check-input" type="radio" name="charges_final" id="charges_final4" value="4" <?php echo (($transport_type == '4')? 'checked' : ''); ?> required>
-                            <label class="form-check-label" for="charges_final">By Ship</label>
+                            <label class="form-check-label" for="charges_final">By Sea</label>
                         </div>
                     </div>
                     <div class="row" style="display: <?php echo (($quote_data != '')? 'none' : ''); ?>;">

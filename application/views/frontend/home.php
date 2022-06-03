@@ -93,7 +93,8 @@ $this->load->view('frontend/includes/header');
 
 
                                             <!--<label>Address Line1</label>
-                                            <input type="text" name="address" id="autocomplete" value="<?php //echo $profile_details['address'];?>" class="form-control name-text" placeholder="Enter location.." required readonly onfocus="geolocate()">-->
+                                            <input type="text" name="address" id="autocomplete" value="<?php //echo $profile_details['address'];  
+                                                                                                        ?>" class="form-control name-text" placeholder="Enter location.." required readonly onfocus="geolocate()">-->
 
                                             <label>From Address Line1 <span class="star">*</span></label>
                                             <div class="address_from_err" style="display:none"></div>
@@ -139,8 +140,10 @@ $this->load->view('frontend/includes/header');
 
 
 
-                                            <label>Email Address <span class="star">*</span></label>
-                                            <div class="email_from_err" style="display:none"></div>
+                                            <label>Email Address
+                                                <!-- <span class="star">*</span> -->
+                                            </label>
+                                            <!-- <div class="email_from_err" style="display:none"></div> -->
                                             <input type="email" name="email" id="email" value="<?php echo $profile_details['email']; ?>" class="form-control name-text" placeholder="abc@gmail.com" required readonly>
 
 
@@ -172,7 +175,7 @@ $this->load->view('frontend/includes/header');
                                             <!--+++++++++++++++++++++++++++++++++++++++++++++++++form++++++-->
                                             <h2 class="ds-title gap"> To Location</h2>
                                             <!--<input type="checkbox" name="copy_from" id="copy_from" class="form-check-input">
-                                            <label class="form-check-label" for="copy_from">Copy From Address</label>-->
+                                 <label class="form-check-label" for="copy_from">Copy From Address</label>-->
                                             <div class="spacer"></div>
                                             <div class="row">
                                                 <div class="col-sm-12">
@@ -193,9 +196,9 @@ $this->load->view('frontend/includes/header');
                                                     <div class="address_to_err" style="display:none"></div>
                                                     <input type="text" name="address_to" id="autocomplete2" class="form-control second_step_cls name-text autocomplete" data-loc="toloc" placeholder="" required>
 
-                                                    <input type="hidden" name="lat_to" id="lat_to" class="form-control" placeholder="" value="" required >
+                                                    <input type="hidden" name="lat_to" id="lat_to" class="form-control" placeholder="" value="" required>
 
-                                                    <input type="hidden" name="lng_to" id="lng_to" class="form-control" placeholder="" value="" required >
+                                                    <input type="hidden" name="lng_to" id="lng_to" class="form-control" placeholder="" value="" required>
                                                 </div>
 
                                                 <div class="col-sm-12">
@@ -246,8 +249,10 @@ $this->load->view('frontend/includes/header');
 
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <label>Email Address <span class="star">*</span></label>
-                                                    <div class="email_to_err" style="display:none"></div>
+                                                    <label>Email Address 
+                                                        <!-- <span class="star">*</span> -->
+                                                    </label>
+                                                    <!-- <div class="email_to_err" style="display:none"></div> -->
                                                     <input type="email" name="email_to" id="email_to" class="form-control name-text second_step_cls" placeholder="" required>
 
                                                 </div>
@@ -871,9 +876,32 @@ $this->load->view('frontend/includes/header');
             </div>
             <!-- Modal body -->
             <div class="modal-body">
-                <?php foreach ($prohibitedList as $prohibitedKey => $prohibitedValue) { ?>
-                    <p><?php echo $prohibitedValue->name; ?></p>
-                <?php } ?>
+                <div class="theme_tabs">
+                    <ul class="nav nav-tabs " role="tablist">
+                        <li role="presentation"><a href="#tab1" class="active" role="tab" data-toggle="tab">Document</a></li>
+                        <li role="presentation"><a href="#tab2" class="" role="tab" data-toggle="tab">Package</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="tab1">
+                            <?php foreach ($prohibited_document as $prohibitedKey => $prohibitedValue) { ?>
+                                <p><?php echo $prohibitedValue['name']; ?></p>
+                            <?php } ?>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="tab2">
+                            <?php foreach ($prohibited_parcel as $prohibitedKey => $prohibitedValue) { ?>
+                                <p><?php echo $prohibitedValue['name']; ?></p>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
             </div>
             <!-- Modal footer -->
             <div class="modal-footer">
@@ -920,7 +948,7 @@ $this->load->view('frontend/includes/header');
 
 <!--<script id="script1"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 <!-- <script src="<?php echo base_url(); ?>assets/frontend/js/home.js" type="text/javascript"></script> -->
 <script>
     $(document).ready(function() {
@@ -1050,15 +1078,15 @@ $this->load->view('frontend/includes/header');
                     //$('#second_step').prop('disabled', false);
                 }
 
-                if (email == '') {
-                    $(".email_from_err").html('<font color="red">Please enter your email.</font>');
-                    $(".email_from_err").show();
-                    //$('#second_step').prop('disabled', true);
-                } else {
-                    $(".email_from_err").html('');
-                    $(".email_from_err").hide();
-                    //$('#second_step').prop('disabled', false);
-                }
+                // if (email == '') {
+                //     $(".email_from_err").html('<font color="red">Please enter your email.</font>');
+                //     $(".email_from_err").show();
+                //     //$('#second_step').prop('disabled', true);
+                // } else {
+                //     $(".email_from_err").html('');
+                //     $(".email_from_err").hide();
+                //     //$('#second_step').prop('disabled', false);
+                // }
 
                 if (telephone == '') {
                     $(".telephone_from_err").html('<font color="red">Please enter your phone number.</font>');
@@ -1130,19 +1158,19 @@ $this->load->view('frontend/includes/header');
                     $(".zip_to_err").hide();
                 }
 
-                if (email_to == '') {
-                    $(".email_to_err").html('<font color="red">Please enter your email.</font>');
-                    $(".email_to_err").show();
-                } else {
-                    if (validateEmail(email_to)) {
-                        $(".email_to_err").html('');
-                        $(".email_to_err").hide();
-                    } else {
-                        $(".email_to_err").html('<font color="red">Please enter valid email.</font>');
-                        $(".email_to_err").show();
-                    }
+                // if (email_to == '') {
+                //     $(".email_to_err").html('<font color="red">Please enter your email.</font>');
+                //     $(".email_to_err").show();
+                // } else {
+                //     if (validateEmail(email_to)) {
+                //         $(".email_to_err").html('');
+                //         $(".email_to_err").hide();
+                //     } else {
+                //         $(".email_to_err").html('<font color="red">Please enter valid email.</font>');
+                //         $(".email_to_err").show();
+                //     }
 
-                }
+                // }
 
                 if (telephone_to == '') {
                     $(".telephone_to_err").html('<font color="red">Please enter your phone number.</font>');
@@ -1198,7 +1226,7 @@ $this->load->view('frontend/includes/header');
                 //     $(".zip_to_popup").show();
                 // }
 
-                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && email != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' && zip_to != '' && email_to != '' && validateEmail(email_to) && telephone_to != '' && country_to != '' && state_to != '' && city_to != '' && zip_from == '' && zip_to_val == '' && user_type != undefined && address_type != undefined) {
+                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' && zip_to != '' && telephone_to != '' && country_to != '' && state_to != '' && city_to != '' && zip_from == '' && zip_to_val == '' && user_type != undefined && address_type != undefined) {
                     gotonext = 1;
                     //$('#second_step').prop('disabled', false);
                 } else {
@@ -2945,9 +2973,6 @@ $this->load->view('frontend/includes/header');
 
     // Validate To zip code by keypress // DEBASIS
     $('#zip_to').keyup(function() {
-
-        
-        return true;
         if ($(this).val().length > 4) {
             //do something
             //alert($(this).val());
@@ -2982,7 +3007,6 @@ $this->load->view('frontend/includes/header');
 
     // Validate From zip code by keypress // DEBASIS
     $('#zip').keyup(function() {
-        return true;
         if ($(this).val().length > 4) {
             //do something
             //alert($(this).val());
@@ -3416,33 +3440,4 @@ $this->load->view('frontend/includes/header');
         // }
 
     }
-</script>
-
-<script type='text/javascript'>
-    $(document).ready(function(){
-     // Initialize 
-     $( "#firstname_to" ).autocomplete({
-        source: function( request, response ) {
-          // Fetch data
-          $.ajax({
-            url: "<?=base_url()?>recipients/list",
-            type: 'post',
-            dataType: "json",
-            data: {
-              search: request.term
-            },
-            success: function( data ) {
-              response( data );
-            }
-          });
-        },
-        select: function (event, ui) {
-          // Set selection
-          $('#firstname_to').val(ui.item.firstname); // display the selected text
-          $('#lastname_to').val(ui.item.lastname); // save selected id to input
-          return false;
-        }
-      });
-
-    });
 </script>
