@@ -12,8 +12,25 @@ class RecipientController extends CI_Controller
 
     function autocomplete(){
         $postData = $this->input->post('search');
-        $data = $this->recipients_model->getLists(['firstname'=>$postData]);
-        echo json_encode($data);
+        $session_id = $this->session->userdata('Customer');
+        $customer_id = $session_id['id'];
+        $datas = $this->recipients_model->serach($postData,$customer_id);
+        
+
+        $newdata = array();
+        foreach($datas as $data){
+            $data['label']= $data['firstname'].' '.$data['lastname'].' '.$data['address'];
+            if (!empty($data['telephone']) && is_serialized_string($data['telephone'])) {
+                $telephone = repairSerializeString($data['telephone']);
+                $telephone = unserialize($telephone);
+            } else {
+                $telephones = $quote_to_details[0]['telephone'];
+            }
+
+            $data['telephone'] = $telephone;
+            $newdata[] = $data;
+        }
+        echo json_encode($newdata);
     }
 
     

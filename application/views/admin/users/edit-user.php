@@ -123,7 +123,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="form-group col-md-6">
                             <label for="email">Zip Code<span>*</span> : </label>
-                            <input type="text" class="form-control" placeholder="Code" name="zip" value="<?= $editUser[0]->zip ?>" maxlength="8" required>
+                            <input type="text" class="form-control" id="zipcode" placeholder="Code" name="zip" value="<?= $editUser[0]->zip ?>" maxlength="8" <?php if ($editBranch[0]->country!='195') {
+                                echo "required";} ?>>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="email">Online Status : </label>

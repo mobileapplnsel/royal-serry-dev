@@ -14,7 +14,7 @@ class Recipients_model extends CI_Model
     
     public function insert($data)
     {
-        $this->db->insert('recipients', $data);
+        $this->db->insert('quotation_to_address', $data);
         return $this->db->insert_id();
     }
 
@@ -24,16 +24,19 @@ class Recipients_model extends CI_Model
         if($param != null){
             $this->db->where($param);
         }
-        $query = $this->db->get('recipients');
+        $query = $this->db->get('quotation_to_address');
         $row = $query->result();
     }
 
-    public function serach($param)
+    public function serach($param,$customer_id)
     {
         $this->db->select('*');
+        $this->db->where('customer_id', $customer_id);
         $this->db->like('firstname', $param);
-        $query = $this->db->get('recipients');
-        return $query->result();
+        $this->db->order_by("id", "desc");
+        $this->db->group_by('telephone');
+        $query = $this->db->get('quotation_to_address');
+        return $query->result_array();
     }
 
     public function getRecipient($param = null)
@@ -43,7 +46,7 @@ class Recipients_model extends CI_Model
             $this->db->where($param);
         }
         $this->db->where('is_deleted', '0');
-        $query = $this->db->get('recipients');
+        $query = $this->db->get('quotation_to_address');
         $row = $query->row();
         return $row;
     }
@@ -52,13 +55,13 @@ class Recipients_model extends CI_Model
     {
         $this->db->set($data);
         $this->db->where('id',$id);
-        $this->db->update('recipients',$data);
+        $this->db->update('quotation_to_address',$data);
         return $this->db->affected_rows();
     }
 
     public function delete($id)
     {
-        $this->db->delete('recipients', array('id' => $id));      
+        $this->db->delete('quotation_to_address', array('id' => $id));      
         return $this->db->affected_rows();
     }
     

@@ -941,7 +941,7 @@ $this->load->view('frontend/includes/header');
     </div>
 </div>
 <?php $this->load->view('frontend/includes/footer'); ?>
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+
 
 <!--<script src="<?php //echo base_url();
                     ?>assets/frontend/js/shipment_form_val.js" type="text/javascript"></script>-->
@@ -1068,7 +1068,7 @@ $this->load->view('frontend/includes/header');
                     //$('#second_step').prop('disabled', false);
                 }
 
-                if (zip == '') {
+                if (zip == '' && country!='195') {
                     $(".zip_from_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_from_err").show();
                     //$('#second_step').prop('disabled', true);
@@ -1150,7 +1150,7 @@ $this->load->view('frontend/includes/header');
                 //     $(".address2_to_err").hide();
                 // }
 
-                if (zip_to == '') {
+                if (zip_to == '' && country_to!='195') {
                     $(".zip_to_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_to_err").show();
                 } else {
@@ -3443,30 +3443,68 @@ $this->load->view('frontend/includes/header');
     }
 </script>
 <script type='text/javascript'>
-    $(document).ready(function(){
-     // Initialize 
+  $(document).ready(function(){
+  
      $( "#firstname_to" ).autocomplete({
-        source: function( request, response ) {
-          // Fetch data
-          $.ajax({
-            url: "<?=base_url()?>recipients/list",
-            type: 'post',
-            dataType: "json",
-            data: {
-              search: request.term
-            },
-            success: function( data ) {
-              response( data );
-            }
-          });
+      source: function( request, response ) {
+       // Fetch data
+       $.ajax({
+        url: "<?=base_url()?>ajax/recipients/list",
+        type: 'post',
+        dataType: "json",
+        data: {
+         search: request.term
         },
-        select: function (event, ui) {
-          // Set selection
-          $('#firstname_to').val(ui.item.firstname); // display the selected text
-          $('#lastname_to').val(ui.item.lastname); // save selected id to input
-          return false;
+        success: function( data ) {
+          response(data.map(function (value) {
+                    return value;  
+                }));
         }
-      });
+       });
+      },
+    select: function (event, ui) {
+       // Set selection
+       
+       $('#firstname_to').val(ui.item.firstname);
+       $('#lastname_to').val(ui.item.lastname); 
+       $('#autocomplete2').val(ui.item.address);
+       $('#address2_to').val(ui.item.address2);
+       $('#company_name_to').val(ui.item.company_name);
+       $('#country_to').val(ui.item.country);
+       $('#country_to').trigger("change");
+       
+       setTimeout( function(){ 
+            $('#state_to').val(ui.item.state);
+            $('#state_to').trigger("change"); 
+        }  , 1000 );
+       setTimeout( function(){ 
+            $('#city_to').val(ui.item.city); 
+        }  , 2000 );
+      
+       $('#zip_to').val(ui.item.zip);
+       $('#email_to').val(ui.item.email);
+       $('#email_to').val(ui.item.email);
+       $('#lat_to').val(ui.item.latitude);
+       $('#lng_to').val(ui.item.longitude);
 
+        $.each(ui.item.telephone, function(key, value) {
+            console.log(key + ": " + value);
+            if (key==0) {
+                $("#telephone_to").val(value);
+            }else{
+
+                var html = '<div><div class="col-sm-9"><label>Phone no </label><input type="number" name="telephone_to[]" id="telephone_to" value="'+value+'" class="form-control name-text" placeholder="" required=""></div><div class="col-sm-3"><input type="button" name="remove_tel_btn" id="remove_tel_btn" class="remove_tel_btn action-button add" value="Remove" style="border: 1px solid rgb(206, 212, 218);background-color: #ff0000 !important;color: #fff;font-size: 12px!important;font-family:Open Sans!important;height: 46px;"></div>';
+                $('#add_more_tel').append(html);
+
+            }
+        });
+      
+       $("input[name=address_type][value="+ ui.item.address_type+ "]").prop('checked', true);
+       
+       return false;
+      }
+      
     });
-</script>
+
+  });
+  </script>

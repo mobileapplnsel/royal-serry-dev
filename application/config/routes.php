@@ -401,4 +401,4 @@ $route['admin/sharing-rule-update'] = 'Role/sharingRulesUpdate';
 
 
 $route['view-news/(:any)']     = "CustomerController/onGetNewsDetails/$1";
-$route['recipients/list'] = 'RecipientController/autocomplete';
+$route['ajax/recipients/list'] = 'RecipientController/autocomplete';
