@@ -253,7 +253,7 @@ $this->load->view('frontend/includes/header');
                                                         <!-- <span class="star">*</span> -->
                                                     </label>
                                                     <!-- <div class="email_to_err" style="display:none"></div> -->
-                                                    <input type="email" name="email_to" id="email_to" class="form-control name-text second_step_cls" placeholder="" required>
+                                                    <input type="email" name="email_to" id="email_to" class="form-control name-text second_step_cls" placeholder="" >
 
                                                 </div>
                                                 <div class="col-sm-9">
