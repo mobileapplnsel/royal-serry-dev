@@ -129,7 +129,7 @@ $this->load->view('frontend/includes/header');
                                             <input type="hidden" name="city_google_val" id="city_google_val" value="">
 
 
-                                            <label style=" display:block; clear:both;">Zip code <span class="star">*</span></label>
+                                            <label style=" display:block; clear:both;">Zip code <span class="star" id="zipreq1">*</span></label>
                                             <div class="zip_from_err" style="display:none"></div>
                                             <div id="div_zip" style="float:left;"></div>
                                             <div class="zip_popup" style="display: none;  float:left;" data-zip=""><a class="getintouch-pop" href="javascript:void(0);" style="color:#016c1c!important;" data-zip-type="zip"> &nbsp; Click here</a> to get in touch!</div>
@@ -237,7 +237,7 @@ $this->load->view('frontend/includes/header');
                                                 </div>
                                                 <div class="spacer"></div>
                                                 <div class="col-sm-12">
-                                                    <label style=" display:block; clear:both;">Zip code <span class="star">*</span></label>
+                                                    <label style=" display:block; clear:both;">Zip code <span class="star" id="zipreq">*</span></label>
                                                     <div class="zip_to_err" style="display:none"></div>
                                                     <div id="div_zip_to" style="float:left;"></div>
                                                     <div class="zip_to_popup" style="display: none; float:left;" data-zip-to=""><a class="getintouch-pop" href="javascript:void(0);" style="color:#016c1c!important;" data-zip-type="zip_to"> &nbsp; Click here</a> to get in touch!</div>
@@ -1071,10 +1071,12 @@ $this->load->view('frontend/includes/header');
                 if (zip == '' && country!='195') {
                     $(".zip_from_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_from_err").show();
+                    $("#zipreq1").html('*');
                     //$('#second_step').prop('disabled', true);
                 } else {
                     $(".zip_from_err").html('');
                     $(".zip_from_err").hide();
+                    $("#zipreq1").html('');
                 }
 
                 // if (email == '') {
@@ -1152,9 +1154,11 @@ $this->load->view('frontend/includes/header');
                 if (zip_to == '' && country_to!='195') {
                     $(".zip_to_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_to_err").show();
+                    $("#zipreq").html('*');
                 } else {
                     $(".zip_to_err").html('');
                     $(".zip_to_err").hide();
+                    $("#zipreq").html('');
                 }
 
                 // if (email_to == '') {
