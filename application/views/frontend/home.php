@@ -1073,9 +1073,8 @@ $this->load->view('frontend/includes/header');
                     $(".zip_from_err").show();
                     //$('#second_step').prop('disabled', true);
                 } else {
-                    $(".city_from_err").html('');
-                    $(".city_from_err").hide();
-                    //$('#second_step').prop('disabled', false);
+                    $(".zip_from_err").html('');
+                    $(".zip_from_err").hide();
                 }
 
                 // if (email == '') {
@@ -1226,7 +1225,7 @@ $this->load->view('frontend/includes/header');
                 //     $(".zip_to_popup").show();
                 // }
 
-                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' && zip_to != '' && telephone_to != '' && country_to != '' && state_to != '' && city_to != '' && zip_from == '' && zip_to_val == '' && user_type != undefined && address_type != undefined) {
+                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' &&  telephone_to != '' && country_to != '' && state_to != '' && city_to != '' && zip_from == ''  && user_type != undefined && address_type != undefined) {
                     gotonext = 1;
                     //$('#second_step').prop('disabled', false);
                 } else {
