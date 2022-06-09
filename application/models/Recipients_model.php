@@ -30,11 +30,11 @@ class Recipients_model extends CI_Model
 
     public function serach($param,$customer_id)
     {
-        $this->db->distinct();
+        $this->db->select('*');
         $this->db->where('customer_id', $customer_id);
         $this->db->like('firstname', $param);
         $this->db->order_by("id", "desc");
-        //$this->db->group_by('telephone');
+        $this->db->group_by('telephone');
         $query = $this->db->get('quotation_to_address');
         return $query->result_array();
     }
