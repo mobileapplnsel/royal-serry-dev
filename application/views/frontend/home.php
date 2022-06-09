@@ -1041,6 +1041,8 @@ $this->load->view('frontend/includes/header');
                     $("#country").css('outline', '1px solid red');
                     $(".country_from_err").html('<font color="red">Please enter your country.</font>');
                     $(".country_from_err").show();
+
+                    
                     //$('#second_step').prop('disabled', true);
                 } else {
                     $(".country_from_err").html('');
@@ -1071,12 +1073,12 @@ $this->load->view('frontend/includes/header');
                 if (zip == '' && country!='195') {
                     $(".zip_from_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_from_err").show();
-                    $("#zipreq1").html('*');
+                    
                     //$('#second_step').prop('disabled', true);
                 } else {
                     $(".zip_from_err").html('');
                     $(".zip_from_err").hide();
-                    $("#zipreq1").html('');
+                    
                 }
 
                 // if (email == '') {
@@ -1154,11 +1156,11 @@ $this->load->view('frontend/includes/header');
                 if (zip_to == '' && country_to!='195') {
                     $(".zip_to_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_to_err").show();
-                    $("#zipreq").html('*');
+                    
                 } else {
                     $(".zip_to_err").html('');
                     $(".zip_to_err").hide();
-                    $("#zipreq").html('');
+                    
                 }
 
                 // if (email_to == '') {
@@ -1186,6 +1188,7 @@ $this->load->view('frontend/includes/header');
                 if (country_to == '') {
                     $(".country_to_err").html('<font color="red">Please enter your country.</font>');
                     $(".country_to_err").show();
+                    
                 } else {
                     $(".country_to_err").html('');
                     $(".country_to_err").hide();
@@ -1344,6 +1347,11 @@ $this->load->view('frontend/includes/header');
 
         $('#country').on('change', function() {
             var countryID = $(this).val();
+            if (countryID=='195') {
+                $("#zipreq1").html('');
+            }else{
+                $("#zipreq1").html('*');
+            }
             if (countryID) {
                 $.ajax({
                     type: 'POST',
@@ -1413,6 +1421,11 @@ $this->load->view('frontend/includes/header');
 
         $('#country_to').on('change', function() {
             var countryID = $(this).val();
+            if (countryID=='195') {
+                $("#zipreq").html('');
+            }else{
+                $("#zipreq").html('*');
+            }
             if (countryID) {
                 $.ajax({
                     type: 'POST',
