@@ -1225,7 +1225,7 @@ $this->load->view('frontend/includes/header');
                 //     $(".zip_to_popup").show();
                 // }
 
-                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' &&  telephone_to != '' && country_to != '' && state_to != '' && city_to != '' && zip_from == ''  && user_type != undefined && address_type != undefined) {
+                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' &&  telephone_to != '' && country_to != '' && state_to != '' && city_to != '' &&  user_type != undefined && address_type != undefined) {
                     gotonext = 1;
                     //$('#second_step').prop('disabled', false);
                 } else {
