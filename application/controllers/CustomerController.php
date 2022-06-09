@@ -1448,10 +1448,10 @@ class CustomerController extends CI_Controller
         $data['quote_details']          = $this->Users_model->quotationDetails($quote_id);
         $data['quote_from_details']     = $this->Users_model->quotationFromDetailsNew($quote_id);
         $data['quote_to_details']       = $this->Users_model->quotationToDetailsNew($quote_id);
-        die('==');
+       
         $data['quote_item_details']     = $this->Users_model->quotationItemDetails($quote_id);
         $data['shipment_details']     = $this->customer_model->getShipmentDetails(array('quotation_id' => $quote_id));
-
+         die('==');
         $data['profile_details'] = $this->OveModel->Read_User_Information($id);
         $data['prohibitedList']  = $this->prohibited_model->getProhibitedList();
         $data['quote_id_enc'] = $quote_id_enc;
