@@ -12,10 +12,10 @@ function base_url() {
 
     } else {
 
-        var url = 'http://182.75.124.211/royal-serry-dev/'; // http://stackoverflow.com
+        var url = 'http://develop-rss.staqo.com/'; // http://stackoverflow.com
 
     }
-
+    //var url = "http://localhost/project/royal-serry-dev/";
     return url;
 
 }

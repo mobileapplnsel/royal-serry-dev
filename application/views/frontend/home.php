@@ -93,7 +93,8 @@ $this->load->view('frontend/includes/header');
 
 
                                             <!--<label>Address Line1</label>
-                                            <input type="text" name="address" id="autocomplete" value="<?php //echo $profile_details['address'];?>" class="form-control name-text" placeholder="Enter location.." required readonly onfocus="geolocate()">-->
+                                            <input type="text" name="address" id="autocomplete" value="<?php //echo $profile_details['address'];  
+                                                                                                        ?>" class="form-control name-text" placeholder="Enter location.." required readonly onfocus="geolocate()">-->
 
                                             <label>From Address Line1 <span class="star">*</span></label>
                                             <div class="address_from_err" style="display:none"></div>
@@ -128,7 +129,7 @@ $this->load->view('frontend/includes/header');
                                             <input type="hidden" name="city_google_val" id="city_google_val" value="">
 
 
-                                            <label style=" display:block; clear:both;">Zip code <span class="star">*</span></label>
+                                            <label style=" display:block; clear:both;">Zip code <span class="star" id="zipreq1">*</span></label>
                                             <div class="zip_from_err" style="display:none"></div>
                                             <div id="div_zip" style="float:left;"></div>
                                             <div class="zip_popup" style="display: none;  float:left;" data-zip=""><a class="getintouch-pop" href="javascript:void(0);" style="color:#016c1c!important;" data-zip-type="zip"> &nbsp; Click here</a> to get in touch!</div>
@@ -139,8 +140,10 @@ $this->load->view('frontend/includes/header');
 
 
 
-                                            <label>Email Address <span class="star">*</span></label>
-                                            <div class="email_from_err" style="display:none"></div>
+                                            <label>Email Address
+                                                <!-- <span class="star">*</span> -->
+                                            </label>
+                                            <!-- <div class="email_from_err" style="display:none"></div> -->
                                             <input type="email" name="email" id="email" value="<?php echo $profile_details['email']; ?>" class="form-control name-text" placeholder="abc@gmail.com" required readonly>
 
 
@@ -172,7 +175,7 @@ $this->load->view('frontend/includes/header');
                                             <!--+++++++++++++++++++++++++++++++++++++++++++++++++form++++++-->
                                             <h2 class="ds-title gap"> To Location</h2>
                                             <!--<input type="checkbox" name="copy_from" id="copy_from" class="form-check-input">
-                                            <label class="form-check-label" for="copy_from">Copy From Address</label>-->
+                                 <label class="form-check-label" for="copy_from">Copy From Address</label>-->
                                             <div class="spacer"></div>
                                             <div class="row">
                                                 <div class="col-sm-12">
@@ -193,9 +196,9 @@ $this->load->view('frontend/includes/header');
                                                     <div class="address_to_err" style="display:none"></div>
                                                     <input type="text" name="address_to" id="autocomplete2" class="form-control second_step_cls name-text autocomplete" data-loc="toloc" placeholder="" required>
 
-                                                    <input type="hidden" name="lat_to" id="lat_to" class="form-control" placeholder="" value="" required >
+                                                    <input type="hidden" name="lat_to" id="lat_to" class="form-control" placeholder="" value="" required>
 
-                                                    <input type="hidden" name="lng_to" id="lng_to" class="form-control" placeholder="" value="" required >
+                                                    <input type="hidden" name="lng_to" id="lng_to" class="form-control" placeholder="" value="" required>
                                                 </div>
 
                                                 <div class="col-sm-12">
@@ -234,7 +237,7 @@ $this->load->view('frontend/includes/header');
                                                 </div>
                                                 <div class="spacer"></div>
                                                 <div class="col-sm-12">
-                                                    <label style=" display:block; clear:both;">Zip code <span class="star">*</span></label>
+                                                    <label style=" display:block; clear:both;">Zip code <span class="star" id="zipreq">*</span></label>
                                                     <div class="zip_to_err" style="display:none"></div>
                                                     <div id="div_zip_to" style="float:left;"></div>
                                                     <div class="zip_to_popup" style="display: none; float:left;" data-zip-to=""><a class="getintouch-pop" href="javascript:void(0);" style="color:#016c1c!important;" data-zip-type="zip_to"> &nbsp; Click here</a> to get in touch!</div>
@@ -246,9 +249,11 @@ $this->load->view('frontend/includes/header');
 
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <label>Email Address <span class="star">*</span></label>
-                                                    <div class="email_to_err" style="display:none"></div>
-                                                    <input type="email" name="email_to" id="email_to" class="form-control name-text second_step_cls" placeholder="" required>
+                                                    <label>Email Address 
+                                                        <!-- <span class="star">*</span> -->
+                                                    </label>
+                                                    <!-- <div class="email_to_err" style="display:none"></div> -->
+                                                    <input type="email" name="email_to" id="email_to" class="form-control name-text second_step_cls" placeholder="" >
 
                                                 </div>
                                                 <div class="col-sm-9">
@@ -871,9 +876,32 @@ $this->load->view('frontend/includes/header');
             </div>
             <!-- Modal body -->
             <div class="modal-body">
-                <?php foreach ($prohibitedList as $prohibitedKey => $prohibitedValue) { ?>
-                    <p><?php echo $prohibitedValue->name; ?></p>
-                <?php } ?>
+                <div class="theme_tabs">
+                    <ul class="nav nav-tabs " role="tablist">
+                        <li role="presentation"><a href="#tab1" class="active" role="tab" data-toggle="tab">Document</a></li>
+                        <li role="presentation"><a href="#tab2" class="" role="tab" data-toggle="tab">Package</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="tab1">
+                            <?php foreach ($prohibited_document as $prohibitedKey => $prohibitedValue) { ?>
+                                <p><?php echo $prohibitedValue['name']; ?></p>
+                            <?php } ?>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="tab2">
+                            <?php foreach ($prohibited_parcel as $prohibitedKey => $prohibitedValue) { ?>
+                                <p><?php echo $prohibitedValue['name']; ?></p>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
             </div>
             <!-- Modal footer -->
             <div class="modal-footer">
@@ -920,7 +948,7 @@ $this->load->view('frontend/includes/header');
 
 <!--<script id="script1"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 <!-- <script src="<?php echo base_url(); ?>assets/frontend/js/home.js" type="text/javascript"></script> -->
 <script>
     $(document).ready(function() {
@@ -1013,6 +1041,8 @@ $this->load->view('frontend/includes/header');
                     $("#country").css('outline', '1px solid red');
                     $(".country_from_err").html('<font color="red">Please enter your country.</font>');
                     $(".country_from_err").show();
+
+                    
                     //$('#second_step').prop('disabled', true);
                 } else {
                     $(".country_from_err").html('');
@@ -1040,25 +1070,26 @@ $this->load->view('frontend/includes/header');
                     //$('#second_step').prop('disabled', false);
                 }
 
-                if (zip == '') {
+                if (zip == '' && country!='195') {
                     $(".zip_from_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_from_err").show();
+                    
                     //$('#second_step').prop('disabled', true);
                 } else {
-                    $(".city_from_err").html('');
-                    $(".city_from_err").hide();
-                    //$('#second_step').prop('disabled', false);
+                    $(".zip_from_err").html('');
+                    $(".zip_from_err").hide();
+                    
                 }
 
-                if (email == '') {
-                    $(".email_from_err").html('<font color="red">Please enter your email.</font>');
-                    $(".email_from_err").show();
-                    //$('#second_step').prop('disabled', true);
-                } else {
-                    $(".email_from_err").html('');
-                    $(".email_from_err").hide();
-                    //$('#second_step').prop('disabled', false);
-                }
+                // if (email == '') {
+                //     $(".email_from_err").html('<font color="red">Please enter your email.</font>');
+                //     $(".email_from_err").show();
+                //     //$('#second_step').prop('disabled', true);
+                // } else {
+                //     $(".email_from_err").html('');
+                //     $(".email_from_err").hide();
+                //     //$('#second_step').prop('disabled', false);
+                // }
 
                 if (telephone == '') {
                     $(".telephone_from_err").html('<font color="red">Please enter your phone number.</font>');
@@ -1122,27 +1153,29 @@ $this->load->view('frontend/includes/header');
                 //     $(".address2_to_err").hide();
                 // }
 
-                if (zip_to == '') {
+                if (zip_to == '' && country_to!='195') {
                     $(".zip_to_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_to_err").show();
+                    
                 } else {
                     $(".zip_to_err").html('');
                     $(".zip_to_err").hide();
+                    
                 }
 
-                if (email_to == '') {
-                    $(".email_to_err").html('<font color="red">Please enter your email.</font>');
-                    $(".email_to_err").show();
-                } else {
-                    if (validateEmail(email_to)) {
-                        $(".email_to_err").html('');
-                        $(".email_to_err").hide();
-                    } else {
-                        $(".email_to_err").html('<font color="red">Please enter valid email.</font>');
-                        $(".email_to_err").show();
-                    }
+                // if (email_to == '') {
+                //     $(".email_to_err").html('<font color="red">Please enter your email.</font>');
+                //     $(".email_to_err").show();
+                // } else {
+                //     if (validateEmail(email_to)) {
+                //         $(".email_to_err").html('');
+                //         $(".email_to_err").hide();
+                //     } else {
+                //         $(".email_to_err").html('<font color="red">Please enter valid email.</font>');
+                //         $(".email_to_err").show();
+                //     }
 
-                }
+                // }
 
                 if (telephone_to == '') {
                     $(".telephone_to_err").html('<font color="red">Please enter your phone number.</font>');
@@ -1155,6 +1188,7 @@ $this->load->view('frontend/includes/header');
                 if (country_to == '') {
                     $(".country_to_err").html('<font color="red">Please enter your country.</font>');
                     $(".country_to_err").show();
+                    
                 } else {
                     $(".country_to_err").html('');
                     $(".country_to_err").hide();
@@ -1198,7 +1232,7 @@ $this->load->view('frontend/includes/header');
                 //     $(".zip_to_popup").show();
                 // }
 
-                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && email != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' && zip_to != '' && email_to != '' && validateEmail(email_to) && telephone_to != '' && country_to != '' && state_to != '' && city_to != '' && zip_from == '' && zip_to_val == '' && user_type != undefined && address_type != undefined) {
+                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' &&  telephone_to != '' && country_to != '' && state_to != '' && city_to != '' &&  user_type != undefined && address_type != undefined) {
                     gotonext = 1;
                     //$('#second_step').prop('disabled', false);
                 } else {
@@ -1313,6 +1347,11 @@ $this->load->view('frontend/includes/header');
 
         $('#country').on('change', function() {
             var countryID = $(this).val();
+            if (countryID=='195') {
+                $("#zipreq1").html('');
+            }else{
+                $("#zipreq1").html('*');
+            }
             if (countryID) {
                 $.ajax({
                     type: 'POST',
@@ -1382,6 +1421,11 @@ $this->load->view('frontend/includes/header');
 
         $('#country_to').on('change', function() {
             var countryID = $(this).val();
+            if (countryID=='195') {
+                $("#zipreq").html('');
+            }else{
+                $("#zipreq").html('*');
+            }
             if (countryID) {
                 $.ajax({
                     type: 'POST',
@@ -2945,10 +2989,8 @@ $this->load->view('frontend/includes/header');
 
     // Validate To zip code by keypress // DEBASIS
     $('#zip_to').keyup(function() {
-
-        
-        return true;
         if ($(this).val().length > 4) {
+            return true
             //do something
             //alert($(this).val());
             var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
@@ -2982,7 +3024,6 @@ $this->load->view('frontend/includes/header');
 
     // Validate From zip code by keypress // DEBASIS
     $('#zip').keyup(function() {
-        return true;
         if ($(this).val().length > 4) {
             //do something
             //alert($(this).val());
@@ -3417,32 +3458,69 @@ $this->load->view('frontend/includes/header');
 
     }
 </script>
-
 <script type='text/javascript'>
-    $(document).ready(function(){
-     // Initialize 
+  $(document).ready(function(){
+  
      $( "#firstname_to" ).autocomplete({
-        source: function( request, response ) {
-          // Fetch data
-          $.ajax({
-            url: "<?=base_url()?>recipients/list",
-            type: 'post',
-            dataType: "json",
-            data: {
-              search: request.term
-            },
-            success: function( data ) {
-              response( data );
-            }
-          });
+      source: function( request, response ) {
+       // Fetch data
+       $.ajax({
+        url: "<?=base_url()?>ajax/recipients/list",
+        type: 'post',
+        dataType: "json",
+        data: {
+         search: request.term
         },
-        select: function (event, ui) {
-          // Set selection
-          $('#firstname_to').val(ui.item.firstname); // display the selected text
-          $('#lastname_to').val(ui.item.lastname); // save selected id to input
-          return false;
+        success: function( data ) {
+          response(data.map(function (value) {
+                    return value;  
+                }));
         }
-      });
+       });
+      },
+    select: function (event, ui) {
+       // Set selection
+       
+       $('#firstname_to').val(ui.item.firstname);
+       $('#lastname_to').val(ui.item.lastname); 
+       $('#autocomplete2').val(ui.item.address);
+       $('#address2_to').val(ui.item.address2);
+       $('#company_name_to').val(ui.item.company_name);
+       $('#country_to').val(ui.item.country);
+       $('#country_to').trigger("change");
+       
+       setTimeout( function(){ 
+            $('#state_to').val(ui.item.state);
+            $('#state_to').trigger("change"); 
+        }  , 1000 );
+       setTimeout( function(){ 
+            $('#city_to').val(ui.item.city); 
+        }  , 2000 );
+      
+       $('#zip_to').val(ui.item.zip);
+       $('#email_to').val(ui.item.email);
+       $('#email_to').val(ui.item.email);
+       $('#lat_to').val(ui.item.latitude);
+       $('#lng_to').val(ui.item.longitude);
 
+        $.each(ui.item.telephone, function(key, value) {
+            console.log(key + ": " + value);
+            if (key==0) {
+                $("#telephone_to").val(value);
+            }else{
+
+                var html = '<div><div class="col-sm-9"><label>Phone no </label><input type="number" name="telephone_to[]" id="telephone_to" value="'+value+'" class="form-control name-text" placeholder="" required=""></div><div class="col-sm-3"><input type="button" name="remove_tel_btn" id="remove_tel_btn" class="remove_tel_btn action-button add" value="Remove" style="border: 1px solid rgb(206, 212, 218);background-color: #ff0000 !important;color: #fff;font-size: 12px!important;font-family:Open Sans!important;height: 46px;"></div>';
+                $('#add_more_tel').append(html);
+
+            }
+        });
+      
+       $("input[name=address_type][value="+ ui.item.address_type+ "]").prop('checked', true);
+       
+       return false;
+      }
+      
     });
-</script>
+
+  });
+  </script>

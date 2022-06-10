@@ -11,6 +11,7 @@ class CustomerController extends CI_Controller
         $this->load->model('customer_model');
         $this->load->model('branch_model');
         $this->load->model('news_model');
+        $this->load->model('api_model');
         //$this->load->model('Users_model', 'OveModel', 'OuthModel');
         $this->load->helper('admin_helper');
     }
@@ -535,6 +536,8 @@ class CustomerController extends CI_Controller
         $id                      = $sessionData['id'];
         $data['profile_details'] = $this->OveModel->Read_User_Information($id);
         $data['prohibitedList']  = $this->prohibited_model->getProhibitedList();
+        $data['prohibited_document'] = $this->api_model->getProhibitedItems(['shipping_category_id' => 1]);
+		$data['prohibited_parcel'] = $this->api_model->getProhibitedItems(['shipping_category_id' => 2]);
         $data['deliveryModeList']  = $this->customer_model->getDeliveryModeList();
         $rateFactor  = $this->customer_model->getRateFactor();
         $data['rateFactor']  = $rateFactor['amount'];
@@ -731,7 +734,7 @@ class CustomerController extends CI_Controller
     public function saveQuote()
     {
         // echo '<pre>';print_r($_POST);die;
-
+        $post = $this->input->post();
         $shipment_type_option   = $this->input->post('shipment_type_option');
         $document_other         = $this->input->post('document_other');
         $parcel_other           = $this->input->post('parcel_other');
@@ -744,8 +747,11 @@ class CustomerController extends CI_Controller
         $this->form_validation->set_rules('address_from', 'Address From', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('address2', 'Address From 2nd', 'trim|required|xss_clean');
         $this->form_validation->set_rules('company_name', 'Company Name', 'trim|xss_clean');
-        $this->form_validation->set_rules('zip', 'Zip', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
+        
+        if ($post['country_to']!=='195') {
+           $this->form_validation->set_rules('zip', 'Zip', 'trim|required|xss_clean');
+        }
+        // $this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
         $this->form_validation->set_rules('telephone', 'Telephone', 'trim|required|xss_clean');
         $this->form_validation->set_rules('user_type', 'Address Type', 'trim|required|xss_clean');
         $this->form_validation->set_rules('firstname_to', 'First Name To', 'trim|required|xss_clean');
@@ -756,8 +762,12 @@ class CustomerController extends CI_Controller
         $this->form_validation->set_rules('country_to', 'Country To', 'trim|required|xss_clean');
         $this->form_validation->set_rules('state_to', 'State To', 'trim|required|xss_clean');
         $this->form_validation->set_rules('city_to', 'City To', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('zip_to', 'Zip To', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('email_to', 'Email To', 'trim|required|xss_clean|valid_email');
+        if ($post['country_to']!=='195') {
+            $this->form_validation->set_rules('zip_to', 'Zip To', 'trim|required|xss_clean');
+        }
+        
+
+        // $this->form_validation->set_rules('email_to', 'Email To', 'trim|required|xss_clean|valid_email');
         $this->form_validation->set_rules('address_type', 'Address Type To', 'trim|xss_clean');
         $this->form_validation->set_rules('telephone_to[]', 'Telephone To', 'trim|required|xss_clean');
         $this->form_validation->set_rules('shipment_type_option', 'Shipment Type', 'trim|required|xss_clean');
@@ -1438,9 +1448,10 @@ class CustomerController extends CI_Controller
         $data['quote_details']          = $this->Users_model->quotationDetails($quote_id);
         $data['quote_from_details']     = $this->Users_model->quotationFromDetailsNew($quote_id);
         $data['quote_to_details']       = $this->Users_model->quotationToDetailsNew($quote_id);
+
         $data['quote_item_details']     = $this->Users_model->quotationItemDetails($quote_id);
         $data['shipment_details']     = $this->customer_model->getShipmentDetails(array('quotation_id' => $quote_id));
-
+        
         $data['profile_details'] = $this->OveModel->Read_User_Information($id);
         $data['prohibitedList']  = $this->prohibited_model->getProhibitedList();
         $data['quote_id_enc'] = $quote_id_enc;

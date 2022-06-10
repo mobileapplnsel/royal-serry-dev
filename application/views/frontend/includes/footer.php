@@ -94,7 +94,7 @@
 <!-- intlTelInput -->
 <script src="<?php echo base_url(); ?>assets/frontend/plugins/intl-tel-input-master/build/js/intlTelInput.min.js"></script>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
 <!--Bootstrap Alert-->
 <script type="text/javascript">

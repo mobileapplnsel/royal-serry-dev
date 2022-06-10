@@ -264,6 +264,13 @@ $(function () {
 
 					 $('#state').empty().append(data);
 
+					 	if (countryId=='195') {
+					 		$("#zipcode").removeAttr('required');
+					 	}else{
+					 		$("#zipcode").prop('required', 'required');
+					 	}
+
+
 					}
 
 				   });

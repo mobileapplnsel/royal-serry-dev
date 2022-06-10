@@ -23,11 +23,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
  */
-//$config['base_url'] = 'http://localhost/royal-serry-dev/';
+//$config['base_url'] = 'http://localhost/project/royal-serry-dev/';
 $base = "http://" . $_SERVER['HTTP_HOST'];
 $base .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 $config['base_url'] = $base;
-
+//$config['base_url'] = 'http://localhost/project/royal-serry-dev/';
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -459,7 +459,7 @@ $config['csrf_expire']      = 7200;
 $config['csrf_regenerate']  = false;
 
 
-$config['csrf_exclude_uris'] = array('getStates', 'getCity','admin/processImage','admin/saveImageComments', 'api/user_login', 'deleteRecordAjax', 'api/countryList', 'api/stateListByCountry', 'api/cityListBystate', 'api/user_registration', 'api/forget_password', 'api/edit_profile', 'api/change_profile_picture', 'api/user_change_password', 'api/shipping_mode_list', 'api/delivery_mode_list', 'api/shipping_category_list', 'api/item_cat_list_by_shipping_cat', 'api/item_subcat_list_by_shipping_cat_itemcat', 'api/ratelist_by_catsubcat', 'api/rate_factor', 'api/item_list_by_cat_type', 'admin/testmesg', 'api/tax_rate', 'api/validateTozipcode', 'api/creatQuote', 'api/quoteList', 'api/viewQuoteDetails', 'api/pickupOrderList', 'api/deliveryOrderList', 'api/getlocationId', 'api/viewOrderDetails', 'api/holidayList', 'api/duty_allocation', 'api/pickup_history', 'api/delivery_history', 'api/updateOrderItemDetails', 'api/pdboyallorderlist', 'api/getlatlong', 'api/paylater', 'api/onSaveOrder', 'api/orderList', 'api/viewUserOrderDetails', 'api/viewOrderStatus', 'api/addOrderItem', 'api/services_contact', 'api/orderTracking', 'api/orderItemBarcodeScan', 'api/testpush', 'api/pdboy_createQuote', 'api/AddItemToQuote', 'api/sendzipcodeQuery', 'api/creatQuoteRequest', 'api/pdboyRequsetquoteList', 'api/customStatusList', 'api/addCustomStatus', 'api/customersList', 'api/customersDetails', 'api/requestQuoteCompleted', 'api/pdboyallorderLatLonglist', 'api/areaWiseCustomersList', 'api/manualpickup', 'api/manualdelivery', 'api/pdboy_login');
+$config['csrf_exclude_uris'] = array('getStates', 'getCity','admin/processImage','admin/saveImageComments', 'api/user_login', 'deleteRecordAjax', 'api/countryList', 'api/stateListByCountry', 'api/cityListBystate', 'api/user_registration', 'api/forget_password', 'api/edit_profile', 'api/change_profile_picture', 'api/user_change_password', 'api/shipping_mode_list', 'api/delivery_mode_list', 'api/shipping_category_list', 'api/item_cat_list_by_shipping_cat', 'api/item_subcat_list_by_shipping_cat_itemcat', 'api/ratelist_by_catsubcat', 'api/rate_factor', 'api/item_list_by_cat_type', 'admin/testmesg', 'api/tax_rate', 'api/validateTozipcode', 'api/creatQuote', 'api/quoteList', 'api/viewQuoteDetails', 'api/pickupOrderList', 'api/deliveryOrderList', 'api/getlocationId', 'api/viewOrderDetails', 'api/holidayList', 'api/duty_allocation', 'api/pickup_history', 'api/delivery_history', 'api/updateOrderItemDetails', 'api/pdboyallorderlist', 'api/getlatlong', 'api/paylater', 'api/onSaveOrder', 'api/orderList', 'api/viewUserOrderDetails', 'api/viewOrderStatus', 'api/addOrderItem', 'api/services_contact', 'api/orderTracking', 'api/orderItemBarcodeScan', 'api/testpush', 'api/pdboy_createQuote', 'api/AddItemToQuote', 'api/sendzipcodeQuery', 'api/creatQuoteRequest', 'api/pdboyRequsetquoteList', 'api/customStatusList', 'api/addCustomStatus', 'api/customersList', 'api/customersDetails', 'api/requestQuoteCompleted', 'api/pdboyallorderLatLonglist', 'api/areaWiseCustomersList', 'api/manualpickup', 'api/manualdelivery', 'api/pdboy_login','ajax/recipients/list');
 
 
 /*

@@ -143,28 +143,30 @@ class Customer_model extends CI_Model
         if ($id != null && $quote_id != null && $shipment_no != null) {
 
             //get from address
-            $this->db->select('zip');
+            $this->db->select('*');
             $this->db->where('quotation_id', $quote_id);
             //$this->db->where('is_deleted', '0');
             $query_fz = $this->db->get('quotation_from_address');
+            $quotationFromAddress = $query_fz->row_array();
+            $from_zip = $quotationFromAddress;
             // echo $this->db->last_query();die;
-            if ($query_fz) {
+            /*if ($quotationFromAddress['zip']!=null ) {
                 $from_zip = $query_fz->row_array();
             } else {
                 $from_zip = false;
-            }
+            }*/
 
             //get to address
-            $this->db->select('zip');
+            $this->db->select('*');
             $this->db->where('quotation_id', $quote_id);
-            //$this->db->where('is_deleted', '0');
             $query_tz = $this->db->get('quotation_to_address');
-            // echo $this->db->last_query();die;
-            if ($query_tz) {
+            $quotationToAddress = $query_fz->row_array();
+            $to_zip = $quotationToAddress;
+            /*if ($query_tz) {
                 $to_zip = $query_tz->row_array();
             } else {
                 $to_zip = false;
-            }
+            }*/
 
             //get from branch_id by pincode
             if (!empty($from_zip)) {
@@ -175,6 +177,15 @@ class Customer_model extends CI_Model
                 $query_fb = $this->db->get('postal_codes_data_master');
                 // echo $this->db->last_query();
                 if ($query_fb) {
+                    $from_branchid = $query_fb->row_array();
+                } else {
+                    $from_branchid = false;
+                }
+            }else if(empty($from_zip) && $quotationFromAddress->country=='195') {
+                $this->db->select('*');
+                $this->db->where('country',$quotationFromAddress->country);
+                $query_fb = $this->db->get('branch');
+                if ($query_fb->num_rows) {
                     $from_branchid = $query_fb->row_array();
                 } else {
                     $from_branchid = false;
@@ -196,7 +207,17 @@ class Customer_model extends CI_Model
                 } else {
                     $to_branchid = false;
                 }
-            } else {
+            } else if(empty($to_zip) && $quotationToAddress->country=='195') {
+                $this->db->select('*');
+                $this->db->where('country',$quotationToAddress->country);
+                $query_fb = $this->db->get('branch');
+                if ($query_fb->num_rows) {
+                    $to_branchid = $query_fb->row_array();
+                } else {
+                    $to_branchid = false;
+                }
+            }
+            else {
                 $to_branchid = false;
             }
 
@@ -339,6 +360,28 @@ class Customer_model extends CI_Model
 						}
 					}
 				}
+                if (empty($from_zip) && !empty($from_branchid) && $from_branchid['country']=='195') {
+                    $this->db->select('*');
+                    $this->db->from('users');
+                    $this->db->where('country', $from_branchid['country']);
+                    $query  =  $this->db->get();
+                    $row = $query->num_rows();
+                    if ($row > 0)
+                    {
+                        $pdBoyList = $query->result();
+                        foreach($pdBoyList as $val){
+                            $pdBoyData = array(
+                                'shipment_id' => $shipment_id,
+                                'user_id' => $val->id,
+                                'order_type' => 1,
+                                'status' => 0,
+                                'created_date' => DTIME
+                            );
+                            $this->db->insert('pd_boy_order_tagging', $pdBoyData);
+                            $pdboy_insert_id = $this->db->insert_id();
+                        }
+                    }
+                }
 				// End assign order to P/D boy by area
 
                 //status
