@@ -133,7 +133,7 @@ $this->load->view('frontend/includes/header');
                                             <div class="zip_from_err" style="display:none"></div>
                                             <div id="div_zip" style="float:left;"></div>
                                             <div class="zip_popup" style="display: none;  float:left;" data-zip=""><a class="getintouch-pop" href="javascript:void(0);" style="color:#016c1c!important;" data-zip-type="zip"> &nbsp; Click here</a> to get in touch!</div>
-                                            <input type="text" name="zip" id="zip" value="<?php echo $profile_details['zip']; ?>" class="form-control name-text" placeholder="LE14" readonly>
+                                            <input type="text" name="zip" id="zip" value="<?php echo $profile_details['zip']; ?>" class="form-control name-text" placeholder="" readonly>
                                             <div id="LoadingImage1" style="display:none;">
                                                 <img src="<?= base_url('uploads/profile_img/') ?>loading-buffering.gif" height="30" width="30" />
                                             </div>
@@ -980,7 +980,7 @@ $this->load->view('frontend/includes/header');
                 var lastname = $("input[name=lastname]").val();
                 var address_from = $("input[name=address_from]").val();
                 var address2 = $("input[name=address2]").val();
-                var country = $("input[name=country]").val();
+                var country = $('#country').find(":selected").val();
                 var state = $("input[name=state]").val();
                 var city = $("input[name=city]").val();
                 var zip = $("input[name=zip]").val();
@@ -1071,7 +1071,7 @@ $this->load->view('frontend/includes/header');
                 }
 
                 if (zip == '' && country!='195') {
-                    $(".zip_from_err").html('<font color="red">Please enter your zip.</font>');
+                    $(".zip_from_err").html('<font color="red">Please enter your zip.</font>'+country);
                     $(".zip_from_err").show();
                     
                     //$('#second_step').prop('disabled', true);
@@ -1349,6 +1349,7 @@ $this->load->view('frontend/includes/header');
             var countryID = $(this).val();
             if (countryID=='195') {
                 $("#zipreq1").html('');
+                $("#zip").val('');
             }else{
                 $("#zipreq1").html('*');
             }
@@ -1423,6 +1424,7 @@ $this->load->view('frontend/includes/header');
             var countryID = $(this).val();
             if (countryID=='195') {
                 $("#zipreq").html('');
+                $("#zip_to").val('');
             }else{
                 $("#zipreq").html('*');
             }
@@ -1727,6 +1729,10 @@ $this->load->view('frontend/includes/header');
             $('#country').prop('disabled', false);
             $('#state').prop('disabled', false);
             $('#city').prop('disabled', false);
+            $('#email').prop('disabled', false);
+            $('#email').attr("readonly", false);
+            $('#telephone').prop('disabled', false);
+            $('#telephone').attr("readonly", false);
 
             /* $('#firstname_to').prop('readonly', false);
             $('#lastname_to').prop('readonly', false);
