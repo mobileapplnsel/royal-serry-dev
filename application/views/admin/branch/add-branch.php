@@ -88,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="email">Zip Code<span>*</span> : </label>
+                            <label for="email">Zip Code<span class="required-string">*</span> : </label>
                             <input type="text" class="form-control" placeholder="Zip Code" id="zipcode" name="zip" maxlength="8" value="" required>
                         </div>
                         <div class="form-group col-md-6">
