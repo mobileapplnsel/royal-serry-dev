@@ -23,9 +23,7 @@ class RecipientController extends CI_Controller
             if (!empty($data['telephone']) && is_serialized_string($data['telephone'])) {
                 $telephone = repairSerializeString($data['telephone']);
                 $telephone = unserialize($telephone);
-            } else {
-                $telephones = $quote_to_details[0]['telephone'];
-            }
+            } 
 
             $data['telephone'] = $telephone;
             $newdata[] = $data;
