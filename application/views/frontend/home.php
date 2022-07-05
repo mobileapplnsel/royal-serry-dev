@@ -1071,7 +1071,7 @@ $this->load->view('frontend/includes/header');
                 }
 
                 if (zip == '' && country!='195') {
-                    $(".zip_from_err").html('<font color="red">Please enter your zip.</font>'+country);
+                    $(".zip_from_err").html('<font color="red">Please enter your zip.</font>');
                     $(".zip_from_err").show();
                     
                     //$('#second_step').prop('disabled', true);
@@ -1232,7 +1232,7 @@ $this->load->view('frontend/includes/header');
                 //     $(".zip_to_popup").show();
                 // }
 
-                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != '' && zip != '' && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' &&  telephone_to != '' && country_to != '' && state_to != '' && city_to != '' &&  user_type != undefined && address_type != undefined) {
+                if (firstname != '' && lastname != '' && address_from != '' && country != '' && state != '' && city != ''  && telephone != '' && firstname_to != '' && lastname_to != '' && address_to != '' &&  telephone_to != '' && country_to != '' && state_to != '' && city_to != '' &&  user_type != undefined && address_type != undefined) {
                     gotonext = 1;
                     //$('#second_step').prop('disabled', false);
                 } else {
