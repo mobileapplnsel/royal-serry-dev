@@ -348,6 +348,7 @@ else
                 </a>              
             </li>
             <?php
+            		$step  = 2;
             	 // echo '<pre>';
             	 // print_r($_SESSION); die;
 				if(is_superadmin_loggedin()){
@@ -369,10 +370,11 @@ else
                   } else {
                     $menuData = getSideBarMenuRole($value['parent_id'], '',loggedin_role_id());            
                   }  
+                  
                   foreach ($menuData as $key1 => $value1) {
               	?>
-                	<li ><a href="<?php echo base_url($value1['page_url']); ?>" id="menu_<?php echo $value1['tabid']; ?>" data-color="<?php echo $value['tab_color']; ?>" data-module="<?php echo $value['parent_id']; ?>"><?php echo $value1['icon_path']; ?> <?php echo $value1['tablabel']; ?> </a></li>                	
-            	<?php } ?>
+                	<li><a href="<?php echo base_url($value1['page_url']); ?>" id="menu_<?php echo $value1['tabid']; ?>" data-color="<?php echo $value['tab_color']; ?>" data-module="<?php echo $value['parent_id']; ?>"><?php echo $value1['icon_path']; ?> <?php echo $value1['tablabel']; ?> </a></li>                	
+            	<?php $step++; } ?>
               </ul>
             </li>
         	<?php } ?>
