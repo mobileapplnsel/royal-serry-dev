@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<div class="form-group col-md-6 col-md-offset-3"></div>
                         <div class="form-group col-md-6">
                             <label for="email">Category Name<span>*</span> : </label>
-                            <input type="text" class="form-control" placeholder="Category Name" name="category_name" maxlength="50" value="<?= $editCategory[0]->category_name ?>" onKeyUp="this.value=this.value.replace(/[^A-z_ ]/g,'');" required>
+                            <input type="text" class="form-control" placeholder="Category Name" name="category_name" maxlength="50" value="<?= $editCategory[0]->category_name ?>"  required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="destination">Select Parent Category : </label>                        
