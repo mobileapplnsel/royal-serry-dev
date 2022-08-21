@@ -88,19 +88,12 @@ class Branch_model extends CI_Model
         }
     }
 	
-	public function CheckBranchAreaExist($area)
+	public function CheckBranchAreaExist($city_id,$branch_id)
     {
-        //$query = $this->db->get_where('branch_area', array('area_id' => $area, 'branch_id' => $branch_id));
-		$query = $this->db->get_where('branch_area', array('area_id' => $area));
-        $row   = $query->num_rows();
-        if ($row > 0) {
-            //return true;
-            // $row = $query->result();
-            return $row;
-        } else {
-            //return false;
-            return $row;
-        }
+        $query = $this->db->get_where('branch_area', array('city_id' => $city_id, 'branch_id' => $branch_id));
+		//$query = $this->db->get_where('branch_area', array('area_id' => $area));
+        return $row   = $query->num_rows();
+        
     }
 	
 	public function CheckBranchShipment($id)
@@ -200,6 +193,12 @@ class Branch_model extends CI_Model
             //return false;
             return $row;
         }
+    }
+
+    public function getBranch($id)
+    {
+        $query  =   $this->db->get_where('branch', array('branch_id' => $id));
+        return $row = $query->row();
     }
     
     public function updateBranch($id, $data)
@@ -462,15 +461,15 @@ class Branch_model extends CI_Model
     
     public function getBranchAreaList($id)
     {
-        //$query = $this->db->get('tourisms', ['tourCategory' => '1']);
-        $this->db->select('ba.id as branch_areaID, pc.*, b.name as branch_name, b.email as branch_email');
+        
+        $this->db->select('ba.id as branch_areaID, b.name as branch_name, b.email as branch_email, city.name as city_name');
         $this->db->from('branch_area ba');
         $this->db->where('ba.branch_id', $id);
-		$this->db->join('postal_codes_data_master pc', 'ba.area_id = pc.id');
+		//$this->db->join('postal_codes_data_master pc', 'ba.area_id = pc.id');
 		$this->db->join('branch b', 'ba.branch_id = b.branch_id');
+        $this->db->join('cities_master city', 'city.id = ba.city_id');
         $query  =   $this->db->get();
-		//$query = $this->db->last_query();
-        //echo $query; die;
+		
         $row = $query->num_rows();
         if ($row > 0)
         {

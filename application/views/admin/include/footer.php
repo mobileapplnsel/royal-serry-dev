@@ -266,21 +266,7 @@ $(function () {
 					success:function(data)
 
 					{
-
-					 //$('#city_to').empty();
-
 					 	$('#state').empty().append(data);
-
-					 	if (countryId=='195') {
-					 		$("#zipcode").removeAttr('required');
-					 		$("#zipcode").val('');
-					 		$(".required-string").html('');
-					 	}else{
-					 		$("#zipcode").prop('required', 'required');
-					 		$(".required-string").html('*');
-					 	}
-
-
 					}
 
 				   });
@@ -851,6 +837,9 @@ $(document).ready(function(){
 	  getallBranchAjax('branch_id','branch','name', from_branch_id, to_branch_id);
 
 	});
+
+	$( ".select2field" ).select2();
+
 
 	
 

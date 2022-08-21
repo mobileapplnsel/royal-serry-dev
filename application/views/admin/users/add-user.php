@@ -126,8 +126,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="email">Zip Code<span>*</span> : </label>
-                            <input type="text" class="form-control" id="zipcode" placeholder="Code" name="zip" value="<?= $this->session->flashdata('zip'); ?>" maxlength="8" required>
+                            <label for="email">Zip Code : </label>
+                            <input type="text" class="form-control" id="zipcode" placeholder="Code" name="zip" value="<?= $this->session->flashdata('zip'); ?>" maxlength="8" >
                         </div>
                         <div class="form-group col-md-6">
                             <label for="email">Online Status : </label>

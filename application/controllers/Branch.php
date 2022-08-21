@@ -30,6 +30,7 @@ class Branch extends CI_Controller {
 		$this->load->model('user_model');
         $this->load->library('image_lib');
         $this->load->library("pagination");
+        $this->load->model('city_model');
         $this->gallery_path = realpath(APPPATH . '../uploads');
     }
 
@@ -286,7 +287,9 @@ class Branch extends CI_Controller {
 	/*********************** ADD BRANCH AREA ***********************/
 	public function addbrancharea($id)
     {
-		$page = 'add-branch-area';
+        $page = 'add-branch-area';
+        $branchDetails =  $this->branch_model->getBranch($id);
+        $cityList = $this->city_model->getCityListByState($branchDetails->state);
         if(!$this->session->userdata('logged_in'))
         {
             return redirect('admin/login');
@@ -300,7 +303,9 @@ class Branch extends CI_Controller {
             else{
                 $data                   =   [];
                 $data['branchAreaList']     =   $this->branch_model->getBranchAreaList($id);
-                $data['title']          =   ucfirst($page);                
+                $data['title']          =   ucfirst($page);
+                $data['cities'] = $cityList; 
+                $data['branchDetails'] = $branchDetails;               
                 $this->load->view('admin/branch/' . $page, $data);
             }
         }
@@ -331,63 +336,29 @@ class Branch extends CI_Controller {
 	
 	public function insertbrancharea()
     {
-        //$this->form_validation->set_rules('area_id', 'Area Postcode', 'trim|required');
         
-        /*if ($this->form_validation->run() == FALSE)
-        {
-            $this->session->set_flashdata('error', validation_errors());
-            //return redirect('subscription/addSubscription');
+		$cityIds  =   $this->input->post('city_id', TRUE);
+		$branch_id  =   $this->input->post('branch_id', TRUE);
+		$branch_area   =   [];
+		foreach($cityIds as $city){
+            $branch_area['city_id']     =  $city;
+            $branch_area['branch_id']   =  $branch_id;
+			$BranchAreacheck   =   $this->branch_model->CheckBranchAreaExist($city, $branch_id);
+			//$BranchAreacheck   =   $this->branch_model->CheckBranchAreaExist($area);
+			if($BranchAreacheck == 0){
+				$insertBranchArea   =   $this->branch_model->insert_branch_area($branch_area);
+			}
+        }
+
+        if($insertBranchArea > 0){
+            $this->session->set_flashdata('success', 'Branch Area Successfully Added');
             echo redirectPreviousPage();
         }
-        else
-        {*/
-            //$data   =   $_POST;
-			/*$checkAvailablity       =   $this->branch_model->checkExistBranch($_POST['email']);
-			
-            if($checkAvailablity>0){
-                $this->session->set_flashdata('error', 'Branch Already exists!');
-                echo redirectPreviousPage();
-                exit;
-            }
-			$postal_code = $data['zip'];
-			$url = "https://maps.googleapis.com/maps/api/geocode/json?address=".urlencode($postal_code)."&sensor=false&key=googleapi";
-			$result_string = file_get_contents($url);
-			$result = json_decode($result_string, true);
-			//print_r($result);
-			if(!empty($result['results'])){
-				$data['latitude'] = $result['results'][0]['geometry']['location']['lat'];
-				$data['longitude'] = $result['results'][0]['geometry']['location']['lng'];
-			} else {
-				$data['latitude'] = '23.5204';
-				$data['longitude'] = '87.3119';
-			}*/
-	
-			//echo '===>>>'.$checkAvailablity; 
-			//print_r($data); die;
-			$area_id                      =   $this->input->post('area_id', TRUE);
-			$branch_id                      =   $this->input->post('branch_id', TRUE);
-			$branch_area   =   [];
-			foreach($area_id as $area){
-                    $branch_area['area_id']     =  $area;
-                    $branch_area['branch_id']   =  $branch_id;
-					//$BranchAreacheck   =   $this->branch_model->CheckBranchAreaExist($area, $branch_id);
-					$BranchAreacheck   =   $this->branch_model->CheckBranchAreaExist($area);
-					if($BranchAreacheck == 0){
-						$insertBranchArea   =   $this->branch_model->insert_branch_area($branch_area);
-					}
-                }
-				 //die;
-            //$insertBranch   =   $this->branch_model->addNewbranch($data);
-
-            if($insertBranchArea > 0){
-                $this->session->set_flashdata('success', 'Branch Area Successfully Added');
-                echo redirectPreviousPage();
-            }
-            else{
-                $this->session->set_flashdata('error', 'Area Cannot be added!! Already assign to another branch.');
-                echo redirectPreviousPage();
-            }
-        //}
+        else{
+            $this->session->set_flashdata('error', 'Area Cannot be added!! Already assign to branch.');
+            echo redirectPreviousPage();
+        }
+        
     }
 	
 	
