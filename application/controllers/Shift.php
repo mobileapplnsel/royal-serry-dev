@@ -28,6 +28,7 @@ class Shift extends CI_Controller {
         $this->encryption->create_key(16);
         $this->load->model('shift_model');
 		$this->load->model('category_model');
+        $this->load->model('branch_model');
         $this->load->library('image_lib');
         $this->load->library("pagination");
         $this->gallery_path = realpath(APPPATH . '../uploads');
@@ -201,8 +202,15 @@ class Shift extends CI_Controller {
     public function deleteShift($id)
     {   
         
-        $deleteShift   =   $this->shift_model->deleteShift($id);
+        //check assign to branch
+        $shiftAssigned = $this->branch_model->checkShiftAssignToBranch($id);
+        if ($shiftAssigned) {
+            $this->session->set_flashdata('error', 'You can not delete this shift. this is assigned to branch');
+            echo redirectPreviousPage();
+            exit;
+        }
         
+        $deleteShift=$this->shift_model->deleteShift($id);
         if($deleteShift == 1){
             $this->session->set_flashdata('success', 'Shift deleted successfully');
             //return redirect('admin/international/');

@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="box-header with-border"> Add New Shift Allocation </div>
                             <div class="box-body">
                                <div class="form-group col-md-6 col-md-offset-3"></div>
-                            		<div class="form-group col-md-6">
+                            		<div class="form-group col-md-4">
                                     <label for="parent">Shift Name<span>*</span> : </label>                        
                                     <select class="form-control" name="shift_id" id="user_shift_id" required>
                                     	<option value="">Select Shift</option>
@@ -64,13 +64,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         ?>
                                     </select>
                                 </div>
-                                
-                                	<div class="form-group col-md-6">
-                                    <label for="parent">Days<span>*</span> : </label>                        
-                                    <select class="form-control" name="day" id="user_day" required>
-                                        <option value="">Select Day</option>
-                                    </select>
+                                <div class="form-group col-md-4">
+                                    <label for="parent">From Date<span>*</span> : </label>                        
+                                    <input type="date" class="form-control" name="from_date" id="from-date"/> 
                                 </div>
+                                <div class="form-group col-md-4">
+                                    <label for="parent">To Date<span>*</span> : </label>                        
+                                    <input type="date" class="form-control" name="to_date" id="to-date"/> 
+                                </div>
+
                                </div>
                             
                                 <div class="box-footer">

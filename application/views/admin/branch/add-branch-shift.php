@@ -47,37 +47,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php echo form_open(base_url('branch/insertbranchshift/'.$this->uri->segment(3).'/'.$this->uri->segment(4)), array('id' => 'loginF', 'class' => 'contact-form', 'enctype' => 'multipart/form-data')); ?>
                             <div class="box box-primary">
                             <div class="box-header with-border"> Add New Shift </div>
-                            <div class="box-body">
-                               <div class="form-group col-md-6 col-md-offset-3"></div>
+                                <div class="box-body">
+                                    <div class="form-group col-md-6 col-md-offset-3"></div>
                             		<div class="form-group col-md-6">
-                                    <label for="parent">Shift Name<span>*</span> : </label>                        
-                                    <select class="form-control" name="shift_id" required>
-                                        <?php
-                                            if(!empty($ShiftList)){
-                                                foreach($ShiftList as $Shift){
-                                        ?>
-                                        <option value="<?= $Shift->id ?>"><?= $Shift->shift_name.' ('.$Shift->shift_type.')' ?></option>
-                                        <?php 
+                                        <label for="parent">Shift Name<span>*</span> : </label>                        
+                                        <select class="form-control" name="shift_id" required>
+                                            <?php
+                                                if(!empty($ShiftList)){
+                                                    foreach($ShiftList as $Shift){
+                                            ?>
+                                            <option value="<?= $Shift->id ?>"><?= $Shift->shift_name.' ('.$Shift->shift_type.')' ?></option>
+                                            <?php 
+                                                    }
                                                 }
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
-                                
-                                	<div class="form-group col-md-6">
-                                    <label for="parent">Days<span>*</span> : </label>                        
-                                    <select class="form-control" name="day" required>
-                                        <?php
-                                            if(!empty($DaysList)){
-                                                foreach($DaysList as $Days){
-                                        ?>
-                                        <option value="<?= $Days->id ?>"><?= $Days->day ?></option>
-                                        <?php 
-                                                }
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
+                                            ?>
+                                        </select>
+                                    </div>
                                </div>
                             
                                 <div class="box-footer">
@@ -92,22 +77,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <h3 class="box-title">Branch Shift Allocation List</h3>
                             </div>
                             <div class="box-body">
-                                <table id="example2" class="table table-bordered table-hover">
+                                <table id="example1" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
                                             <th>Action</th>
                                             <th>Shift Name</th>                                            
-                                            <th>Day</th>
+                                            <!-- <th>Day</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
                                             if(!empty($branchShiftList)):
-                                            foreach($branchShiftList as $branchShift){
+                                            foreach($branchShiftList as $key=>$branchShift){
                                         ?>
                                         <tr>
-                                            <td><?= $branchShift->id ?></td>
+                                            <td><?= $key+1; ?></td>
                                             <td><ul class="admin-action btn btn-default" style="list-style:none;">
                                                 <li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true"> Action <span class="caret"></span> </a>
                                                   <ul class="dropdown-menu dropdown-menu-left">
@@ -116,7 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 </li>
                                               </ul></td>
                                             <td><?= $branchShift->shift_name.' ('.$branchShift->time_from.' To '.$branchShift->time_to.')' ?></td>
-                                            <td><?= $branchShift->day ?></td>
+                                            <!-- <td><?= $branchShift->day ?></td> -->
                                         </tr>
                                         <?php 
                                             }                                            

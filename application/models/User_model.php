@@ -544,11 +544,11 @@ class User_model extends CI_Model
     
     public function getUserShiftList($id)
     {
-        $this->db->select('psa.*, sm.shift_name, sm.shift_type, sm.time_from, sm.time_to, wd.day');
+        $this->db->select('psa.*, sm.shift_name, sm.shift_type, sm.time_from, sm.time_to');
         $this->db->from('pd_shift_allocation psa');
         $this->db->where('psa.pd_id', $id);
 		$this->db->join('shift_master sm', 'psa.shift_id = sm.id');
-		$this->db->join('week_days wd', 'psa.day = wd.id');
+		//$this->db->join('week_days wd', 'psa.day = wd.id');
 		
 		/*$this->db->select('*');
 		$this->db->from('pd_shift_allocation');*/
@@ -758,9 +758,9 @@ class User_model extends CI_Model
     }
 	
 	
-	public function checkExistShift($shift_id,$pd_id,$day)
+	public function checkExistShift($shift_id,$pd_id,$day=null)
     {
-        $query  =   $this->db->get_where('pd_shift_allocation', array('shift_id' => $shift_id, 'pd_id' => $pd_id, 'day' => $day));
+        $query  =   $this->db->get_where('pd_shift_allocation', array('shift_id' => $shift_id, 'pd_id' => $pd_id));
         $row = $query->num_rows();
         if ($row > 0)
         {

@@ -318,6 +318,19 @@ class Branch_model extends CI_Model
             return $row;
         }
     } 
+
+    public function checkShiftAssignToBranch($id)
+    {
+        $this->db->select('*');
+        $this->db->from('branch_shift_allocation');
+        $this->db->where('shift_id', $id);
+        $query  =   $this->db->get();
+        return $row    =   $query->num_rows();
+    } 
+
+
+
+
 	
 	public function getAreadetails($id)
     {
@@ -583,11 +596,11 @@ class Branch_model extends CI_Model
     
     public function getBranchShiftList($id)
     {
-        $this->db->select('bsa.*, sm.shift_name, sm.shift_type, sm.time_from, sm.time_to, wd.day');
+        $this->db->select('bsa.*, sm.shift_name, sm.shift_type, sm.time_from, sm.time_to');
         $this->db->from('branch_shift_allocation bsa');
         $this->db->where('bsa.branch_id', $id);
 		$this->db->join('shift_master sm', 'bsa.shift_id = sm.id');
-		$this->db->join('week_days wd', 'bsa.day = wd.id');
+		//$this->db->join('week_days wd', 'bsa.day = wd.id');
 		
 		/*$this->db->select('*');
 		$this->db->from('pd_shift_allocation');*/
@@ -608,9 +621,9 @@ class Branch_model extends CI_Model
         }
     }
 	
-	public function checkExistShift($shift_id,$branch_id,$day)
+	public function checkExistShift($shift_id,$branch_id)
     {
-        $query  =   $this->db->get_where('branch_shift_allocation', array('shift_id' => $shift_id, 'branch_id' => $branch_id, 'day' => $day));
+        $query  =   $this->db->get_where('branch_shift_allocation', array('shift_id' => $shift_id, 'branch_id' => $branch_id));
         $row = $query->num_rows();
         if ($row > 0)
         {

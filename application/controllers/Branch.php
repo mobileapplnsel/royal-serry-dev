@@ -379,6 +379,7 @@ class Branch extends CI_Controller {
             else{
                 $data                    =   [];
                 $data['branchShiftList']   =   $this->branch_model->getBranchShiftList($id);
+                
 				$data['ShiftList']   	 =   $this->user_model->getShiftList();
 				$data['DaysList']   	 =   $this->user_model->getDaysList();
                 $data['title']           =   ucfirst($page);                
@@ -393,9 +394,9 @@ class Branch extends CI_Controller {
 		$data                           =   [];
 		$data['shift_id']                       =   $this->input->post('shift_id', TRUE);
 		$data['branch_id']                      =   $this->input->post('branch_id', TRUE);
-		$data['day']                   			=   $this->input->post('day', TRUE);
+		//$data['day']                   			=   $this->input->post('day', TRUE);
 		
-		$checkAvailablity       =   $this->branch_model->checkExistShift($data['shift_id'],$data['branch_id'],$data['day']);
+		$checkAvailablity       =   $this->branch_model->checkExistShift($data['shift_id'],$data['branch_id']);
 			
             if($checkAvailablity>0){
                 $this->session->set_flashdata('error', 'Shift allocation Already exists!');

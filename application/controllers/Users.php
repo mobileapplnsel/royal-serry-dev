@@ -1110,15 +1110,17 @@ class Users extends CI_Controller {
 	
 	public function insertusershift()
     {
-		$data                           =   [];
-		$data['shift_id']                       =   $this->input->post('shift_id', TRUE);
-		$data['pd_id']                      	=   $this->input->post('pd_id', TRUE);
-		$data['day']                   			=   $this->input->post('day', TRUE);
+		$data =   [];
+		$data['shift_id'] = $this->input->post('shift_id', TRUE);
+		$data['pd_id'] = $this->input->post('pd_id', TRUE);
+		$data['from_date'] = $this->input->post('from_date', TRUE);
+		$data['to_date'] = $this->input->post('to_date', TRUE);
+		//$data['day']                   			=   $this->input->post('day', TRUE);
 		
-		$checkAvailablity       =   $this->user_model->checkExistShift($data['shift_id'],$data['pd_id'],$data['day']);
+		$checkAvailablity =   $this->user_model->checkExistShift($data['shift_id'],$data['pd_id']);
 			
             if($checkAvailablity>0){
-                $this->session->set_flashdata('error', 'Shift allocation Already exists!');
+                $this->session->set_flashdata('error', 'Shift already assigned');
                 echo redirectPreviousPage();
                 exit;
             }
