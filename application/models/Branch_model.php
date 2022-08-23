@@ -475,7 +475,7 @@ class Branch_model extends CI_Model
     public function getBranchAreaList($id)
     {
         
-        $this->db->select('ba.id as branch_areaID, b.name as branch_name, b.email as branch_email, city.name as city_name');
+        $this->db->select('ba.id as branch_areaID, b.name as branch_name, b.email as branch_email, city.name as city_name,city.id as city_id');
         $this->db->from('branch_area ba');
         $this->db->where('ba.branch_id', $id);
 		//$this->db->join('postal_codes_data_master pc', 'ba.area_id = pc.id');

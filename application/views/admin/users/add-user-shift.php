@@ -65,12 +65,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="parent">From Date<span>*</span> : </label>                        
-                                    <input type="date" class="form-control" name="from_date" id="from-date"/> 
+                                    <label for="parent">From Date<span>*</span> : </label>
+                                    <input type="text" id="shift_from_date" class="form-control" name="from_date" id="from-date" placeholder="mm/dd/yyyy" readonly/> 
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="parent">To Date<span>*</span> : </label>                        
-                                    <input type="date" class="form-control" name="to_date" id="to-date"/> 
+                                    <label for="parent">To Date<span>*</span> : </label>
+                                    <input type="text" id="shift_to_date" class="form-control" name="to_date" id="to-date" placeholder="mm/dd/yyyy" readonly/> 
                                 </div>
 
                                </div>
@@ -92,8 +92,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <tr>
                                             <th>ID</th>
                                             <th>Action</th>
-                                            <th>Shift Name</th>                                            
-                                            <th>Day</th>
+                                            <th>Shift Name</th>                              
+                                            <th>Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -111,7 +111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 </li>
                                               </ul></td>
                                             <td><?= $userShift->shift_name.' ('.$userShift->time_from.' To '.$userShift->time_to.')' ?></td>
-                                            <td><?= $userShift->day ?></td>
+                                            <td><?php if($userShift->from_date && $userShift->to_date){echo $userShift->from_date.' To '. $userShift->from_date;} ?></td>
                                         </tr>
                                         <?php 
                                             }                                            

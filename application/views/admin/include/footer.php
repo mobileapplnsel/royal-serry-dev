@@ -96,30 +96,56 @@
 		$('#to_date').attr({"min" : date});
 	});*/
 	
-$(function () {
-    $("#from_date").datepicker({
-        numberOfMonths: 1,
-		showOn: 'button',
-      	buttonImageOnly: true,
-      	buttonImage: '<?php echo base_url(); ?>assets/admin/dist/img/calendar.png',
-        onSelect: function (selected) {
-            var dt = new Date(selected);
-            dt.setDate(dt.getDate() + 1);
-            $("#to_date").datepicker("option", "minDate", dt);
-        }
-    });
-    $("#to_date").datepicker({
-        numberOfMonths: 1,
-		showOn: 'button',
-      	buttonImageOnly: true,
-      	buttonImage: '<?php echo base_url(); ?>assets/admin/dist/img/calendar.png',
-        onSelect: function (selected) {
-            var dt = new Date(selected);
-            dt.setDate(dt.getDate() - 1);
-            $("#from_date").datepicker("option", "maxDate", dt);
-        }
-    });
-});
+	$(function () {
+	    $("#from_date").datepicker({
+	        numberOfMonths: 1,
+			showOn: 'button',
+	      	buttonImageOnly: true,
+	      	buttonImage: '<?php echo base_url(); ?>assets/admin/dist/img/calendar.png',
+	        onSelect: function (selected) {
+	            var dt = new Date(selected);
+	            dt.setDate(dt.getDate() + 1);
+	            $("#to_date").datepicker("option", "minDate", dt);
+	        }
+	    });
+	    $("#to_date").datepicker({
+	        numberOfMonths: 1,
+			showOn: 'button',
+	      	buttonImageOnly: true,
+	      	buttonImage: '<?php echo base_url(); ?>assets/admin/dist/img/calendar.png',
+	        onSelect: function (selected) {
+	            var dt = new Date(selected);
+	            dt.setDate(dt.getDate() - 1);
+	            $("#from_date").datepicker("option", "maxDate", dt);
+	        }
+	    });
+
+	    $("#shift_from_date").datepicker({
+			showOn: 'button',	      	
+			buttonImageOnly: true,
+	      	buttonImage: '<?php echo base_url(); ?>assets/admin/dist/img/calendar.png',
+	        onSelect: function (selected) {
+	            var dt = new Date(selected);
+	            dt.setDate(dt.getDate() + 1);
+	            $("#shift_to_date").datepicker("option", "minDate", dt);
+	        }
+	    });
+	    $("#shift_to_date").datepicker({
+			showOn: 'button',
+	      	buttonImageOnly: true,
+	      	buttonImage: '<?php echo base_url(); ?>assets/admin/dist/img/calendar.png',
+	        onSelect: function (selected) {
+	            var dt = new Date(selected);
+	            dt.setDate(dt.getDate() - 1);
+	            $("#shift_from_date").datepicker("option", "maxDate", dt);
+
+	        }
+	    });
+	});
+	
+
+
+
 
         $(function () {
             $("#example1").DataTable();

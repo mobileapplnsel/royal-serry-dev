@@ -50,8 +50,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="box-body">
                                 <div class="form-group col-md-6 col-md-offset-3"></div>
                             	<div class="form-group col-md-6">
-                                <label for="email">Area Postcode<span>*</span> : </label>
-                                <select class="form-control" name="area_id[]" id="user_area_id" multiple="multiple" style="width: 75%" required>                                 
+                                <label for="email">Area <span>*</span> : </label>
+                                <select class="form-control select2field" name="area_id[]" id="user_area_ids" multiple="multiple" style="width: 75%" required>
+                                <?php if($branchAreaList){ ?>    
+                                <?php foreach($branchAreaList as $area){?> 
+                                    <option value="<?=$area->city_id;?>"><?=$area->city_name;?></option>
+
+                                <?php } }?>                             
                                 </select>
                             </div>
                             </div>
@@ -92,7 +97,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                   </ul>
                                                 </li>
                                               </ul></td>
-                                            <td><?= $userArea->place_name.', '.$userArea->state_name.', '.$userArea->county_name.' - '.$userArea->postal_code ?></td>
+                                            <td><?= $userArea->city_name ?></td>
                                             <td><?= $userArea->firstname.' '.$userArea->lastname ?></td>
                                         </tr>
                                         <?php 
