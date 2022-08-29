@@ -516,6 +516,91 @@ class Branch extends CI_Controller {
         }
     }
 	
+
+    /*********************** ADD branch Pickup method ***********************/
+    public function setpickupmethod($id)
+    {
+        $page = 'add-branch-pickup-method';
+        if(!$this->session->userdata('logged_in'))
+        {
+            return redirect('admin/login');
+        }
+        else
+        {
+            if(!file_exists(APPPATH . 'views/admin/branch/' . $page . '.php'))
+            {
+                show_404();
+            }
+            else{
+
+                $data                    =   [];
+                $data['deliveryModeList']       =   $this->branch_model->getDeliveryModeList();
+                $data['pickupMethod']   =   $this->branch_model->branchPickupMethod($id);
+                $data['title']           =   ucfirst($page);                
+                $this->load->view('admin/branch/' . $page, $data);
+            }
+        }
+    }
+    public function insertBranchPickupMethod()
+    {
+        $data =   [];
+        $data['branch_id']=   $this->input->post('branch_id', TRUE);
+        $data['monday']=   $this->input->post('monday', TRUE);
+        $data['tuesday']=   $this->input->post('tuesday', TRUE);
+        $data['wednesday']=   $this->input->post('wednesday', TRUE);
+        $data['thursday']=   $this->input->post('thursday', TRUE);
+        $data['friday']=   $this->input->post('friday', TRUE);
+        $data['saturday']=   $this->input->post('saturday', TRUE);
+        $data['sunday']=   $this->input->post('sunday', TRUE);
+       
+        $checkAvailablity = $this->branch_model->checkExistMethod($data['branch_id']);
+        
+        if($checkAvailablity){
+            $updateDate = $data;
+            $this->branch_model->updateBranchPickupMethod($updateDate, $data['branch_id']);
+        } else {
+            $this->branch_model->insertBranchPickupMethod($data);
+        }
+        $this->session->set_flashdata('success', 'Branch Pickup/Delivery Method Successfully updated.');
+        echo redirectPreviousPage();
+    }
+
+
+    function getNearestBranchPickupMethod(){
+        $pickupspeed = $this->input->post('pickupspeed');
+        $city_id = $this->input->post('from_city');
+        $pickupMethod = $this->branch_model->branchPickupMethodByCityId($city_id);
+        $data = [];
+        if (!empty($pickupMethod)) {
+            if ($pickupMethod->saturday==$pickupspeed) {
+               $data[]=0;
+            }
+            if ($pickupMethod->monday==$pickupspeed) {
+               $data[]=1;
+            }
+            if ($pickupMethod->tuesday==$pickupspeed) {
+               $data[]=2;
+            }
+            if ($pickupMethod->wednesday==$pickupspeed) {
+               $data[]=3;
+            }
+            if ($pickupMethod->thursday==$pickupspeed) {
+               $data[]=4;
+            }
+            if ($pickupMethod->friday==$pickupspeed) {
+               $data[]=5;
+            }
+            if ($pickupMethod->saturday==$pickupspeed) {
+               $data[]=6;
+            }
+            
+        }
+        
+        echo json_encode($data);
+    }
+
+
+
 	/*********************** ADD branch Pickup delivery rules ***********************/
 	public function addpickuprules($id)
     {

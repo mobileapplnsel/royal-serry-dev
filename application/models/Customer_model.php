@@ -145,47 +145,39 @@ class Customer_model extends CI_Model
             //get from address
             $this->db->select('*');
             $this->db->where('quotation_id', $quote_id);
-            //$this->db->where('is_deleted', '0');
             $query_fz = $this->db->get('quotation_from_address');
             $quotationFromAddress = $query_fz->row_array();
-            $from_zip = $quotationFromAddress;
-            // echo $this->db->last_query();die;
-            /*if ($quotationFromAddress['zip']!=null ) {
-                $from_zip = $query_fz->row_array();
-            } else {
-                $from_zip = false;
-            }*/
+
+            $from_zip = null;
+            $from_city = $quotationFromAddress['city'];
 
             //get to address
             $this->db->select('*');
             $this->db->where('quotation_id', $quote_id);
             $query_tz = $this->db->get('quotation_to_address');
             $quotationToAddress = $query_fz->row_array();
-            $to_zip = $quotationToAddress;
-            /*if ($query_tz) {
-                $to_zip = $query_tz->row_array();
-            } else {
-                $to_zip = false;
-            }*/
 
-            //get from branch_id by pincode
+            $to_zip = null;
+            $to_city = $quotationToAddress['city'];
+
+            
+            //get branch_id by city
             if (!empty($from_zip)) {
                 $this->db->select('`branch_area`.`branch_id` AS fbranch_id');
                 $this->db->join('`branch_area`', '`postal_codes_data_master`.`id` = `branch_area`.`area_id`', 'INNER');
                 $this->db->where('postal_code', $from_zip['zip']);
-                //$this->db->where('is_deleted', '0');
                 $query_fb = $this->db->get('postal_codes_data_master');
-                // echo $this->db->last_query();
-                if ($query_fb) {
+                if ($query_fb->num_rows()) {
                     $from_branchid = $query_fb->row_array();
                 } else {
                     $from_branchid = false;
                 }
-            }else if(empty($from_zip) && $quotationFromAddress->country=='195') {
+            }else if(empty($from_zip) && $from_city) {
+
                 $this->db->select('*');
-                $this->db->where('country',$quotationFromAddress->country);
-                $query_fb = $this->db->get('branch');
-                if ($query_fb->num_rows) {
+                $this->db->where('city_id',$from_city);
+                $query_fb = $this->db->get('branch_area');
+                if ($query_fb->num_rows()) {
                     $from_branchid = $query_fb->row_array();
                 } else {
                     $from_branchid = false;
@@ -194,24 +186,23 @@ class Customer_model extends CI_Model
                 $from_branchid = false;
             }
 
-            //get to branch_id by pincode
+            //get branch_id by city
             if (!empty($to_zip)) {
                 $this->db->select('`branch_area`.`branch_id` AS tbranch_id');
                 $this->db->join('`branch_area`', '`postal_codes_data_master`.`id` = `branch_area`.`area_id`', 'INNER');
                 $this->db->where('postal_code', $to_zip['zip']);
-                //$this->db->where('is_deleted', '0');
                 $query_tb = $this->db->get('postal_codes_data_master');
-                // echo $this->db->last_query();
-                if ($query_tb) {
+                if ($query_tb->num_rows()) {
                     $to_branchid = $query_tb->row_array();
                 } else {
                     $to_branchid = false;
                 }
-            } else if(empty($to_zip) && $quotationToAddress->country=='195') {
+            } else if(empty($to_zip) && $to_city) {
                 $this->db->select('*');
-                $this->db->where('country',$quotationToAddress->country);
-                $query_fb = $this->db->get('branch');
-                if ($query_fb->num_rows) {
+                $this->db->where('city_id',$to_city);
+                $query_fb = $this->db->get('branch_area');
+
+                if ($query_fb->num_rows()) {
                     $to_branchid = $query_fb->row_array();
                 } else {
                     $to_branchid = false;
@@ -220,9 +211,7 @@ class Customer_model extends CI_Model
             else {
                 $to_branchid = false;
             }
-
-            //echo $from_branchid['fbranch_id'] . ' <> ' . $to_branchid['tbranch_id'].'<br>';die;
-
+            
             if ($from_branchid == false || $to_branchid == false) {
                 return false;
             } else {
@@ -239,13 +228,6 @@ class Customer_model extends CI_Model
                     $this->db->insert('shipment_price_details', $priceData);
                     $price_details_id = $this->db->insert_id();
                  }
-
-
-                //charges 
-                // $sql_c = 'INSERT INTO `shipment_charges` (`shipment_id`,`shipment_item_details_id`, `road`, `rail`, `air`, `ship`) SELECT  "' . $shipment_id . '", `quotation_item_details_id`, `road`, `rail`, `air`, `ship` FROM `quotation_charges` WHERE quotation_id =' . $quote_id;
-
-                // $query_c = $this->db->query($sql_c);
-                // $charges_id = $this->db->insert_id();
 
                 // from address
                 $sql_from_add = 'INSERT INTO `shipment_from_address` (`shipment_id`, `quotation_id`, `customer_id`, `firstname`, `lastname`, `address`, `address2`, `company_name`, `country`, `state`, `city`, `zip`, `email`, `telephone`, `address_type`, `latitude`, `longitude`) SELECT ' . $shipment_id . ',  `quotation_id`, `customer_id`, `firstname`, `lastname`, `address`, `address2`, `company_name`, `country`, `state`, `city`, `zip`, `email`, `telephone`, `address_type`, `latitude`, `longitude` FROM `quotation_from_address` WHERE quotation_id =' . $quote_id;
@@ -323,8 +305,8 @@ class Customer_model extends CI_Model
                 //branch starts
                 $branchData = array(
                     'shipment_id' => $shipment_id,
-                    'from_branch_id' => ($from_branchid['fbranch_id'] != '') ? $from_branchid['fbranch_id'] : 0,
-                    'to_branch_id' => ($to_branchid['tbranch_id'] != '') ? $to_branchid['tbranch_id'] : 0,
+                    'from_branch_id' => ($from_branchid['branch_id'] != '') ? $from_branchid['branch_id'] : 0,
+                    'to_branch_id' => ($to_branchid['branch_id'] != '') ? $to_branchid['branch_id'] : 0,
                     'created_by' => $id,
                     'created_date' => DTIME
                 );
@@ -339,9 +321,9 @@ class Customer_model extends CI_Model
 					$this->db->select('pdba.*');
 					$this->db->from('pickup_delivery_boy_area pdba');
 					$this->db->join('branch_users bu', 'pdba.user_id = bu.user_id');
-					$this->db->join('postal_codes_data_master pcdm', 'pdba.area_id = pcdm.id');
-					$this->db->where('bu.branch_id', $from_branchid['fbranch_id']);
-					$this->db->where('pcdm.postal_code', $from_zip['zip']);
+					//$this->db->join('postal_codes_data_master pcdm', 'pdba.area_id = pcdm.id');
+					$this->db->where('bu.branch_id', $from_branchid['branch_id']);
+					//$this->db->where('pcdm.postal_code', $from_zip['zip']);
 					$query  =   $this->db->get();
 					$row = $query->num_rows();
 					if ($row > 0)
@@ -360,10 +342,10 @@ class Customer_model extends CI_Model
 						}
 					}
 				}
-                if (empty($from_zip) && !empty($from_branchid) && $from_branchid['country']=='195') {
+                if (empty($to_zip) && !empty($to_branchid)) {
                     $this->db->select('*');
-                    $this->db->from('users');
-                    $this->db->where('country', $from_branchid['country']);
+                    $this->db->from('pickup_delivery_boy_area');
+                    $this->db->where('area_id', $to_branchid['city_id']);
                     $query  =  $this->db->get();
                     $row = $query->num_rows();
                     if ($row > 0)
@@ -372,7 +354,7 @@ class Customer_model extends CI_Model
                         foreach($pdBoyList as $val){
                             $pdBoyData = array(
                                 'shipment_id' => $shipment_id,
-                                'user_id' => $val->id,
+                                'user_id' => $val->user_id,
                                 'order_type' => 1,
                                 'status' => 0,
                                 'created_date' => DTIME
@@ -388,7 +370,7 @@ class Customer_model extends CI_Model
                 $statusData = array(
                     'shipment_id' => $shipment_id,
                     'status_id' => 1,
-                    'branch_id' => ($to_branchid['tbranch_id'] != '') ? $to_branchid['tbranch_id'] : 0,
+                    'branch_id' => ($to_branchid['branch_id'] != '') ? $to_branchid['branch_id'] : 0,
                     'status_text' => '',
                     'created_by' => $id,
                     'created_date' => DTIME

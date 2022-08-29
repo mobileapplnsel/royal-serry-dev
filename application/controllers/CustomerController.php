@@ -741,6 +741,8 @@ class CustomerController extends CI_Controller
         $payment_mode           = $this->input->post('payment_mode');
         $quote_type             = ($this->input->post('quote_type') != '') ? $this->input->post('quote_type') : 0;
         $delivery_mode_id       = $this->input->post('delivery_speed');
+        $pickupDate = date('Y-m-d',strtotime($this->input->post('pickup_date')));
+        
         $this->form_validation->set_rules('location_type', 'Location Type', 'required');
         $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|xss_clean');
         $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|xss_clean');
@@ -748,9 +750,7 @@ class CustomerController extends CI_Controller
         // $this->form_validation->set_rules('address2', 'Address From 2nd', 'trim|required|xss_clean');
         $this->form_validation->set_rules('company_name', 'Company Name', 'trim|xss_clean');
         
-        if ($post['country_to']!=='195') {
-           $this->form_validation->set_rules('zip', 'Zip', 'trim|required|xss_clean');
-        }
+        
         // $this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
         $this->form_validation->set_rules('telephone', 'Telephone', 'trim|required|xss_clean');
         $this->form_validation->set_rules('user_type', 'Address Type', 'trim|required|xss_clean');
@@ -762,9 +762,7 @@ class CustomerController extends CI_Controller
         $this->form_validation->set_rules('country_to', 'Country To', 'trim|required|xss_clean');
         $this->form_validation->set_rules('state_to', 'State To', 'trim|required|xss_clean');
         $this->form_validation->set_rules('city_to', 'City To', 'trim|required|xss_clean');
-        if ($post['country_to']!=='195') {
-            $this->form_validation->set_rules('zip_to', 'Zip To', 'trim|required|xss_clean');
-        }
+        
         
 
         // $this->form_validation->set_rules('email_to', 'Email To', 'trim|required|xss_clean|valid_email');
@@ -927,7 +925,7 @@ class CustomerController extends CI_Controller
             $line_total           = (int)$quantity * (int)$road_input;
         }
 
-
+        $this->form_validation->set_rules('pickup_date', 'Pickup Date', 'trim|required|xss_clean');
         $ids = ($this->input->post('ids') != '') ? $this->input->post('ids') : '';
 
 
@@ -975,9 +973,10 @@ class CustomerController extends CI_Controller
                 'quote_type'        => $quote_type,
                 'created_by'        => $customer_id,
                 'delivery_mode_id'  => $delivery_mode_id,
+                'pickup_date'       => $pickupDate,
                 'created_date'      => DTIME,
             ];
-
+            
             $ins_id   = $this->OuthModel->insertQuery('quotation_master', $this->OuthModel->xss_clean($quot_data));
 
 

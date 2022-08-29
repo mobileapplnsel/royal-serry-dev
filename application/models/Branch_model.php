@@ -648,6 +648,8 @@ class Branch_model extends CI_Model
             return $row;
         }
     }
+
+    
 	
 	public function insert_branch_shift($data)
     {
@@ -660,6 +662,39 @@ class Branch_model extends CI_Model
         $this->db->insert('branch_pickup_delivery_rules', $data);
 		//echo $this->db->last_query(); die;
         return $this->db->insert_id();
+    }
+
+    public function branchPickupMethod($branch_id)
+    {
+        $query  =   $this->db->get_where('branch_pickup_method', array('branch_id' => $branch_id));
+        $row = $query->row();
+        return $row;
+    }
+    public function branchPickupMethodByCityId($city_id)
+    {
+        $this->db->select('bpm.*');
+        $this->db->from('branch_area ba');
+        $this->db->join('branch_pickup_method bpm','bpm.branch_id=ba.branch_id');
+        $this->db->where('ba.city_id',$city_id);
+        $query = $this->db->get();
+        $row = $query->row();
+        return $row;
+    }
+    public function checkExistMethod($branch_id)
+    {
+        $query  =   $this->db->get_where('branch_pickup_method', array('branch_id' => $branch_id));
+        $row = $query->num_rows();
+        return $row;
+    }
+    public function insertBranchPickupMethod($data)
+    {
+        $this->db->insert('branch_pickup_method', $data);
+        return $this->db->insert_id();
+    }
+    public function updateBranchPickupMethod($data)
+    {
+        $this->db->update('branch_pickup_method', $data);
+        return $this->db->affected_rows();
     }
 	
 	public function deleteShiftallocation($id)
@@ -786,5 +821,17 @@ class Branch_model extends CI_Model
 	
         echo json_encode(array("events" => $data_events));
 
+    }
+
+    public function getDeliveryModeList($param = null)
+    {
+        $this->db->select('*');
+        $this->db->where('status', '1');
+        $query = $this->db->get('delivery_mode');
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
     }
 }

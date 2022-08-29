@@ -156,7 +156,9 @@ $route['admin/addbranchshift/(:any)']      = "branch/addbranchshift/$1";
 $route['admin/addbranchholiday/(:any)']  = "branch/addbranchholiday/$1";
 $route['admin/addbranchcalendar/(:any)']  = "branch/addbranchcalendar/$1";
 $route['admin/addpickuprules/(:any)']  = "branch/addpickuprules/$1";
-
+$route['admin/setpickupmethod/(:any)']  = "branch/setpickupmethod/$1";
+$route['admin/branch/add-pickup-method/(:any)'] = "branch/insertBranchPickupMethod";
+$route['get-branch-pickup-method'] = "branch/getNearestBranchPickupMethod";
 
 // Tax routes
 $route['admin/tax-list']               = "tax";
