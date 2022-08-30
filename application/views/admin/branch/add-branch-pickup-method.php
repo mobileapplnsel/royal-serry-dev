@@ -69,7 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                     <?php if(!empty($deliveryModeList)){
                                                             foreach($deliveryModeList as $method){
                                                     ?>
-                                                    <option value="<?= $method->id ?>" <?php if($pickupMethod->monday==$method->id){echo "selected";} ?> ><?= $method->name ?></option>
+                                                    <option value="<?= $method->id ?>" <?php if(isset($pickupMethod->monday) && $pickupMethod->monday==$method->id){echo "selected";} ?> ><?= $method->name ?></option>
                                                     <?php }}?>
                                                 </select>
                                             </td>
@@ -82,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                     <?php if(!empty($deliveryModeList)){
                                                             foreach($deliveryModeList as $method){
                                                     ?>
-                                                    <option value="<?= $method->id ?>" <?php if($pickupMethod->tuesday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
+                                                    <option value="<?= $method->id ?>" <?php if(isset($pickupMethod->tuesday) && $pickupMethod->tuesday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
                                                     <?php }}?>
                                                 </select>
                                             </td>
@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                     <?php if(!empty($deliveryModeList)){
                                                             foreach($deliveryModeList as $method){
                                                     ?>
-                                                    <option value="<?= $method->id ?>" <?php if($pickupMethod->wednesday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
+                                                    <option value="<?= $method->id ?>" <?php if(isset($pickupMethod->wednesday) && $pickupMethod->wednesday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
                                                     <?php }}?>
                                                 </select>
                                             </td>
@@ -108,7 +108,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                     <?php if(!empty($deliveryModeList)){
                                                             foreach($deliveryModeList as $method){
                                                     ?>
-                                                    <option value="<?= $method->id ?>" <?php if($pickupMethod->thursday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
+                                                    <option value="<?= $method->id ?>" <?php if(isset($pickupMethod->thursday) && $pickupMethod->thursday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
                                                     <?php }}?>
                                                 </select>
                                             </td>
@@ -121,7 +121,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                     <?php if(!empty($deliveryModeList)){
                                                             foreach($deliveryModeList as $method){
                                                     ?>
-                                                    <option value="<?= $method->id ?>" <?php if($pickupMethod->friday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
+                                                    <option value="<?= $method->id ?>" <?php if(isset($pickupMethod->friday) && $pickupMethod->friday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
                                                     <?php }}?>
                                                 </select>
                                             </td>
@@ -134,7 +134,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                     <?php if(!empty($deliveryModeList)){
                                                             foreach($deliveryModeList as $method){
                                                     ?>
-                                                    <option value="<?= $method->id ?>" <?php if($pickupMethod->saturday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
+                                                    <option value="<?= $method->id ?>" <?php if(isset($pickupMethod->saturday) && $pickupMethod->saturday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
                                                     <?php }}?>
                                                 </select>
                                             </td>
@@ -147,7 +147,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                     <?php if(!empty($deliveryModeList)){
                                                             foreach($deliveryModeList as $method){
                                                     ?>
-                                                    <option value="<?= $method->id ?>" <?php if($pickupMethod->sunday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
+                                                    <option value="<?= $method->id ?>" <?php if(isset($pickupMethod->sunday) && $pickupMethod->sunday==$method->id){echo "selected";} ?>><?= $method->name ?></option>
                                                     <?php }}?>
                                                 </select>
                                             </td>
