@@ -1446,10 +1446,13 @@ class CustomerController extends CI_Controller
 
         $data['quote_details']          = $this->Users_model->quotationDetails($quote_id);
         $data['quote_from_details']     = $this->Users_model->quotationFromDetailsNew($quote_id);
+
         $data['quote_to_details']       = $this->Users_model->quotationToDetailsNew($quote_id);
 
         $data['quote_item_details']     = $this->Users_model->quotationItemDetails($quote_id);
-        $data['shipment_details']     = $this->customer_model->getShipmentDetails(array('quotation_id' => $quote_id));
+        $data['shipment_details'] = $shipmentDetails    = $this->customer_model->getShipmentDetails(array('quotation_id' => $quote_id));
+
+        $data['order_status']  = $this->customer_model->getOrderStatus(@$shipmentDetails['shipment_no']);
         
         $data['profile_details'] = $this->OveModel->Read_User_Information($id);
         $data['prohibitedList']  = $this->prohibited_model->getProhibitedList();
@@ -1912,5 +1915,31 @@ class CustomerController extends CI_Controller
         }
         $data['newsData'] = $newsData;
         $this->load->view('frontend/news_details', $data);
+    }
+
+    public function rescheduledpickup()
+    {
+        $sessionData = $this->session->userdata('Customer');
+        $id = $sessionData['id'];
+        if ($sessionData['logged_in'] != 'TRUE') {
+            redirect(base_url('/'));
+        }
+        $quote_id_enc    = $this->uri->segment(2);
+        $quote_id    = $this->OuthModel->Encryptor('decrypt', $quote_id_enc);
+
+        $data['quote_details'] = $this->Users_model->quotationDetails($quote_id);
+        $data['quote_from_details'] = $this->Users_model->quotationFromDetailsNew($quote_id);
+        $data['quote_to_details'] = $this->Users_model->quotationToDetailsNew($quote_id);
+        $data['shipment_details'] = $shipmentDetails    = $this->customer_model->getShipmentDetails(array('quotation_id' => $quote_id));
+
+        $data['shipment_from_address']  = $this->customer_model->getShipmentFromAddress($shipmentDetails['id']);
+
+
+
+        $data['order_status']  = $this->customer_model->getOrderStatus($shipmentDetails['shipment_no']);
+        $data['quote_id_enc'] = $quote_id_enc;
+        $data['tax'] = $this->customer_model->getTax();
+        $data['deliveryModeList']  = $this->customer_model->getDeliveryModeList();
+        $this->parser->parse('frontend/rescheduled_pickup', $data);
     }
 }

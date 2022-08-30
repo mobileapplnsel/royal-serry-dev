@@ -160,7 +160,7 @@ class Customer_model extends CI_Model
             $to_zip = null;
             $to_city = $quotationToAddress['city'];
 
-            
+
             //get branch_id by city
             if (!empty($from_zip)) {
                 $this->db->select('`branch_area`.`branch_id` AS fbranch_id');
@@ -216,7 +216,7 @@ class Customer_model extends CI_Model
                 return false;
             } else {
                 //shipment master
-                $sql_sm = 'INSERT INTO `shipment_master` (`shipment_no`, `quotation_id`, `parent_id`, `customer_id`, `shipment_type`, `location_type`, `transport_type`, `road`, `rail`, `air`, `ship`, `status`, `platform`, `created_by`, `created_date`, `payment_mode`, `payment_status`, `transaction_id`) SELECT  "' . $shipment_no . '", `id`, `parent_id`, `customer_id`, `shipment_type`, `location_type`, `transport_type`, `road`, `rail`, `air`, `ship`, `status`, `platform`, `created_by`, `created_date`, ' . $payment_mode . ', ' . $payment_status . ', ' . $transaction_id . ' FROM `quotation_master` WHERE id =' . $quote_id;
+                $sql_sm = 'INSERT INTO `shipment_master` (`shipment_no`, `quotation_id`, `parent_id`, `customer_id`, `shipment_type`, `location_type`, `transport_type`,`delivery_mode_id`,`road`, `rail`, `air`, `ship`, `status`, `platform`, `created_by`, `created_date`, `payment_mode`, `payment_status`, `transaction_id`,`pickup_date`) SELECT  "' . $shipment_no . '", `id`, `parent_id`, `customer_id`, `shipment_type`, `location_type`, `transport_type`,`delivery_mode_id`, `road`, `rail`, `air`, `ship`, `status`, `platform`, `created_by`, `created_date`, ' . $payment_mode . ', ' . $payment_status . ', ' . $transaction_id . ',`pickup_date` FROM `quotation_master` WHERE id =' . $quote_id;
 
                 $query_sm = $this->db->query($sql_sm);
                 $shipment_id = $this->db->insert_id();
@@ -572,14 +572,22 @@ class Customer_model extends CI_Model
         }
     }
 
+    public function getShipmentFromAddress($shipment_master_id)
+    {
+        
+        $this->db->select('*');
+        $this->db->where('shipment_id',$shipment_master_id);
+        $query = $this->db->get('shipment_from_address');
+        return $data = $query->row_array();
+
+    }
+
     public function getOrderStatus($shipment_no){
         $this->db->select('*,t2.`created_date` AS status_date,t1.`created_date` AS order_date');
         $this->db->from('shipment_master t1');
         $this->db->join('shipment_status t2','t1.id = t2.shipment_id' , 'left');
         $this->db->where('t1.shipment_no', $shipment_no);   
-		//$this->db->group_by('t2.status_id');     
         $query = $this->db->get();
-        // echo $this->db->last_query();die;
         if ($query) {
             return $query->result_array();
         } else {

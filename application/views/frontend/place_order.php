@@ -49,10 +49,15 @@ $this->load->view('frontend/includes/header');
                      <fieldset>
                         <div class="form-card" style=" margin-top: -37px;">
                            <div class="row">
-                              <div class="col-md-8">
+                              <div class="col-md-4">
                                  <h3>Generate Order</h3>
                                  <!-- <p class="ds-title-new"><strong>Valid Until : </strong> </p>
                                  <p class="ds-title-new"><strong>Customer Number : </strong> </p> -->
+                              </div>
+                              <div class="col-md-4">
+                                 <?php if($quote_details[0]['order_created'] && $order_status[0]['status_id']==1){ ?>
+                                    <a href="<?php echo base_url('shipment-rescheduled-pickup/'.$quote_id_enc) ?>" style="display: inline;background: #fe0000;padding: 5px;color: #fff;font-size: 19px;text-decoration: none;">Rescheduled Pickup</a>
+                                 <?php }?>
                               </div>
                               <div class="col-md-4">
                                  <p class="ds-title-new"><strong>Order # :</strong> <?php echo (!empty($shipment_details) && $shipment_details['shipment_no'] != '') ? $shipment_details['shipment_no'] : ''; ?></p>
@@ -73,7 +78,10 @@ $this->load->view('frontend/includes/header');
                                  ?>
                               </div>
                            </div>
-                           <div style=" width: 100%; display: block; clear: both; height: 40px; border-top: 1px solid #76b382; border-bottom: 1px solid #76b382; margin-top: 10px;"></div>
+                           <div style=" width: 100%; display: block; clear: both; height: 40px; border-top: 1px solid #76b382; border-bottom: 1px solid #76b382; margin-top: 10px;">
+
+                              
+                           </div>
                            <div class="row">
                               <div class="col-sm-12 col-md-6 left-box-st">
                                  <?php
