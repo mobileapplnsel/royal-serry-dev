@@ -14,6 +14,7 @@ class CustomerController extends CI_Controller
         $this->load->model('api_model');
         //$this->load->model('Users_model', 'OveModel', 'OuthModel');
         $this->load->helper('admin_helper');
+        $this->load->model('shipment_model');
     }
 
     public function index()
@@ -1211,7 +1212,7 @@ class CustomerController extends CI_Controller
     public function onSaveOrder()
     {
         // $this->saveQuote();
-
+        dd('4546',1);
         $sessionData = $this->session->userdata('Customer');
         $id          = $sessionData['id'];
         if ($sessionData['logged_in'] != 'TRUE') {
@@ -1247,6 +1248,8 @@ class CustomerController extends CI_Controller
                 'ra_tax_amt' => $ra_tax_amt,
                 'grand_total' => $grand_total
             );
+
+
             // For Authorize net payment gateway
             $transaction_id = '';
             if ($payment_mode == '2') {
@@ -1934,12 +1937,340 @@ class CustomerController extends CI_Controller
 
         $data['shipment_from_address']  = $this->customer_model->getShipmentFromAddress($shipmentDetails['id']);
 
-
-
         $data['order_status']  = $this->customer_model->getOrderStatus($shipmentDetails['shipment_no']);
         $data['quote_id_enc'] = $quote_id_enc;
         $data['tax'] = $this->customer_model->getTax();
         $data['deliveryModeList']  = $this->customer_model->getDeliveryModeList();
+        $data['profile_details'] = $this->OveModel->Read_User_Information($id);
         $this->parser->parse('frontend/rescheduled_pickup', $data);
+    }
+
+    public function pickupRescheduled()
+    {
+
+        try {
+           
+            $sessionData = $this->session->userdata('Customer');
+            $id = $userId = $sessionData['id'];
+            if ($sessionData['logged_in'] != 'TRUE') {
+                redirect(base_url('/'));
+            }
+
+            $this->form_validation->set_rules('delivery_speed', 'Delivery Speed', 'trim|required|xss_clean');
+
+            $this->form_validation->set_rules('pickup_date', 'Pickup Date', 'trim|required|xss_clean');
+
+            if ($this->form_validation->run() == false) {
+                $response = ['status' => 0, 'message' => '<span style="color:#fff;">' . validation_errors() . '</span>'];
+                echo json_encode($response);
+                die;
+            }
+            
+
+            $quote_id_enc    = $this->uri->segment(2);
+            $quote_id    = $this->OuthModel->Encryptor('decrypt', $quote_id_enc);
+            $deliverySpeed = $this->input->post('delivery_speed');
+            $pickupDate = $this->input->post('pickup_date');
+            if ($pickupDate!="") {
+                $pickupDate = date('Y-m-d',strtotime($pickupDate));
+            }
+            $quoteDetails = $this->Users_model->quotationDetails($quote_id);
+            $quoteFromDetails = $this->Users_model->quotationFromDetailsNew($quote_id);
+            $quoteToDetails = $this->Users_model->quotationToDetailsNew($quote_id);
+            $shipmentDetails = $this->customer_model->getShipmentDetails(array('quotation_id' => $quote_id));
+
+            $shipmentStatus  = $this->shipment_model->getShipmentStatus($shipmentDetails['id'],1);
+            if ($shipmentStatus->status_id!=1 ||$shipmentDetails['delivery_mode_id']==$deliverySpeed && $shipmentDetails['pickup_date']==$pickupDate ) {
+                $response = ['status' => 0, 'message' => '<span style="color:#fff;"> You can not rescheduled pickup.</span>'];
+                echo  json_encode($response);
+                die;
+            }
+
+
+            if ($shipmentDetails['delivery_mode_id']==$deliverySpeed && $shipmentDetails['pickup_date']!=$pickupDate || $deliverySpeed==1) {
+                $rescheduledData = array(
+                    "shipment_id"=> $shipmentDetails['id'],
+                    "delivery_mode_id"=>$deliverySpeed,
+                    "pickup_date"=> $pickupDate,
+                    "created_date"=> date('Y-m-d'),
+                    "rescheduled_by" => $userId
+                );
+                $rescheduledId = $this->shipment_model->addRescheduled($rescheduledData);
+                if ($rescheduledId) {
+                    $updateShipmentMasterData = array(
+                        "delivery_mode_id"=>$deliverySpeed,
+                        "pickup_date"=> $pickupDate
+                    );
+
+                    $this->shipment_model->updateShipmentMaster($updateShipmentMasterData,$shipmentDetails['id']);
+                    $response = ['status' => 1, 'message' => '<span style="color:#fff;"> Your pickup has been rescheduled successfully.</span>','redirectUrl'=>base_url('place-order/'.$quote_id_enc)];
+                    echo  json_encode($response);
+                    die;
+                }
+            }
+
+
+
+            $shipmentFromAddress  = $this->customer_model->getShipmentFromAddress($shipmentDetails['id']);
+            $shipmentToAddress = $this->customer_model->getShipmentToAddress($shipmentDetails['id']);
+            
+            $shipmentpPriceDetails = $this->shipment_model->getShipmentPriceDetails($shipmentDetails['id']);
+            
+            $tax = $this->customer_model->getTax();
+            
+            $shipmentItems = $this->shipment_model->getShipmentItems($shipmentDetails['id']);
+
+            $rateError = false;
+            $newRate = 0;
+            $newInsurance = 0;
+            $oldRate = $shipmentpPriceDetails->subtotal;
+            $oldInsurance = $shipmentpPriceDetails->ga_tax_amt+$shipmentpPriceDetails->ra_tax_amt;
+           
+            foreach($shipmentItems as $shipmentItem){
+
+                $ship_cat_id = $shipmentDetails['shipment_type'];
+                $ship_subcat_id= $shipmentItem->category_id;
+                $ship_sub_subcat_id= $shipmentItem->subcategory_id;
+                $rate_type= "L";
+                $location_from= $shipmentFromAddress['state'];
+                $location_to= $shipmentToAddress['state'];
+                $charges_mode= $shipmentDetails['transport_type'];
+                $delivery_mode_id= $deliverySpeed;
+
+                $rates = $this->shipment_model->shipmentRates($ship_cat_id, $ship_subcat_id, $ship_sub_subcat_id, $rate_type, $location_from, $location_to, $charges_mode, $delivery_mode_id);
+
+                
+                if (!$rates) {
+                   $rateError = true;
+                }else{
+
+                    $newRate = $newRate+$rates->rate;
+                    $newInsurance = $newInsurance+$rates->insurance;
+                }
+                
+
+            }
+
+            if ($rateError) {
+                $response = ['status' => 0, 'message' => '<span style="color:#fff;"> You can not rescheduled pickup because shiping rate not found.</span>'];
+                echo  json_encode($response);
+                die;
+            }
+            
+            $extraCharge = $newRate-$oldRate;
+            $added_ga_tax = ($extraCharge * $tax[0]['amount']) / 100;
+            $added_ra_tax = ($added_ga_tax * $tax[1]['amount']) / 100;
+            $rescheduledCharge = $extraCharge+$added_ga_tax+$added_ra_tax;
+
+            $newsData = array(
+                 "delivery_mode_id"=>$deliverySpeed,
+                "old"=>$oldRate,
+                "new"=>$newRate,
+                "amount"=> $extraCharge,
+                "ga_tax_amt"=> $added_ga_tax,
+                "ra_tax_amt"=> $added_ra_tax,
+                "ga_percentage"=> $tax[0]['amount'],
+                "ra_percentage"=> $tax[1]['amount'],
+                "total"=>$rescheduledCharge
+
+            );
+
+            if ($extraCharge>0) {
+
+               $response = ['status' => 1, 'message' => '<span style="color:#fff;">Procces with payment</span>', "paymentrequired"=>1,'paymentDetails'=>$newsData];
+                echo  json_encode($response);
+                die;
+
+            }else{
+
+                $rescheduledData = array(
+                    "shipment_id"=> $shipmentDetails['id'],
+                    "delivery_mode_id"=>$deliverySpeed,
+                    "pickup_date"=> $pickupDate,
+                    "created_date"=> date('Y-m-d'),
+                    "rescheduled_by" => $userId
+                );
+                $rescheduledId = $this->shipment_model->addRescheduled($rescheduledData);
+                if ($rescheduledId) {
+                    $updateShipmentMasterData = array(
+                        "delivery_mode_id"=>$deliverySpeed,
+                        "pickup_date"=> $pickupDate
+                    );
+
+                    $this->shipment_model->updateShipmentMaster($updateShipmentMasterData,$shipmentDetails['id']);
+                    $response = ['status' => 1, 'message' => '<span style="color:#fff;"> Your pickup has been rescheduled successfully.</span>','redirectUrl'=>base_url('place-order/'.$quote_id_enc)];
+                    echo  json_encode($response);
+                    die;
+                }
+            }
+
+        }catch(Exception $err) {
+            $errorMessage = $err.message;
+            $response = ['status' => 0, 'message' => '<span style="color:#fff;">' .$errorMessage. '</span>'];
+            echo   json_encode($response);
+            die;
+        }
+       
+    }
+
+    public function pickupRescheduledPayment()
+    {
+
+        try {
+
+            $sessionData = $this->session->userdata('Customer');
+            $id = $userId = $sessionData['id'];
+            if ($sessionData['logged_in'] != 'TRUE') {
+                redirect(base_url('/'));
+            }
+            $quote_id_enc    = $this->uri->segment(2);
+            $quote_id    = $this->OuthModel->Encryptor('decrypt', $quote_id_enc);
+            $deliverySpeed = $this->input->post('delivery_mode_id');
+            $pickupDate = date('Y-m-d',strtotime($this->input->post('pickup_date')));
+            
+            $shipmentDetails = $this->customer_model->getShipmentDetails(array('quotation_id' => $quote_id));
+            $shipmentStatus  = $this->shipment_model->getShipmentStatus($shipmentDetails['id'],1);
+            $shipmentFromAddress  = $this->customer_model->getShipmentFromAddress($shipmentDetails['id']);
+            $shipmentToAddress = $this->customer_model->getShipmentToAddress($shipmentDetails['id']);
+            $shipmentpPriceDetails = $this->shipment_model->getShipmentPriceDetails($shipmentDetails['id']);
+            $tax = $this->customer_model->getTax();
+            
+            $shipmentItems = $this->shipment_model->getShipmentItems($shipmentDetails['id']);
+
+            $orderno = $shipmentDetails['shipment_no'];
+
+            $payment_mode       = $this->input->post('payment_mode');
+            $quote_id_enc      = $this->input->post('quote_id_enc');
+            $credit_outstanding_amount     = $this->input->post('credit_outstanding_amount');
+            $Userdetails = $this->OveModel->Read_User_Information($id);
+
+            //price details
+            $subtotal      = $this->input->post('subtotal');
+            $discount      = $this->input->post('discount');
+            $ga_percentage      = $this->input->post('ga_percentage');
+            $ga_tax_amt      = $this->input->post('ga_tax_amt');
+            $ra_percentage      = $this->input->post('ra_percentage');
+            $ra_tax_amt      = $this->input->post('ra_tax_amt');
+            $grand_total      = $this->input->post('grand_total');
+
+            // For Authorize net payment gateway
+            $transaction_id = '';
+            if ($payment_mode == '2') {
+                $this->load->library('authorize_net');
+                $fname = $shipmentFromAddress['firstname'];
+                $lname = $shipmentFromAddress['lastname'];
+                $address = $shipmentFromAddress['address'];
+                $city = $shipmentFromAddress['city_name'];
+                $state = $shipmentFromAddress['state_name'];
+                $country = $shipmentFromAddress['country_name'];
+                $zip = $shipmentFromAddress['zip'];
+                $email = $shipmentFromAddress['email'];
+                $telephone = $shipmentFromAddress['telephone'];
+
+                $ccno = $this->input->post('card_number');
+                $amount = $this->input->post('grand_total');
+                $card_exp_month = $this->input->post('card_exp_month');
+                $card_exp_year = $this->input->post('card_exp_year');
+                $cvv = $this->input->post('card_cvc');
+
+                // Lets do a test transaction
+                $this->authorize_net->add_x_field('x_first_name', $fname);
+                $this->authorize_net->add_x_field('x_last_name', $lname);
+                $this->authorize_net->add_x_field('x_address', $address);
+                $this->authorize_net->add_x_field('x_city', $city);
+                $this->authorize_net->add_x_field('x_state', $state);
+                $this->authorize_net->add_x_field('x_zip', $zip);
+                $this->authorize_net->add_x_field('x_country', $country);
+                $this->authorize_net->add_x_field('x_email', $email);
+                $this->authorize_net->add_x_field('x_phone', $telephone);
+
+                /**
+                 * Use credit card number 4111111111111111 for a god transaction
+                 * Use credit card number 4111111111111122 for a bad card
+                 */
+                $this->authorize_net->add_x_field('x_card_num', "$ccno");
+                $this->authorize_net->add_x_field('x_amount', "$amount");
+                $this->authorize_net->add_x_field('x_exp_date', $card_exp_month . $card_exp_year); // MMYY
+                $this->authorize_net->add_x_field('x_card_code', $cvv);
+
+                $this->authorize_net->process_payment();
+                $authnetreponse = $this->authorize_net->get_all_response_codes();
+                //echo '<pre>'; print_r($authnetreponse);die;
+                if ($authnetreponse['Response_Code'] == '1') {
+                    /*$data['authresponse'] = $authnetreponse;Transaction_ID
+                    $this->load->view('auth_success', $data);*/
+                    $transaction_id = $authnetreponse['Transaction_ID'];
+                } elseif ($authnetreponse['Response_Code'] == '2') {
+                    $messageString = [
+                        'status' => 0, 'message' => $authnetreponse['Response_Reason_Text']
+                    ];
+                    echo json_encode($messageString);
+                    die;
+                } elseif ($authnetreponse['Response_Code'] == '3') {
+                    $messageString = [
+                        'status' => 0, 'message' => $authnetreponse['Response_Reason_Text']
+                    ];
+                    echo json_encode($messageString);
+                    die;
+                }
+            }
+
+            // Update user outstanding amount
+            if ($payment_mode == '3') {
+                $outstanding_amount = $credit_outstanding_amount - $grand_total;
+                $creditAmount = array(
+                    'credit_outstanding_amount' => $outstanding_amount
+                );
+                $this->customer_model->updateOutstandinAmount($id, $creditAmount);
+            }
+            $shipment_id = $shipmentDetails['id'];
+            $shipmentData = array(
+                'shipment_id' => $shipmentDetails['id'],
+                'delivery_mode_id'=>$deliverySpeed,
+                'pickup_date'=>$pickupDate,
+                'created_date'=> date('Y-m-d'),
+                'rescheduled_by'=>$userId,
+                'subtotal' => $subtotal,
+                'ga_percentage' => $ga_percentage,
+                'ga_tax_amt' => $ga_tax_amt,
+                'ra_percentage' => $ra_percentage,
+                'ra_tax_amt' => $ra_tax_amt,
+                'grand_total' => $grand_total,
+                'payment_mode' =>$payment_mode,
+                'payment_status'=>1,
+                'transaction_id'=>$transaction_id
+
+            );
+            $add_order = $this->shipment_model->addRescheduled($shipmentData);
+
+            if ($add_order) {
+
+                $updateShipmentMasterData = array(
+                        "delivery_mode_id"=>$deliverySpeed,
+                        "pickup_date"=> $pickupDate
+                    );
+                $this->shipment_model->updateShipmentMaster($updateShipmentMasterData,$shipmentDetails['id']);
+                $messageString = [
+                    'status' => 1, 'message' => 'Order has been successfully created.',
+                    'redirectUrl'   => base_url('/place-order/' . $quote_id_enc),
+                ];
+            } else {
+                $messageString = [
+                    'status' => 0, 'message' => 'Pincode is not linked to any branch! Order Cannot be placed!',
+                    'redirectUrl'  => base_url('/place-order/' . $quote_id_enc),
+                ];
+            }
+
+            echo json_encode($messageString);
+            die;
+        
+
+        }catch(Exception $err) {
+            $errorMessage = $err.message;
+            $response = ['status' => 0, 'message' => '<span style="color:#fff;">' .$errorMessage. '</span>'];
+            echo   json_encode($response);
+            die;
+        }
+       
     }
 }

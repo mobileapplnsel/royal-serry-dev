@@ -575,12 +575,29 @@ class Customer_model extends CI_Model
     public function getShipmentFromAddress($shipment_master_id)
     {
         
-        $this->db->select('*');
-        $this->db->where('shipment_id',$shipment_master_id);
-        $query = $this->db->get('shipment_from_address');
+        $this->db->select('sfa.*, cm.name as country_name, sm.name as state_name, ctm.name as city_name');
+        $this->db->from('shipment_from_address sfa');
+        $this->db->where('sfa.shipment_id',$shipment_master_id);
+        $this->db->join('countries_master cm', 'sfa.country = cm.id', 'left');
+        $this->db->join('states_master sm', 'sfa.state = sm.id', 'left');
+        $this->db->join('cities_master ctm', 'sfa.city = ctm.id', 'left');
+        $query = $this->db->get();
         return $data = $query->row_array();
 
     }
+
+    public function getShipmentToAddress($shipment_master_id)
+    {
+        $this->db->select('sfa.*, cm.name as country_name, sm.name as state_name, ctm.name as city_name');
+        $this->db->from('shipment_to_address sfa');
+        $this->db->where('sfa.shipment_id',$shipment_master_id);
+        $this->db->join('countries_master cm', 'sfa.country = cm.id', 'left');
+        $this->db->join('states_master sm', 'sfa.state = sm.id', 'left');
+        $this->db->join('cities_master ctm', 'sfa.city = ctm.id', 'left');
+        $query = $this->db->get();
+        return $data = $query->row_array();
+    }
+
 
     public function getOrderStatus($shipment_no){
         $this->db->select('*,t2.`created_date` AS status_date,t1.`created_date` AS order_date');
@@ -588,6 +605,7 @@ class Customer_model extends CI_Model
         $this->db->join('shipment_status t2','t1.id = t2.shipment_id' , 'left');
         $this->db->where('t1.shipment_no', $shipment_no);   
         $query = $this->db->get();
+
         if ($query) {
             return $query->result_array();
         } else {

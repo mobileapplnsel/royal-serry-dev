@@ -389,6 +389,9 @@ $route['order-tracking-search'] = "CustomerController/getOrderTrackDetails";
 
 $route['tracking-details/(:any)'] = "CustomerController/trackingDetails";
 $route['shipment-rescheduled-pickup/(:any)']    = "CustomerController/rescheduledpickup";
+$route['shipment-rescheduled/(:any)']    = "CustomerController/pickupRescheduled";
+$route['shipment-rescheduled-payment/(:any)']    = "CustomerController/pickupRescheduledPayment";
+
 
 
 $route['admin/role-list']        = 'Role/roleList';
