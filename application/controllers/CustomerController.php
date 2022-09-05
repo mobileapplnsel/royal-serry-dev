@@ -1294,7 +1294,7 @@ class CustomerController extends CI_Controller
 
                 $this->authorize_net->process_payment();
                 $authnetreponse = $this->authorize_net->get_all_response_codes();
-                //echo '<pre>'; print_r($authnetreponse);die;
+                echo '<pre>'; print_r($authnetreponse);die;
                 if ($authnetreponse['Response_Code'] == '1') {
 
                     /*$data['authresponse'] = $authnetreponse;Transaction_ID
