@@ -113,6 +113,7 @@ class Banner extends CI_Controller {
                 $this->load->library('upload', $config);
                 $posterImage    =   $this->upload->do_upload('banner_image');
                 $image_data     =   $this->upload->data();
+
                 // Resize image to the given format
                 $imageResize    =   [
                                     'image_library'   => 'gd2',
@@ -189,7 +190,46 @@ class Banner extends CI_Controller {
         }
         else
         {
-			$data['heading']     =	$this->input->post('heading');
+			
+            if($_FILES["banner_image"]["name"]){
+                $config['upload_path']       =   './uploads/banner/';
+                $config['allowed_types']     =   'gif|jpg|png';
+                $config["file_name"] = $fileName   =   time().'-'.$_FILES["banner_image"]['name'];
+                $this->load->library('upload', $config);
+                $posterImage    =   $this->upload->do_upload('banner_image');
+                $image_data     =   $this->upload->data();
+                
+                // Resize image to the given format
+                $imageResize    =   [
+                                    'image_library'   => 'gd2',
+                                    'source_image'    =>  $image_data['full_path'],
+                                    'maintain_ratio'  =>  FALSE,
+                                    'width'           =>  1380,
+                                    'height'          =>  538,
+                                ];
+                
+                $this->image_lib->clear();
+                $this->image_lib->initialize($imageResize);
+                $this->image_lib->resize();
+                $this->image_lib->clear();
+
+                
+                /* Second size */    
+                 $configSize2['image_library']   = 'gd2';
+                 $configSize2['source_image']    = $image_data['full_path'];
+                 $configSize2['create_thumb']    = FALSE;
+                 $configSize2['maintain_ratio']  = TRUE;
+                 $configSize2['width']           = 220;
+                 $configSize2['height']          = 320;
+                 $configSize2['new_image']   = './uploads/banner/mobile/'.time().'-'.$_FILES["banner_image"]['name'];
+                
+                 $this->image_lib->initialize($configSize2);
+                 $this->image_lib->resize();
+                 $this->image_lib->clear();
+
+                 $data['image']     =   $fileName;
+            }
+            $data['heading']     =	$this->input->post('heading');
 			$data['heading2']     =	$this->input->post('heading2');
 			$data['heading3']     =	$this->input->post('heading3');
 			$data['sub_heading']     =	$this->input->post('sub_heading');

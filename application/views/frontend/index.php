@@ -62,7 +62,7 @@ $this->load->view('frontend/includes/header');
       } ?>
    </ol>
    <!-- Wrapper for slides -->
-   <div class="carousel-inner" role="listbox">
+   <div class="carousel-inner" data-interval="false" role="listbox">
       <?php
       // print_r($bannerList);die;
       if (!empty($bannerList)) {
@@ -73,7 +73,7 @@ $this->load->view('frontend/includes/header');
                                  echo 'active';
                               } ?>">
                <a target="_blank"></a>
-               <img src="<?php echo base_url(); ?>uploads/banner/mobile/<?php echo $banner['image']; ?>" alt="" style="width:100%;">
+               <img src="<?php echo base_url(); ?>uploads/banner/<?php echo $banner['image']; ?>" alt="" style="width:100%;">
                <div class="carousel-caption">
                   <h1><?php echo $banner['heading'] . '<br>';
                         if ($banner['heading2'] != '') {

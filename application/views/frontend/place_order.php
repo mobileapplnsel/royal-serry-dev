@@ -53,14 +53,16 @@ $this->load->view('frontend/includes/header');
                                  <h3>Generate Order</h3>
                                  <!-- <p class="ds-title-new"><strong>Valid Until : </strong> </p>
                                  <p class="ds-title-new"><strong>Customer Number : </strong> </p> -->
+                                 <p class="ds-title-new" style="margin-top: 30px;"><strong>Pickup Date : </strong> <?php echo (!empty($shipment_details) && $shipment_details['pickup_date'] != '') ? $shipment_details['pickup_date'] : ''; ?></p>
                               </div>
                               <div class="col-md-4">
                                  <?php if($quote_details[0]['order_created'] && $order_status[0]['status_id']==1){ ?>
-                                    <a href="<?php echo base_url('shipment-rescheduled-pickup/'.$quote_id_enc) ?>" style="display: inline;background: #fe0000;padding: 5px;color: #fff;font-size: 19px;text-decoration: none;">Rescheduled Pickup</a>
+                                    <a href="<?php echo base_url('shipment-rescheduled-pickup/'.$quote_id_enc) ?>" style="display: inline;background: #fe0000;padding: 5px;color: #fff;font-size: 19px;text-decoration: none;">Reschedule Pickup</a>
                                  <?php }?>
                               </div>
                               <div class="col-md-4">
                                  <p class="ds-title-new"><strong>Order # :</strong> <?php echo (!empty($shipment_details) && $shipment_details['shipment_no'] != '') ? $shipment_details['shipment_no'] : ''; ?></p>
+                                 <p class="ds-title-new"><strong>Date : </strong> <?php echo (!empty($quote_details) && $quote_details[0]['order_created_dtime'] != '') ? $quote_details[0]['order_created_dtime'] : DTIME; ?></p>
                                  <p class="ds-title-new"><strong>Date : </strong> <?php echo (!empty($quote_details) && $quote_details[0]['order_created_dtime'] != '') ? $quote_details[0]['order_created_dtime'] : DTIME; ?></p>
                                  <?php
                                  if (!empty($shipment_details) && $shipment_details['payment_mode'] != '') {

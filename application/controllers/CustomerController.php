@@ -2155,6 +2155,13 @@ class CustomerController extends CI_Controller
 
             // For Authorize net payment gateway
             $transaction_id = '';
+            if ($payment_mode == '1') {
+                $messageString = [
+                    'status' => 0, 'message' => 'Order Cannot be placed choose other payment method.'
+                ];
+                echo json_encode($messageString);
+                die;
+            }
             if ($payment_mode == '2') {
                 $this->load->library('authorize_net');
                 $fname = $shipmentFromAddress['firstname'];

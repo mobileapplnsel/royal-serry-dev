@@ -147,6 +147,12 @@ $qty = 0;
                                         <p class="ds-title-new"><strong>Parcel Details:</strong></p>
                                     </div>
 
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p class="ds-title-new" style="margin-top: 30px;"><strong>Pickup Date : </strong> <?php echo (!empty($shipment_details) && $shipment_details['pickup_date'] != '') ? $shipment_details['pickup_date'] : ''; ?></p>
+                                    </div>
                                 </div>
 
                                 <!-- <div class="spacer-gap"></div> -->

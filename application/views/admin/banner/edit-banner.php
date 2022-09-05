@@ -42,9 +42,13 @@ $this->load->view('admin/include/header');
                     <?php echo form_open(base_url('admin/banner-update/' . $editDocument[0]->id), array('id' => 'loginF', 'class' => 'contact-form', 'enctype' => 'multipart/form-data')); ?>
                     <div class="box box-primary">
                         <div class="box-header with-border"> Edit Banner </div>
+                        <h4 class="box-header with-border">Resolution: 1380 x 538 px</h4>
                         <div class="box-body">
                             <div class="form-group col-md-6 col-md-offset-3"></div>
-
+                            <div class="form-group col-md-6">
+                                <label for="pwd">Upload Banner Image :</label>
+                                <input type="file" class="custom-file-input" name="banner_image" accept="image/x-png,image/gif,image/jpeg" required>
+                            </div>
                             <div class="form-group col-md-6">
                                 <label for="heading">Heading 1 :</label>
                                 <input type="text" class="custom-file-input" name="heading" value="<?php echo $editDocument[0]->heading; ?>" required>
@@ -70,7 +74,7 @@ $this->load->view('admin/include/header');
                         </div>
                         <div class="box-footer">
                             <button type="submit" class="btn btn-success">Update Banner</button>
-                            <a href="<?php echo base_url('admin'); ?>" class="btn btn-info pull-right">Back</a>
+                            <a href="<?php echo base_url('admin/banner-list'); ?>" class="btn btn-info pull-right">Back</a>
                         </div>
                     </div>
                     <?php echo form_close(); ?>
