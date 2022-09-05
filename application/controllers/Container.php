@@ -286,7 +286,7 @@ class Container extends CI_Controller
 			$date_of_arrival		= $this->input->post('date_of_arrival');
 			$date_time				= $this->input->post('date_time');
 			$remarks				= $this->input->post('remarks');
-
+			$trackingLink			= $this->input->post('tracking_link');
 			$data = array(
 				'shipment_no' => getSLNo(3),
 				'container_no' => $container_no,
@@ -296,6 +296,7 @@ class Container extends CI_Controller
 				'shipment_details' => $shipment_details,
 				'vehicle_number' => $vehicle_number,
 				'status' => $status,
+				'tracking_link' => $trackingLink,
 				'schedule_date' => $schedule_date,
 				'date_of_arrival' => $date_of_arrival,
 				'date_time' => $date_time,
@@ -498,6 +499,7 @@ class Container extends CI_Controller
 			$shipment_details		= $this->input->post('shipment_details');
 			$vehicle_number			= $this->input->post('vehicle_number');
 			$status					= $this->input->post('status');
+			$trackingLink			= $this->input->post('tracking_link');
 			$schedule_date			= $this->input->post('schedule_date');
 			$date_of_arrival		= $this->input->post('date_of_arrival');
 			$date_time				= $this->input->post('date_time');
@@ -511,6 +513,7 @@ class Container extends CI_Controller
 				'shipment_details' => $shipment_details,
 				'vehicle_number' => $vehicle_number,
 				'status' => $status,
+				'tracking_link'=> $trackingLink,
 				'schedule_date' => $schedule_date,
 				'date_of_arrival' => $date_of_arrival,
 				'date_time' => $date_time,

@@ -1212,7 +1212,7 @@ class CustomerController extends CI_Controller
     public function onSaveOrder()
     {
         // $this->saveQuote();
-        dd('4546',1);
+        
         $sessionData = $this->session->userdata('Customer');
         $id          = $sessionData['id'];
         if ($sessionData['logged_in'] != 'TRUE') {
