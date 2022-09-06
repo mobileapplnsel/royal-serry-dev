@@ -558,15 +558,31 @@ class Customer_model extends CI_Model
         if ($param != null) {
             $this->db->where($param);
         }
-        // $this->db->order_by('id', 'DESC');
+        
         $query = $this->db->get('shipment_master');
-        //echo $this->db->last_query();die;
+        
         if ($query) {
             if ($many == FALSE) {
                 return $query->row_array();
             } else {
                 return $query->result_array();
             }
+        } else {
+            return false;
+        }
+    }
+
+    public function getShipmentDetailsWithStatus($shipment_no)
+    {
+       
+        $this->db->select('`shipment_master` .*, max(shipment_status.status_id) AS shipment_status_id');
+        $this->db->from('shipment_master');
+        $this->db->join('shipment_status','shipment_master.id = shipment_status.shipment_id' , 'left');
+        $this->db->where('shipment_master.quotation_id', $shipment_no);
+        $this->db->where('shipment_master.status', '1');
+        $query = $this->db->get();
+        if ($query->num_rows()) {
+            return $query->row_array();
         } else {
             return false;
         }

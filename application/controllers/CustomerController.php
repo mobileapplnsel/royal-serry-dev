@@ -1453,14 +1453,16 @@ class CustomerController extends CI_Controller
         $data['quote_to_details']       = $this->Users_model->quotationToDetailsNew($quote_id);
 
         $data['quote_item_details']     = $this->Users_model->quotationItemDetails($quote_id);
-        $data['shipment_details'] = $shipmentDetails    = $this->customer_model->getShipmentDetails(array('quotation_id' => $quote_id));
+        $data['shipment_details'] = $shipmentDetails    = $this->customer_model->getShipmentDetailsWithStatus($quote_id);
 
-        $data['order_status']  = $this->customer_model->getOrderStatus(@$shipmentDetails['shipment_no']);
+        //dd($data['shipment_details'],1);
         
         $data['profile_details'] = $this->OveModel->Read_User_Information($id);
         $data['prohibitedList']  = $this->prohibited_model->getProhibitedList();
         $data['quote_id_enc'] = $quote_id_enc;
         $data['tax'] = $this->customer_model->getTax();
+
+
 
         $this->parser->parse('frontend/place_order', $data);
     }
@@ -1546,6 +1548,8 @@ class CustomerController extends CI_Controller
         } else {
             $data['shipment_list']  = $this->customer_model->getOrderStatus($shipment_number);
         }
+
+        //ddd($data,1);
         $this->parser->parse('frontend/tracking-details', $data);
     }
 
@@ -2202,7 +2206,7 @@ class CustomerController extends CI_Controller
 
                 $this->authorize_net->process_payment();
                 $authnetreponse = $this->authorize_net->get_all_response_codes();
-                //echo '<pre>'; print_r($authnetreponse);die;
+                echo '<pre>'; print_r($authnetreponse);die;
                 if ($authnetreponse['Response_Code'] == '1') {
                     /*$data['authresponse'] = $authnetreponse;Transaction_ID
                     $this->load->view('auth_success', $data);*/

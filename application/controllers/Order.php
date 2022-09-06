@@ -926,6 +926,7 @@ class Order extends CI_Controller {
             }
             else{
                 $data                    =   [];
+                $data['OrderDetails']   =   $this->order_model->orderDetails($order_id);
                 $data['OrderStatusList']   =   $this->order_model->getOrderStatusList($order_id);
 				//$data['ShiftList']   	 =   $this->user_model->getShiftListbyUserId($id);
 				$data['StatusList']   	 =   $this->order_model->getStatusList();
