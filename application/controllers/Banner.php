@@ -114,6 +114,7 @@ class Banner extends CI_Controller {
                 $posterImage    =   $this->upload->do_upload('banner_image');
                 $image_data     =   $this->upload->data();
 
+
                 // Resize image to the given format
                 $imageResize    =   [
                                     'image_library'   => 'gd2',
@@ -193,11 +194,12 @@ class Banner extends CI_Controller {
 			
             if($_FILES["banner_image"]["name"]){
                 $config['upload_path']       =   './uploads/banner/';
-                $config['allowed_types']     =   'gif|jpg|png';
+                $config['allowed_types']     =   'gif|jpg|png|webp';
                 $config["file_name"] = $fileName   =   time().'-'.$_FILES["banner_image"]['name'];
                 $this->load->library('upload', $config);
                 $posterImage    =   $this->upload->do_upload('banner_image');
                 $image_data     =   $this->upload->data();
+                $errors = $this->upload->display_errors();
                 
                 // Resize image to the given format
                 $imageResize    =   [
