@@ -700,5 +700,25 @@ class Container_model extends CI_Model
         return $this->db->affected_rows();
     }
 
+
+    public function getContainerByshipmentId($shipmentId)
+    {
+        
+        $this->db->select('cs.*');
+        $this->db->join('container_shipment_items csi', 'csi.container_id = cs.id');
+        $this->db->from('container_shipment as cs');
+        $this->db->where('csi.order_id',$shipmentId);
+        $query  =   $this->db->get();
+        $row = $query->num_rows();
+        if ($row > 0)
+        {
+            return $query->row();            
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     
 }

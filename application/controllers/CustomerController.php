@@ -15,6 +15,8 @@ class CustomerController extends CI_Controller
         //$this->load->model('Users_model', 'OveModel', 'OuthModel');
         $this->load->helper('admin_helper');
         $this->load->model('shipment_model');
+        $this->load->model('order_model');
+
     }
 
     public function index()
@@ -1546,10 +1548,13 @@ class CustomerController extends CI_Controller
             redirect(base_url('/order-tracking'));
             die;
         } else {
-            $data['shipment_list']  = $this->customer_model->getOrderStatus($shipment_number);
+            $data['shipment_list'] = $statusLists  = $this->customer_model->getOrderStatus($shipment_number);
+            if (count($statusLists)) {
+               $data['trackingLinks']   =   $this->order_model->getAllTrackingLink($statusLists[0]['shipment_id']);
+            }else{
+                $data['trackingLinks']   = false;
+            }    
         }
-
-        //ddd($data,1);
         $this->parser->parse('frontend/tracking-details', $data);
     }
 

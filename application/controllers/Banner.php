@@ -106,7 +106,7 @@ class Banner extends CI_Controller {
             }*/
 			
 			$config['upload_path']       =   './uploads/banner/';
-            $config['allowed_types']     =   'gif|jpg|png';
+            $config['allowed_types']     =   'gif|jpg|png|webp';
             
             if($_FILES["banner_image"]["name"]){
                 $config["file_name"]    =   time().'-'.$_FILES["banner_image"]['name'];

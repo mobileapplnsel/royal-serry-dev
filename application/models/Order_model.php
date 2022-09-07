@@ -279,16 +279,14 @@ class Order_model extends CI_Model
 	
 	public function orderDetails($id)
     {
-        $this->db->select('*');
+        $this->db->select('`shipment_master` .*, max(shipment_status.status_id) AS shipment_status_id');
         $this->db->from('shipment_master');
-        if ($id != '') {
-            $this->db->where('id', $id);
-        }
-        $this->db->order_by('id', 'DESC');
+        $this->db->join('shipment_status','shipment_master.id = shipment_status.shipment_id' , 'left');
+        $this->db->where('shipment_master.id', $id);
+        $this->db->where('shipment_master.status', '1');
         $query = $this->db->get();
-        //echo $this->db->last_query();die;
-        if ($query) {
-            return $query->result_array();
+        if ($query->num_rows()) {
+            return $query->row_array();
         } else {
             return false;
         }
@@ -693,5 +691,36 @@ class Order_model extends CI_Model
             //return false;
             return $row;
         }
+    }
+
+    public function deleteTrackingLink($shipmentId)
+    {
+       $this->db->delete('shipmemt_tracking_link', array('shipment_id' => $shipmentId)); 
+
+    }
+    public function addTrackingLink($data)
+    {
+        $this->db->insert('shipmemt_tracking_link', $data);
+        return $this->db->insert_id();
+    }
+    public function getTrackingLink($shipmentId)
+    {
+        $this->db->where('shipment_id',$shipmentId);
+        $this->db->from('shipmemt_tracking_link');
+        $query = $this->db->get();
+        if ($query->num_rows()>1) {
+            return $query->result();
+        }
+        return false;
+    }
+    public function getAllTrackingLink($shipmentId)
+    {
+        $this->db->where('shipment_id',$shipmentId);
+        $this->db->from('shipmemt_tracking_link');
+        $query = $this->db->get();
+        if ($query->num_rows()) {
+            return $query->result();
+        }
+        return false;
     }
 }

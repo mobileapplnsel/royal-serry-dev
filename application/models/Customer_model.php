@@ -616,7 +616,7 @@ class Customer_model extends CI_Model
 
 
     public function getOrderStatus($shipment_no){
-        $this->db->select('*,t2.`created_date` AS status_date,t1.`created_date` AS order_date');
+        $this->db->select('*,t1.`id` AS shipment_id,t2.`created_date` AS status_date,t1.`created_date` AS order_date');
         $this->db->from('shipment_master t1');
         $this->db->join('shipment_status t2','t1.id = t2.shipment_id' , 'left');
         $this->db->where('t1.shipment_no', $shipment_no);   

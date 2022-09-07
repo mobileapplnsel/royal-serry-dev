@@ -1395,3 +1395,10 @@ input.form-control.name-text {margin-top: 20px;}
 input.form-control.info-text {margin-top: 20px;}
 		
 }
+
+.all-tracking-link {
+    list-style: none;
+    display: inline-block;
+    margin-left: 10px;
+}
+.all-tracking-link li {margin-bottom: 5px;}

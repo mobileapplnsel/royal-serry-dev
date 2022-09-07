@@ -63,6 +63,15 @@ $CI->load->model('order_model');
                 <?php } ?>
                <h3 class="ds-title3"><?php echo getStatusName($value['status_id']); ?></h3>
                <p><?php echo date('m-d-Y h:i:sa',strtotime($value['status_date'])); ?></p>
+               <?php if($value['status_id'] >=4){ ?>
+                  <ul class="all-tracking-link">
+                     <?php if ($trackingLinks) {
+                     foreach($trackingLinks as $trackingdata){ ?>
+                     <li><a href="<?php echo $trackingdata->tracking_link;?>" target="_blank"><?php echo $trackingdata->tracking_link;?></a></li>
+                  <?php } }?>
+                  </ul>
+
+               <?php }?>
                <?php if($value['status_id'] == '5'){ ?>
                 <ul class="clsul">
                 <?php

@@ -33,7 +33,9 @@ class Order extends CI_Controller {
 		$this->load->model('category_model');
         $this->load->model('OuthModel');   
         $this->load->model('customer_model');
-        $this->load->model('quotation_model');        
+        $this->load->model('quotation_model');
+        $this->load->model('container_model');        
+
         $this->load->library('image_lib');
         $this->load->library("pagination");
 		$this->load->library("email");
@@ -926,7 +928,9 @@ class Order extends CI_Controller {
             }
             else{
                 $data                    =   [];
-                $data['OrderDetails']   =   $this->order_model->orderDetails($order_id);
+                $data['orderDetails']   =   $this->order_model->orderDetails($order_id);
+                $data['trackingLinks']   =   $this->order_model->getTrackingLink($order_id);
+                $data['containerDetails']   =   $this->container_model->getContainerByshipmentId($order_id);
                 $data['OrderStatusList']   =   $this->order_model->getOrderStatusList($order_id);
 				//$data['ShiftList']   	 =   $this->user_model->getShiftListbyUserId($id);
 				$data['StatusList']   	 =   $this->order_model->getStatusList();
@@ -938,20 +942,34 @@ class Order extends CI_Controller {
 	
 	public function insertorderstatus()
     {
-		$data                           =   [];
+		$trackingLinks = $this->input->post('tracking', TRUE);
+
+        $data                           =   [];
 		$data['shipment_id']                    =   $this->input->post('shipment_id', TRUE);
 		$data['status_id']                      =   $this->input->post('status_id', TRUE);
 		$data['branch_id']                   	=   $this->input->post('branch_id', TRUE);
 		$data['created_by']                   	=   $this->input->post('created_by', TRUE);
 		$data['created_date']                   =   date('Y-m-d H:i:s');
+
+        $shipmentId = $this->input->post('shipment_id', TRUE);
 		
-		$checkAvailablity       =   $this->order_model->checkExistOrderStatus($data['shipment_id'],$data['status_id']);
+		$checkAvailablity  =   $this->order_model->checkExistOrderStatus($data['shipment_id'],$data['status_id']);
 			
-            if($checkAvailablity>0){
-                $this->session->set_flashdata('error', 'Order Status Already exists!');
-                echo redirectPreviousPage();
-                exit;
+        if($checkAvailablity>0){
+
+            if (count($trackingLinks)) {
+                $this->order_model->deleteTrackingLink($shipmentId);
+                foreach($trackingLinks as $trackingLink){
+                    if ($trackingLink) {
+                        $dataLink = array('shipment_id'=>$shipmentId,'tracking_link'=>$trackingLink);
+                        $this->order_model->addTrackingLink($dataLink);
+                    }
+                }
             }
+            $this->session->set_flashdata('error', 'Order Status Already exists!');
+            echo redirectPreviousPage();
+            exit;
+        }
 		//print_r($data); die;
 		if($data['status_id'] == '6'){
 			$statusData = array(
@@ -967,6 +985,17 @@ class Order extends CI_Controller {
 		$insertOrderStatus   =   $this->order_model->insert_order_status($data);
 
 		if($insertOrderStatus > 0){
+
+            if (count($trackingLinks) > 1) {
+                $this->order_model->deleteTrackingLink($shipmentId);
+                foreach($trackingLinks as $trackingLink){
+                    if ($trackingLink) {
+                        $dataLink = array('shipment_id'=>$shipmentId,'tracking_link'=>$trackingLink);
+                        $this->order_model->addTrackingLink($dataLink);
+                    }
+                }
+            }
+
 			$this->session->set_flashdata('success', 'Order Status Successfully Added');
 			echo redirectPreviousPage();
 		}
