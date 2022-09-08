@@ -53,15 +53,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <input type="checkbox" class="minimal">
                             </label> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                             <label>
-                                Normal User&nbsp; &nbsp;                             
+                                Normal Customer&nbsp; &nbsp;                             
                                 <input type="radio" name="user_type" class="minimal-red series" value="NU" <?php if($this->session->flashdata('userType')=='NU') {echo 'checked';} ?> checked/>
                             </label>&nbsp; &nbsp;
                             <label>
-                                Business User&nbsp; &nbsp;                            
+                                Business Customer&nbsp; &nbsp;                            
                             <input type="radio" name="user_type" class="minimal-red series" value="BU" <?php if($this->session->flashdata('userType')=='BU') {echo 'checked';} ?> />
                             </label>&nbsp; &nbsp;
                             <label>
-                                Pickup/Delivery Boy&nbsp; &nbsp;                            
+                                Pickup/Delivery Staff&nbsp; &nbsp;                            
                             <input type="radio" name="user_type" class="minimal-red series" value="PDB" <?php if($this->session->flashdata('userType')=='PDB') {echo 'checked';} ?> />
                             </label>&nbsp; &nbsp;
                             <label>

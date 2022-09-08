@@ -31,8 +31,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="<?= base_url('admin/adduser') ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add New User</a></li>
-                    <li><a href="<?= base_url('admin/pickup-delivery-boy-list') ?>"><i class="fa fa-dashboard"></i>Pickup/Delivery Boy List</a></li>
-                    <li class="active">Pickup/Delivery Boy Duty Allocation List</li>
+                    <li><a href="<?= base_url('admin/pickup-delivery-boy-list') ?>"><i class="fa fa-dashboard"></i>Pickup/Delivery Staff List</a></li>
+                    <li class="active">Pickup/Delivery Staff Duty Allocation List</li>
                 </ol>
             </section>
             <h2></h2>

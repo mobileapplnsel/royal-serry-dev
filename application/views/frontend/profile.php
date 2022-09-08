@@ -82,11 +82,11 @@ $this->load->view('frontend/includes/header');
                   <?php echo form_open(base_url('profile-update'), array('id' => 'profileF', 'class' => 'contact-form-registration')); ?>
                   <div class="form-check form-check-inline" style=" margin-left: 20px;">
                      <input class="form-check-input" type="radio" name="user_type" id="inlineRadio1" value="NU" checked="checked">
-                     <label class="form-check-label" for="inlineRadio1">Normal user</label>
+                     <label class="form-check-label" for="inlineRadio1">Normal Customer</label>
                   </div>
                   <div class="form-check form-check-inline">
                      <input class="form-check-input" type="radio" name="user_type" id="inlineRadio2" value="BU">
-                     <label class="form-check-label" for="inlineRadio2">Business user</label>
+                     <label class="form-check-label" for="inlineRadio2">Business Customer</label>
                   </div>
                   <div class="form-field-text">
                      <div class="row">

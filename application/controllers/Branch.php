@@ -259,7 +259,7 @@ class Branch extends CI_Controller {
 	$areaDetails   =   $this->branch_model->getAreadetails($id);
 	$PDareaDetails   =   $this->branch_model->checkAreaExisttoPD($areaDetails[0]->branch_id,$areaDetails[0]->area_id);
 	if($PDareaDetails > 0){
-		$this->session->set_flashdata('error', 'Cannot delete Area!!! Please ensure you have untag from P/D boy Area.');
+		$this->session->set_flashdata('error', 'Cannot delete Area!!! Please ensure you have untag from P/D Staff Area.');
 		echo redirectPreviousPage();
 		exit;
 	}
@@ -426,7 +426,7 @@ class Branch extends CI_Controller {
 	echo '===>>'.$shiftDetails[0]->day;*/
 	$PDshiftDetails   =   $this->branch_model->checkShiftExisttoPD($shiftDetails[0]->branch_id,$shiftDetails[0]->shift_id,$shiftDetails[0]->day);
 	if($PDshiftDetails > 0){
-		$this->session->set_flashdata('error', 'Cannot delete shift!!! Please ensure you have untag from P/D boy.');
+		$this->session->set_flashdata('error', 'Cannot delete shift!!! Please ensure you have untag from P/D staff.');
 		echo redirectPreviousPage();
 		exit;
 	}

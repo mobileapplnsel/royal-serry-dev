@@ -1752,7 +1752,7 @@ class CustomerController extends CI_Controller
                 }
 
                 $messageString = [
-                    'status' => 1, 'message' => 'Quotation request submitted successfully, PD Boy will contact you soon.',
+                    'status' => 1, 'message' => 'Quotation request submitted successfully, PD Staf will contact you soon.',
                     'redirectUrl'              => base_url('/quotation'),
                 ];
                 echo json_encode($messageString);
