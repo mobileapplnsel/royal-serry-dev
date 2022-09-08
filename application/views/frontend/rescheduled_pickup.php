@@ -96,6 +96,9 @@ $this->load->view('frontend/includes/header');
                               </div>
                               <input  type="hidden" id="city" name="city" value="<?php echo $shipment_from_address['city'] ?>">
                            </div>
+                           <div style=" width: 100%; display: block; clear: both; height: 40px; border-top: 1px solid #76b382; border-bottom: 1px solid #76b382; margin-top: 10px; padding-top: 8px;">
+                              <b>Payable Amount : $<span id="pay-amount">0.00</span></b>
+                           </div>
                            <div class="row" id="make-payment" style="display:none">
                               <div class="col-sm-12">
                                  <fieldset class="rescheduled-payment-1" disabled="" style="display:none">
@@ -265,6 +268,7 @@ $this->load->view('frontend/includes/header');
                      $("#ra_percentage").val(data.paymentDetails.ra_percentage);
                      $("#ra_tax_amt").val(data.paymentDetails.ra_tax_amt);
                      $("#grand_total").val(data.paymentDetails.total);
+                     $("#pay-amount").html(data.paymentDetails.total);
                      $('.rescheduled-payment-1').show();
                      $('.rescheduled-payment-1').prop("disabled", false);
                      var creditOutstandingAmount = $("#credit_outstanding_amount").val();
