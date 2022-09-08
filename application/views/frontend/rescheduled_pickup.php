@@ -92,19 +92,20 @@ $this->load->view('frontend/includes/header');
                               <div class="col-md-6 col-sm-12">
                                   <h3 class="titelt">Pickup Date: </h3>
                                   <div class="spacer"></div>
-                                  <input class="form-control form-control-new pickup-date-picker" type="text" value="<?php echo date('d-m-Y',strtotime($shipment_details['pickup_date'])); ?>" name="pickup_date" readonly required>
+                                  <input class="form-control form-control-new pickup-date-picker" id="new-pickup-date" type="text" value="<?php echo date('d-m-Y',strtotime($shipment_details['pickup_date'])); ?>" name="pickup_date" readonly required>
                               </div>
                               <input  type="hidden" id="city" name="city" value="<?php echo $shipment_from_address['city'] ?>">
                            </div>
                            <div style=" width: 100%; display: block; clear: both; height: 40px; border-top: 1px solid #76b382; border-bottom: 1px solid #76b382; margin-top: 10px; padding-top: 8px;">
                               <b>Payable Amount : $<span id="pay-amount">0.00</span></b>
                            </div>
+                            <input type="hidden" id="quote_id_enc" name="quote_id_enc" value="<?php echo (isset($quote_id_enc)) ? $quote_id_enc : ''; ?>">
                            <div class="row" id="make-payment" style="display:none">
                               <div class="col-sm-12">
                                  <fieldset class="rescheduled-payment-1" disabled="" style="display:none">
                                  <div class="form-check" style="padding-top: 0px!important;">
                                     <?php $grand_total="0.00"; ?>  
-                                    <input type="hidden" id="quote_id_enc" name="quote_id_enc" value="<?php echo (isset($quote_id_enc)) ? $quote_id_enc : ''; ?>">
+                                   
                                     <input type="hidden" id="subtotal" name="subtotal" value="0.00">
                                     <input type="hidden" id="discount" name="discount" value="0.00">
                                     <input type="hidden" id="ga_percentage" name="ga_percentage" value="0.00">
@@ -170,10 +171,10 @@ $this->load->view('frontend/includes/header');
                                              <div class="col-md-3">
                                                 <div class="payment-icon">
                                                    <ul>
-                                                      <li><img src="http://182.75.124.211/royal-serry-dev/assets/frontend/images/picon_1.png"></li>
-                                                      <li><img src="http://182.75.124.211/royal-serry-dev/assets/frontend/images/picon_2.png"></li>
-                                                      <li><img src="http://182.75.124.211/royal-serry-dev/assets/frontend/images/picon_3.png"></li>
-                                                      <li><img src="http://182.75.124.211/royal-serry-dev/assets/frontend/images/picon_4.png"></li>
+                                                      <li><img src="<?php echo base_url('/'); ?>/assets/frontend/images/picon_1.png"></li>
+                                                      <li><img src="<?php echo base_url('/'); ?>/assets/frontend/images/picon_2.png"></li>
+                                                      <li><img src="<?php echo base_url('/'); ?>/assets/frontend/images/picon_3.png"></li>
+                                                      <li><img src="<?php echo base_url('/'); ?>/assets/frontend/images/picon_4.png"></li>
                                                    </ul>
                                                 </div>
                                              </div>
@@ -228,6 +229,14 @@ $this->load->view('frontend/includes/header');
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
    $(document).ready(function() {
+      $('#new-pickup-date').change(function(){
+          var deliverySpeed = $("#delivery_speed").val();
+          var quoteIdEnc = $("#quote_id_enc").val();
+          if (deliverySpeed==2) {
+            $("#msform").submit();
+          } 
+      });
+
       $("#msform").submit('on', function(e) {
         
          e.preventDefault();
@@ -260,7 +269,7 @@ $this->load->view('frontend/includes/header');
 
                   if (data.paymentrequired) {
                      $('#msform').prop('action', '<?php echo base_url('shipment-rescheduled-payment/'.$quote_id_enc); ?>');
-                     $("#delivery_speed").prop("disabled", true);
+                     /*$("#delivery_speed").prop("disabled", true);*/
                      $("#delivery_mode_id").val(data.paymentDetails.delivery_mode_id);
                      $("#subtotal").val(data.paymentDetails.amount);
                      $("#ga_percentage").val(data.paymentDetails.ga_tax_amt);
@@ -277,7 +286,7 @@ $this->load->view('frontend/includes/header');
                         $('.rescheduled-payment-2').prop("disabled", false);
                      }
                      $("#make-payment").show();
-                     $(".payment-action").val('Pay')
+                     $(".payment-action").val('Pay');
                   }else{
                      setTimeout(function() {
                         window.location.href = data.redirectUrl;
@@ -319,13 +328,16 @@ $this->load->view('frontend/includes/header');
 
    $(document).on('change', '.pickup-speed', function() {
         
-        
+      $(".payment-action").val('Rescheduled');
+      var quoteIdEnc = $("#quote_id_enc").val();
+      $('#msform').prop('action', '<?php echo base_url('shipment-rescheduled/') ?>'+quoteIdEnc);
+
       $('.rescheduled-payment-1').hide();
       $('.rescheduled-payment-1').prop("disabled", true);
       $('.rescheduled-payment-2').hide();
       $('.rescheduled-payment-2').prop("disabled", true);
       $("#make-payment").hide();
-
+      $("#pay-amount").html("0.00");
 
 
 
