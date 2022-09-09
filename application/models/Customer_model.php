@@ -155,7 +155,7 @@ class Customer_model extends CI_Model
             $this->db->select('*');
             $this->db->where('quotation_id', $quote_id);
             $query_tz = $this->db->get('quotation_to_address');
-            $quotationToAddress = $query_fz->row_array();
+            $quotationToAddress = $query_tz->row_array();
 
             $to_zip = null;
             $to_city = $quotationToAddress['city'];
@@ -421,9 +421,7 @@ class Customer_model extends CI_Model
             //get to address
             $this->db->select('zip');
             $this->db->where('quotation_id', $quote_id);
-            //$this->db->where('is_deleted', '0');
             $query_tz = $this->db->get('quotation_to_address');
-            // echo $this->db->last_query();die;
             if ($query_tz) {
                 $to_zip = $query_tz->row_array();
             } else {

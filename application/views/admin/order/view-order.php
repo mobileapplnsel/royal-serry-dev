@@ -54,7 +54,7 @@ $qty = 0;
                                 <div class="row">
                                     <div class="col-sm-12 col-md-9">
                                         <p class="ds-title-new"><strong>Order # :</strong> <?php echo (!empty($shipment_details) && $shipment_details['shipment_no'] != '') ? $shipment_details['shipment_no'] : ''; ?></p>
-                                        <p class="ds-title-new"><strong>Date : </strong> <?php echo (!empty($quote_details) && $quote_details[0]['created_date'] != '') ? $quote_details[0]['created_date'] : DTIME; ?></p>
+                                        <p class="ds-title-new"><strong>Date : </strong> <?php echo (!empty($quote_details) && $quote_details['created_date'] != '') ? $quote_details['created_date'] : DTIME; ?></p>
                                         <!-- <p class="ds-title-new"><strong>Valid Until : </strong> </p>
                         <p class="ds-title-new"><strong>Customer Number : </strong> </p> -->
                                     </div>
@@ -129,12 +129,12 @@ $qty = 0;
 
                                 <div class="row">
                                     <div class="col-sm-12 col-md-6">
-                                        <p class="ds-title-new"><strong>Parcel Type: </strong><?php echo (!empty($quote_details) && $quote_details[0]['shipment_type'] == 1) ? 'Document' : 'Package'; ?></p>
+                                        <p class="ds-title-new"><strong>Parcel Type: </strong><?php echo (!empty($quote_details) && $quote_details['shipment_type'] == 1) ? 'Document' : 'Package'; ?></p>
 
 
                                     </div>
                                     <div class="col-sm-12 col-md-6">
-                                        <p class="ds-title-new"><strong>Shipment Type: </strong><?php echo (!empty($quote_from_details) && $quote_details[0]['shipment_type'] == 1) ? 'Domestic' : 'International'; ?></p>
+                                        <p class="ds-title-new"><strong>Shipment Type: </strong><?php echo (!empty($quote_from_details) && $quote_details['shipment_type'] == 1) ? 'Domestic' : 'International'; ?></p>
 
                                     </div>
 
