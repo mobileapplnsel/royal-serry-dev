@@ -54,7 +54,8 @@ $qty = 0;
                                 <div class="row">
                                     <div class="col-sm-12 col-md-9">
                                         <p class="ds-title-new"><strong>Order # :</strong> <?php echo (!empty($shipment_details) && $shipment_details['shipment_no'] != '') ? $shipment_details['shipment_no'] : ''; ?></p>
-                                        <p class="ds-title-new"><strong>Date : </strong> <?php echo (!empty($quote_details) && $quote_details['created_date'] != '') ? $quote_details['created_date'] : DTIME; ?></p>
+                                        <p class="ds-title-new"><strong>Order Date : </strong> <?php echo (!empty($shipment_details) && $shipment_details['created_date'] != '') ? $shipment_details['created_date'] : DTIME; ?></p>
+                                        <p class="ds-title-new"><strong>Pickup Date : </strong> <?php echo (!empty($shipment_details) && $shipment_details['pickup_date'] != '') ? $shipment_details['pickup_date'] : DTIME; ?></p>
                                         <!-- <p class="ds-title-new"><strong>Valid Until : </strong> </p>
                         <p class="ds-title-new"><strong>Customer Number : </strong> </p> -->
                                     </div>
