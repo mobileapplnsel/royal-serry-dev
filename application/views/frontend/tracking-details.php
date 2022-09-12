@@ -66,8 +66,8 @@ $CI->load->model('order_model');
                <?php if($value['status_id'] >=4){ ?>
                   <ul class="all-tracking-link">
                      <?php if ($trackingLinks) {
-                     foreach($trackingLinks as $trackingdata){ ?>
-                     <li><a href="<?php echo $trackingdata->tracking_link;?>" target="_blank"><?php echo $trackingdata->tracking_link;?></a></li>
+                     foreach($trackingLinks as $key=>$trackingdata){ ?>
+                     <li><a href="<?php echo $trackingdata->tracking_link;?>" target="_blank">Container Tracking <?php echo $key+1; ?></a></li>
                   <?php } }?>
                   </ul>
 
