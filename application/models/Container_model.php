@@ -484,7 +484,8 @@ class Container_model extends CI_Model
 	
 	public function getShipmentDetails_by_locationId($FromBranchId, $vialocationArr, $shipment_mode)
     {
-		$this->db->select('sobt.shipment_id, sobt.to_branch_id, sm.shipment_no, sm.quotation_id, sm.customer_id, sm.payment_mode, sm.transport_type, b.name as branch_name, u.firstname, u.email, u.telephone');
+		
+        $this->db->select('sobt.shipment_id, sobt.to_branch_id, sm.shipment_no, sm.quotation_id, sm.customer_id, sm.payment_mode, sm.transport_type, b.name as branch_name, u.firstname, u.email, u.telephone');
         $this->db->from('shipment_order_branch_tagging sobt');
 		$this->db->join('shipment_master sm', 'sobt.shipment_id = sm.id', 'left');
 		$this->db->join('branch b', 'sobt.to_branch_id = b.branch_id', 'left');

@@ -242,7 +242,6 @@ class Customer_model extends CI_Model
                 $to_addr_insert_id = $this->db->insert_id();
 
                 //items
-
                 $this->db->select('*');
                 $this->db->where('quotation_id',$quote_id);
                 $query_quot_items   = $this->db->get('quotation_item_details');
