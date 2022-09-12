@@ -502,7 +502,7 @@ class Container_model extends CI_Model
 		$this->db->group_by('sobt.shipment_id');
 		//$this->db->where('sobt.shipment_id !=', 'csi.order_id');
         $query  =   $this->db->get();
-		echo $this->db->last_query();die();
+		//echo $this->db->last_query();die();
         $row = $query->num_rows();
         if ($row > 0)
         {
