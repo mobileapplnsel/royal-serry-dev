@@ -36,6 +36,7 @@ $sessionData = $this->session->userdata('Customer');
 	    <!-- intlTelInput -->
 	    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/frontend/plugins/intl-tel-input-master/build/css/intlTelInput.css">
 	    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	    <link rel="stylesheet" href="<?= base_url('assets/admin/') ?>css/introjs.css">
 	</head>
 	<body class="<?php echo str_replace('/','',$this->uri->slash_segment(1));?>">
 		<header>
