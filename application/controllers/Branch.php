@@ -570,32 +570,43 @@ class Branch extends CI_Controller {
         $pickupspeed = $this->input->post('pickupspeed');
         $city_id = $this->input->post('from_city');
         $pickupMethod = $this->branch_model->branchPickupMethodByCityId($city_id);
-        $data = [];
+        $days = $holidays = [];
+
         if (!empty($pickupMethod)) {
+            $branchId = $pickupMethod->branch_id;
+            $holidaysLists = $this->branch_model->getHolidays($branchId);
+
+            foreach($holidaysLists as $holidaysList){
+                $holidays[] = $holidaysList['from_date'];
+            }
             if ($pickupMethod->saturday==$pickupspeed) {
-               $data[]=0;
+               $days[]=0;
             }
             if ($pickupMethod->monday==$pickupspeed) {
-               $data[]=1;
+               $days[]=1;
             }
             if ($pickupMethod->tuesday==$pickupspeed) {
-               $data[]=2;
+               $days[]=2;
             }
             if ($pickupMethod->wednesday==$pickupspeed) {
-               $data[]=3;
+               $days[]=3;
             }
             if ($pickupMethod->thursday==$pickupspeed) {
-               $data[]=4;
+               $days[]=4;
             }
             if ($pickupMethod->friday==$pickupspeed) {
-               $data[]=5;
+               $days[]=5;
             }
             if ($pickupMethod->saturday==$pickupspeed) {
-               $data[]=6;
+               $days[]=6;
             }
             
         }
-        
+
+        $data = array(
+            "days"=>$days,
+            "holiday" =>$holidays
+        );
         echo json_encode($data);
     }
 

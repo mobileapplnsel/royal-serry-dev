@@ -355,21 +355,33 @@ $this->load->view('frontend/includes/header');
                 from_city: fromCity,
             },
             success: function(data) {
-                $(".pickup-date-picker" ).val('');
-                $(".pickup-date-picker" ).datepicker( "destroy" );
-                var days = JSON.stringify(data);
-                $(".pickup-date-picker").datepicker({
+               $(".pickup-date-picker" ).val('');
+               $(".pickup-date-picker" ).datepicker( "destroy" );
+               var days = JSON.stringify(data.days);
+               var holidays = JSON.stringify(data.holiday);
+               if (pickupspeed=="1") {
+                 var necls = 'normal-date';
+               }else{
+                  var necls = 'priority-date';
+               }
+
+               $(".pickup-date-picker").datepicker({
                     dateFormat: 'dd-mm-yy',
                     minDate: 0,
                     beforeShowDay: function(date){ 
-                        if (days.includes(date.getDay())) {
-                            return [true, "" ];
+                        month = (date.getMonth() < 10) ? "0" + date.getMonth().toString() : date.getMonth();
+                        day = (date.getDate() < 10) ? "0" + date.getDate().toString() : date.getDate();
+                        currentDate = date.getFullYear()+'-'+month+'-'+day;
+                        if (days.includes(date.getDay()) && !holidays.includes(currentDate)) {
+                            return [true, necls ];
                         } else {
-                            return [false, "" ];
+                            return [false, necls ];
                         }
                         
                     }
-                });
+               });
+
+               
 
             }
         });

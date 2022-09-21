@@ -823,6 +823,16 @@ class Branch_model extends CI_Model
 
     }
 
+    function getHolidays($branch_id) {
+        $this->db->select('from_date');
+        $this->db->from('branch_holiday');
+        $this->db->where('branch_id', $branch_id);
+        $query = $this->db->get();
+        return $dates = $query->result_array();
+       
+
+    }
+
     public function getDeliveryModeList($param = null)
     {
         $this->db->select('*');

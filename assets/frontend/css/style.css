@@ -1402,3 +1402,7 @@ input.form-control.info-text {margin-top: 20px;}
     margin-left: 10px;
 }
 .all-tracking-link li {margin-bottom: 5px;}
+
+.priority-date a{
+    color: #008000!important;
+}

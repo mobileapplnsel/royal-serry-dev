@@ -853,7 +853,9 @@ class Order extends CI_Controller {
 	
 	public function order_tracking($page = 'order-tracking')
     {
-		if(!$this->session->userdata('logged_in'))
+		
+
+        if(!$this->session->userdata('logged_in'))
         {
             return redirect('admin/login');
         }
@@ -866,9 +868,17 @@ class Order extends CI_Controller {
 			else{
 				$data['title'] = ucfirst($page);
 				$shipment_no = $this->input->post('shipment_no', TRUE);
-				if(isset($shipment_no) && $shipment_no != ''){
-					$data['shipment_list']     =   $this->order_model->getOrderStatus($shipment_no);
-				}
+                $data['trackingLinks']   = false;
+                if(isset($shipment_no) && $shipment_no == ''){
+                    $this->session->set_flashdata('error', 'Not a valid Tracking No.');
+                }else{
+
+                    $data['shipment_list'] = $statusLists = $statusLists = $this->order_model->getOrderStatus($shipment_no);
+                    if (count($statusLists)) {
+                       $data['trackingLinks']   =   $this->order_model->getAllTrackingLink($statusLists[0]['shipment_id']);
+                    }
+                }
+                
 				$this->load->view('admin/order/' . $page, $data);
 			}
 		}

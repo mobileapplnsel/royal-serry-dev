@@ -35,6 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </ol>
             </section>
             <h2></h2>
+            
             <!-- DataTables Example -->
             <section class="content">
                 <div class="row">
@@ -42,6 +43,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="box">
                             <div class="box-header">
                                 <h3 class="box-title">Rate List</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="filter-area">
+                                    <form>
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <label for="email">From Location </label>
+                                                <?php echo fillCombo('states_master', 'id', 'name', '', '', 'id', 'form-control select-2', 'location_from', 'location_from'); ?>
+                                            </div>
+                                            
+                                            <div class="form-group col-md-3">
+                                                <label for="email">To Location Name</label>
+                                                <?php echo fillCombo('states_master', 'id', 'name', '', '', 'id', 'form-control', 'location_to', 'location_to'); ?>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                             <div class="box-body">
                                 <table id="example2" class="table table-bordered table-hover">
