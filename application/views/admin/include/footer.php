@@ -1,6 +1,7 @@
 <input id="baseUrl" type="hidden" value="<?= base_url() ?>">
 <!-- jQuery 3 --> 
 <script src="<?= base_url('assets/admin/') ?>bower_components/jquery/dist/jquery.min.js"></script> 
+
 <!-- Bootstrap 3.3.7 --> 
 <script src="<?= base_url('assets/admin/') ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script> 
 <!-- FastClick --> 
@@ -71,6 +72,12 @@
 <script src="<?php echo base_url(); ?>assets/admin/plugins/jquery-ui-1.12.1/jquery-ui.js"></script>
 <!--Bootstrap Alert-->
 <script src="<?php echo base_url(); ?>assets/frontend/plugins/intl-tel-input-master/build/js/intlTelInput.min.js"></script>
+<!-- intojs -->
+<script src="<?= base_url('assets/admin/') ?>js/intro.js"></script>
+<script>
+	introJs().start();
+
+</script>
 <script type="text/javascript">
 <?php if ($this->session->flashdata('success')) {?>
     toastr.success("<?php echo $this->session->flashdata('success'); ?>");

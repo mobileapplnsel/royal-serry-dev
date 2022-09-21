@@ -73,4 +73,6 @@
                 height: 30px;
             }
         </style>
+        <link rel="stylesheet" href="<?= base_url('assets/admin/') ?>css/introjs.css">
+
     </head>

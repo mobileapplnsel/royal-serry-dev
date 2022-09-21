@@ -95,7 +95,11 @@
 <script src="<?php echo base_url(); ?>assets/frontend/plugins/intl-tel-input-master/build/js/intlTelInput.min.js"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="<?= base_url('assets/admin/') ?>js/intro.js"></script>
+<script>
+   introJs().start();
 
+</script>
 <!--Bootstrap Alert-->
 <script type="text/javascript">
    toastr.options = {
