@@ -31,8 +31,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="<?= base_url('admin/adduser') ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add New User</a></li>
-                    <li><a href="<?= base_url('admin/pickup-delivery-boy-list') ?>"><i class="fa fa-dashboard"></i>Pickup/Delivery Boy List</a></li>
-                    <li class="active">Pickup/Delivery Boy Shift Allocation List</li>
+                    <li><a href="<?= base_url('admin/pickup-delivery-boy-list') ?>"><i class="fa fa-dashboard"></i>Pickup/Delivery Staff List</a></li>
+                    <li class="active">Pickup/Delivery Staff Shift Allocation List</li>
                 </ol>
             </section>
             <h2></h2>
@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="box-header with-border"> Add New Shift Allocation </div>
                             <div class="box-body">
                                <div class="form-group col-md-6 col-md-offset-3"></div>
-                            		<div class="form-group col-md-6">
+                            		<div class="form-group col-md-4">
                                     <label for="parent">Shift Name<span>*</span> : </label>                        
                                     <select class="form-control" name="shift_id" id="user_shift_id" required>
                                     	<option value="">Select Shift</option>
@@ -64,13 +64,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         ?>
                                     </select>
                                 </div>
-                                
-                                	<div class="form-group col-md-6">
-                                    <label for="parent">Days<span>*</span> : </label>                        
-                                    <select class="form-control" name="day" id="user_day" required>
-                                        <option value="">Select Day</option>
-                                    </select>
+                                <div class="form-group col-md-4">
+                                    <label for="parent">From Date<span>*</span> : </label>
+                                    <input type="text" id="shift_from_date" class="form-control" name="from_date" id="from-date" placeholder="mm/dd/yyyy" readonly/> 
                                 </div>
+                                <div class="form-group col-md-4">
+                                    <label for="parent">To Date<span>*</span> : </label>
+                                    <input type="text" id="shift_to_date" class="form-control" name="to_date" id="to-date" placeholder="mm/dd/yyyy" readonly/> 
+                                </div>
+
                                </div>
                             
                                 <div class="box-footer">
@@ -82,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php echo form_close(); ?>
                             
                             <div class="box-header">
-                                <h3 class="box-title">Pickup/Delivery Boy Shift Allocation List</h3>
+                                <h3 class="box-title">Pickup/Delivery Staff Shift Allocation List</h3>
                             </div>
                             <div class="box-body">
                                 <table id="example2" class="table table-bordered table-hover">
@@ -90,8 +92,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <tr>
                                             <th>ID</th>
                                             <th>Action</th>
-                                            <th>Shift Name</th>                                            
-                                            <th>Day</th>
+                                            <th>Shift Name</th>                              
+                                            <th>Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -109,7 +111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 </li>
                                               </ul></td>
                                             <td><?= $userShift->shift_name.' ('.$userShift->time_from.' To '.$userShift->time_to.')' ?></td>
-                                            <td><?= $userShift->day ?></td>
+                                            <td><?php if($userShift->from_date && $userShift->to_date){echo $userShift->from_date.' To '. $userShift->from_date;} ?></td>
                                         </tr>
                                         <?php 
                                             }                                            

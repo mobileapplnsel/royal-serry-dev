@@ -343,7 +343,7 @@ else
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li id="dashboard" class="">
-                <a href="<?= base_url('admin') ?>">
+                <a href="<?= base_url('admin') ?>" style="color: #ffffff; font-waight: bold;">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                 </a>              
             </li>
@@ -358,9 +358,9 @@ else
 				}
 				foreach ($moduleData as $key => $value) {
             ?>
-            <li class="header"><?php echo $value['patent_label']; ?> Module</li>
+            
             <li class="treeview">
-              <a href="#" id="module_<?php echo $value['parent_id']; ?>" style="border-left:4px solid <?php echo $value['tab_color']; ?>;">
+              <a href="#" id="module_<?php echo $value['parent_id']; ?>" style=" color: #ffffff; font-waight: bold; border-left:4px solid <?php echo $value['tab_color']; ?>;">
                 <?php echo $value['icon_path']; ?> <span><?php echo $value['patent_label']; ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>              
               <ul class="treeview-menu" id="subparent_<?php echo $value['parent_id']; ?>">

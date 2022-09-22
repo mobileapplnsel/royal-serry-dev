@@ -147,6 +147,20 @@ label.form-check-label {
                                         <div class="node nodeactive">
                                            <h3 class="ds-title3"><?php echo getStatusName($value['status_id']); ?></h3>
                                            <p><?php echo date('m-d-Y h:i:sa',strtotime($value['status_date'])); ?></p>
+
+                                            <?php if($value['status_id'] >=4){ ?>
+                                              <ul class="all-tracking-link">
+                                                <?php if ($trackingLinks) {
+                                                 foreach($trackingLinks as $key=>$trackingdata){ ?>
+                                                 <li><a href="<?php echo $trackingdata->tracking_link;?>" target="_blank">Container Tracking <?php echo $key+1; ?></a></li>
+                                               <?php } }?>
+                                              </ul>
+
+                                            <?php }?>
+
+
+
+
                                            <?php if($value['status_id'] == '5'){ ?>
                                            	<ul class="clsul">
                                             <?php

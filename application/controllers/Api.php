@@ -1264,7 +1264,7 @@ class Api extends CI_Controller
 			if ($return == 'assinged') {
 				$data['code'] = '200';
 				$data['status'] = 'success';
-				$data['message'] = 'Your Quotation Request successfully created. PD boy will contact soon.';
+				$data['message'] = 'Your Quotation Request successfully created. PD Staf will contact soon.';
 				$data['quotation_data'] = $quot_data;
 
 				// send mail to Customer
@@ -1304,7 +1304,7 @@ class Api extends CI_Controller
 			} else {
 				$data['code'] = '201';
 				$data['status'] = 'failed';
-				$data['message'] = 'Quotation request cannot created, due to PD boy not found.';
+				$data['message'] = 'Quotation request cannot created, due to PD Staf not found.';
 			}
 		} else {
 			$data['code'] = '201';

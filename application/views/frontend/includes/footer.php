@@ -256,3 +256,11 @@
       }
    });
 </script>
+
+<script language="javascript">
+    $(document).ready(function () {
+        $(".date-picker").datepicker({
+            minDate: 0
+        });
+    });
+</script>

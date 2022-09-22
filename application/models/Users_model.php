@@ -458,6 +458,25 @@ class Users_model extends CI_Model
     }
 
 
+    public function shipmentRates($ship_cat_id, $ship_subcat_id, $ship_sub_subcat_id, $rate_type, $location_from, $location_to, $charges_mode, $delivery_mode_id)
+    {
+        
+        $this->db->select('ship_mode_id, rate, insurance');
+        $this->db->where('ship_cat_id', $ship_cat_id);
+        $this->db->where('ship_subcat_id', $ship_subcat_id);
+        $this->db->where('ship_sub_subcat_id', $ship_sub_subcat_id);
+        $this->db->where('rate_type', $rate_type);
+        $this->db->where('location_from', $location_from);
+        $this->db->where('location_to', $location_to);
+        $this->db->where('ship_mode_id', $charges_mode);
+        $this->db->where('delivery_mode_id', $delivery_mode_id);
+        $this->db->from('rate_master');
+        $query  = $this->db->get();
+        $result = $query->row();
+        return $result;
+    }
+
+
     /********************************************get User Area List Module********************************************/
 
     public function getUserAreaList($id)

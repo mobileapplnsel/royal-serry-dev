@@ -99,67 +99,68 @@ class Container extends CI_Controller
 		$data['full_status'] = $getContainerLocation[0]->full_status;
 
 		$shipment_mode = $getContainerLocation[0]->shipment_mode;
-
+		$viaBranchNameArr = $vialocationArr = [];
 		if (!empty($getContainerViaLocation)) {
 			foreach ($getContainerViaLocation as $location) {
 				$vialocationArr[] = $location->branch_id;
 				$viaBranchNameArr[] = $location->branch_name;
 			}
-			array_push($vialocationArr, $ToBranchId);
-			$data['ViaBranchName'] = implode(", ", $viaBranchNameArr);
+		}
+		array_push($vialocationArr, $ToBranchId);
+		$data['ViaBranchName'] = implode(", ", $viaBranchNameArr);
 
-			$data['getShipmentDetails']   =   $this->container_model->getShipmentDetails_by_locationId($FromBranchId, $vialocationArr, $shipment_mode);
+		$data['getShipmentDetails']   =   $this->container_model->getShipmentDetails_by_locationId($FromBranchId, $vialocationArr, $shipment_mode);
 
-			// SEND mail to paylater user
-			if (!empty($data['getShipmentDetails'])) {
-				foreach ($data['getShipmentDetails'] as $shipment) {
-					if ($shipment->payment_mode == '3') {
-						$checkPoint = getCheckPoint($shipment->customer_id, '2');
-						if ($checkPoint == '1') {
-							$from_email = 'noreply@staqo.com';
-							$replyemail = 'noreply@staqo.com';
-							$to_email   = $shipment->email;
-							$name       = $shipment->firstname;
-							$subject = "Required payment for order shipment From Royal Sherry";
+		// SEND mail to paylater user
+		if (!empty($data['getShipmentDetails'])) {
+			foreach ($data['getShipmentDetails'] as $shipment) {
+				if ($shipment->payment_mode == '3') {
+					$checkPoint = getCheckPoint($shipment->customer_id, '2');
+					if ($checkPoint == '1') {
+						$from_email = 'noreply@staqo.com';
+						$replyemail = 'noreply@staqo.com';
+						$to_email   = $shipment->email;
+						$name       = $shipment->firstname;
+						$subject = "Required payment for order shipment From Royal Sherry";
 
-							$body = '';
-							$body .= '<p>Dear, ' . $name . '</p>';
-							$body .= '<p>You have to pay total amount before order shipment. please pay required amount. </p>';
-							$body .= '<p>Royal Sherry team</p>';
+						$body = '';
+						$body .= '<p>Dear, ' . $name . '</p>';
+						$body .= '<p>You have to pay total amount before order shipment. please pay required amount. </p>';
+						$body .= '<p>Royal Sherry team</p>';
 
-							$config = array(
-								'protocol' => 'smtp',
-								'smtp_host' => 'smtp.googlemail.com',
-								'smtp_port' => 465,
-								'smtp_user' => 'noreply@staqo.com',
-								'smtp_pass' => 'Welcome@123',
-								'mailtype' => 'html',
-								'smtp_crypto' => 'ssl',
-								'smtp_timeout' => '4',
-								'charset' => 'utf-8',
-								'wordwrap' => TRUE
-							);
+						$config = array(
+							'protocol' => 'smtp',
+							'smtp_host' => 'smtp.googlemail.com',
+							'smtp_port' => 465,
+							'smtp_user' => 'noreply@staqo.com',
+							'smtp_pass' => 'Welcome@123',
+							'mailtype' => 'html',
+							'smtp_crypto' => 'ssl',
+							'smtp_timeout' => '4',
+							'charset' => 'utf-8',
+							'wordwrap' => TRUE
+						);
 
-							$this->email->initialize($config);
-							$this->email->set_newline("\r\n");
-							$this->email->set_mailtype("html");
-							$this->email->from($from_email, $name);
-							$this->email->to($to_email);
-							$this->email->reply_to($replyemail);
-							$this->email->subject($subject);
-							$this->email->message($body);
-							if ($this->email->send()) {
-								$return['mailsent'] = '1';
-								$return['message'] = 'Email Sent!';
-							} else {
-								$return['mailsent'] = '0';
-								$return['message'] = 'SMTP Error: Email Not Sent!';
-							}
+						$this->email->initialize($config);
+						$this->email->set_newline("\r\n");
+						$this->email->set_mailtype("html");
+						$this->email->from($from_email, $name);
+						$this->email->to($to_email);
+						$this->email->reply_to($replyemail);
+						$this->email->subject($subject);
+						$this->email->message($body);
+						if ($this->email->send()) {
+							$return['mailsent'] = '1';
+							$return['message'] = 'Email Sent!';
+						} else {
+							$return['mailsent'] = '0';
+							$return['message'] = 'SMTP Error: Email Not Sent!';
 						}
 					}
 				}
 			}
 		}
+		
 
 		//echo '<pre>'; print_r($vialocationArr);  print_r($getShipmentDetails); echo '</pre>'; die;
 		//$data['ShippingModeList']     		=   $this->rate_model->getShippingModeList();
@@ -286,7 +287,7 @@ class Container extends CI_Controller
 			$date_of_arrival		= $this->input->post('date_of_arrival');
 			$date_time				= $this->input->post('date_time');
 			$remarks				= $this->input->post('remarks');
-
+			$trackingLink			= $this->input->post('tracking_link');
 			$data = array(
 				'shipment_no' => getSLNo(3),
 				'container_no' => $container_no,
@@ -296,6 +297,7 @@ class Container extends CI_Controller
 				'shipment_details' => $shipment_details,
 				'vehicle_number' => $vehicle_number,
 				'status' => $status,
+				'tracking_link' => $trackingLink,
 				'schedule_date' => $schedule_date,
 				'date_of_arrival' => $date_of_arrival,
 				'date_time' => $date_time,
@@ -498,6 +500,7 @@ class Container extends CI_Controller
 			$shipment_details		= $this->input->post('shipment_details');
 			$vehicle_number			= $this->input->post('vehicle_number');
 			$status					= $this->input->post('status');
+			$trackingLink			= $this->input->post('tracking_link');
 			$schedule_date			= $this->input->post('schedule_date');
 			$date_of_arrival		= $this->input->post('date_of_arrival');
 			$date_time				= $this->input->post('date_time');
@@ -511,6 +514,7 @@ class Container extends CI_Controller
 				'shipment_details' => $shipment_details,
 				'vehicle_number' => $vehicle_number,
 				'status' => $status,
+				'tracking_link'=> $trackingLink,
 				'schedule_date' => $schedule_date,
 				'date_of_arrival' => $date_of_arrival,
 				'date_time' => $date_time,

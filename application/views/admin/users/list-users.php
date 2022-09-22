@@ -22,12 +22,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <?php } ?>
             <section class="content-header">
                 <h1>
-                    Normal Users List
+                    Normal Customers List
                 </h1>
                 <ol class="breadcrumb">
                     <!--<li><a href="<?= base_url('admin/addcategory') ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add New Category</a></li>-->
                     <li><a href="<?= base_url('admin/users-list') ?>"><i class="fa fa-dashboard"></i>Home</a></li>
-                    <li class="active">Normal Users List</li>
+                    <li class="active">Normal Customers List</li>
                 </ol>
             </section>
             <h2></h2>
@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header">
-                                <h3 class="box-title"> Normal Users List</h3>
+                                <h3 class="box-title"> Normal Customer List</h3>
                             </div>
                             <div class="box-body">
                                 <table id="example2" class="table table-bordered table-hover">

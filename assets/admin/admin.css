@@ -40,11 +40,13 @@ table.dataTable thead .sorting::after, table.dataTable thead .sorting_asc::after
 
 
 .main-sidebar {
-               /* height: 724px!important;
-                overflow-x: hidden!important;
-                overflow-y: auto!important;
-                text-align:justify!important;*/
-            }
+
+    position: fixed;
+    /* height: 724px!important;
+        overflow-x: hidden!important;
+         overflow-y: auto!important;
+         text-align:justify!important;*/
+}
 
 .sidebar-menu {
                 height: 724px!important;
@@ -326,6 +328,17 @@ div#example2_length {
     border: #f26d35 1px solid;
     transition-duration: 0.5s;
     -webkit-transition-duration: 0.5s;
+}
+
+
+.main-header {
+    position: fixed;
+    max-height: 100px;
+    z-index: 1030;
+    width: 100%;
+}
+.content-wrapper{
+    margin-top: 50px;
 }
 
 

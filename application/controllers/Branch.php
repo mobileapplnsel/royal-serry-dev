@@ -30,6 +30,7 @@ class Branch extends CI_Controller {
 		$this->load->model('user_model');
         $this->load->library('image_lib');
         $this->load->library("pagination");
+        $this->load->model('city_model');
         $this->gallery_path = realpath(APPPATH . '../uploads');
     }
 
@@ -258,7 +259,7 @@ class Branch extends CI_Controller {
 	$areaDetails   =   $this->branch_model->getAreadetails($id);
 	$PDareaDetails   =   $this->branch_model->checkAreaExisttoPD($areaDetails[0]->branch_id,$areaDetails[0]->area_id);
 	if($PDareaDetails > 0){
-		$this->session->set_flashdata('error', 'Cannot delete Area!!! Please ensure you have untag from P/D boy Area.');
+		$this->session->set_flashdata('error', 'Cannot delete Area!!! Please ensure you have untag from P/D Staff Area.');
 		echo redirectPreviousPage();
 		exit;
 	}
@@ -286,7 +287,9 @@ class Branch extends CI_Controller {
 	/*********************** ADD BRANCH AREA ***********************/
 	public function addbrancharea($id)
     {
-		$page = 'add-branch-area';
+        $page = 'add-branch-area';
+        $branchDetails =  $this->branch_model->getBranch($id);
+        $cityList = $this->city_model->getCityListByState($branchDetails->state);
         if(!$this->session->userdata('logged_in'))
         {
             return redirect('admin/login');
@@ -300,7 +303,9 @@ class Branch extends CI_Controller {
             else{
                 $data                   =   [];
                 $data['branchAreaList']     =   $this->branch_model->getBranchAreaList($id);
-                $data['title']          =   ucfirst($page);                
+                $data['title']          =   ucfirst($page);
+                $data['cities'] = $cityList; 
+                $data['branchDetails'] = $branchDetails;               
                 $this->load->view('admin/branch/' . $page, $data);
             }
         }
@@ -331,63 +336,29 @@ class Branch extends CI_Controller {
 	
 	public function insertbrancharea()
     {
-        //$this->form_validation->set_rules('area_id', 'Area Postcode', 'trim|required');
         
-        /*if ($this->form_validation->run() == FALSE)
-        {
-            $this->session->set_flashdata('error', validation_errors());
-            //return redirect('subscription/addSubscription');
+		$cityIds  =   $this->input->post('city_id', TRUE);
+		$branch_id  =   $this->input->post('branch_id', TRUE);
+		$branch_area   =   [];
+		foreach($cityIds as $city){
+            $branch_area['city_id']     =  $city;
+            $branch_area['branch_id']   =  $branch_id;
+			$BranchAreacheck   =   $this->branch_model->CheckBranchAreaExist($city, $branch_id);
+			//$BranchAreacheck   =   $this->branch_model->CheckBranchAreaExist($area);
+			if($BranchAreacheck == 0){
+				$insertBranchArea   =   $this->branch_model->insert_branch_area($branch_area);
+			}
+        }
+
+        if($insertBranchArea > 0){
+            $this->session->set_flashdata('success', 'Branch Area Successfully Added');
             echo redirectPreviousPage();
         }
-        else
-        {*/
-            //$data   =   $_POST;
-			/*$checkAvailablity       =   $this->branch_model->checkExistBranch($_POST['email']);
-			
-            if($checkAvailablity>0){
-                $this->session->set_flashdata('error', 'Branch Already exists!');
-                echo redirectPreviousPage();
-                exit;
-            }
-			$postal_code = $data['zip'];
-			$url = "https://maps.googleapis.com/maps/api/geocode/json?address=".urlencode($postal_code)."&sensor=false&key=googleapi";
-			$result_string = file_get_contents($url);
-			$result = json_decode($result_string, true);
-			//print_r($result);
-			if(!empty($result['results'])){
-				$data['latitude'] = $result['results'][0]['geometry']['location']['lat'];
-				$data['longitude'] = $result['results'][0]['geometry']['location']['lng'];
-			} else {
-				$data['latitude'] = '23.5204';
-				$data['longitude'] = '87.3119';
-			}*/
-	
-			//echo '===>>>'.$checkAvailablity; 
-			//print_r($data); die;
-			$area_id                      =   $this->input->post('area_id', TRUE);
-			$branch_id                      =   $this->input->post('branch_id', TRUE);
-			$branch_area   =   [];
-			foreach($area_id as $area){
-                    $branch_area['area_id']     =  $area;
-                    $branch_area['branch_id']   =  $branch_id;
-					//$BranchAreacheck   =   $this->branch_model->CheckBranchAreaExist($area, $branch_id);
-					$BranchAreacheck   =   $this->branch_model->CheckBranchAreaExist($area);
-					if($BranchAreacheck == 0){
-						$insertBranchArea   =   $this->branch_model->insert_branch_area($branch_area);
-					}
-                }
-				 //die;
-            //$insertBranch   =   $this->branch_model->addNewbranch($data);
-
-            if($insertBranchArea > 0){
-                $this->session->set_flashdata('success', 'Branch Area Successfully Added');
-                echo redirectPreviousPage();
-            }
-            else{
-                $this->session->set_flashdata('error', 'Area Cannot be added!! Already assign to another branch.');
-                echo redirectPreviousPage();
-            }
-        //}
+        else{
+            $this->session->set_flashdata('error', 'Area Cannot be added!! Already assign to branch.');
+            echo redirectPreviousPage();
+        }
+        
     }
 	
 	
@@ -408,6 +379,7 @@ class Branch extends CI_Controller {
             else{
                 $data                    =   [];
                 $data['branchShiftList']   =   $this->branch_model->getBranchShiftList($id);
+                
 				$data['ShiftList']   	 =   $this->user_model->getShiftList();
 				$data['DaysList']   	 =   $this->user_model->getDaysList();
                 $data['title']           =   ucfirst($page);                
@@ -422,9 +394,9 @@ class Branch extends CI_Controller {
 		$data                           =   [];
 		$data['shift_id']                       =   $this->input->post('shift_id', TRUE);
 		$data['branch_id']                      =   $this->input->post('branch_id', TRUE);
-		$data['day']                   			=   $this->input->post('day', TRUE);
+		//$data['day']                   			=   $this->input->post('day', TRUE);
 		
-		$checkAvailablity       =   $this->branch_model->checkExistShift($data['shift_id'],$data['branch_id'],$data['day']);
+		$checkAvailablity       =   $this->branch_model->checkExistShift($data['shift_id'],$data['branch_id']);
 			
             if($checkAvailablity>0){
                 $this->session->set_flashdata('error', 'Shift allocation Already exists!');
@@ -454,7 +426,7 @@ class Branch extends CI_Controller {
 	echo '===>>'.$shiftDetails[0]->day;*/
 	$PDshiftDetails   =   $this->branch_model->checkShiftExisttoPD($shiftDetails[0]->branch_id,$shiftDetails[0]->shift_id,$shiftDetails[0]->day);
 	if($PDshiftDetails > 0){
-		$this->session->set_flashdata('error', 'Cannot delete shift!!! Please ensure you have untag from P/D boy.');
+		$this->session->set_flashdata('error', 'Cannot delete shift!!! Please ensure you have untag from P/D staff.');
 		echo redirectPreviousPage();
 		exit;
 	}
@@ -544,6 +516,102 @@ class Branch extends CI_Controller {
         }
     }
 	
+
+    /*********************** ADD branch Pickup method ***********************/
+    public function setpickupmethod($id)
+    {
+        $page = 'add-branch-pickup-method';
+        if(!$this->session->userdata('logged_in'))
+        {
+            return redirect('admin/login');
+        }
+        else
+        {
+            if(!file_exists(APPPATH . 'views/admin/branch/' . $page . '.php'))
+            {
+                show_404();
+            }
+            else{
+
+                $data                    =   [];
+                $data['deliveryModeList']       =   $this->branch_model->getDeliveryModeList();
+                $data['pickupMethod']   =   $this->branch_model->branchPickupMethod($id);
+                $data['title']           =   ucfirst($page);                
+                $this->load->view('admin/branch/' . $page, $data);
+            }
+        }
+    }
+    public function insertBranchPickupMethod()
+    {
+        $data =   [];
+        $data['branch_id']=   $this->input->post('branch_id', TRUE);
+        $data['monday']=   $this->input->post('monday', TRUE);
+        $data['tuesday']=   $this->input->post('tuesday', TRUE);
+        $data['wednesday']=   $this->input->post('wednesday', TRUE);
+        $data['thursday']=   $this->input->post('thursday', TRUE);
+        $data['friday']=   $this->input->post('friday', TRUE);
+        $data['saturday']=   $this->input->post('saturday', TRUE);
+        $data['sunday']=   $this->input->post('sunday', TRUE);
+       
+        $checkAvailablity = $this->branch_model->checkExistMethod($data['branch_id']);
+        
+        if($checkAvailablity){
+            $updateDate = $data;
+            $this->branch_model->updateBranchPickupMethod($updateDate, $data['branch_id']);
+        } else {
+            $this->branch_model->insertBranchPickupMethod($data);
+        }
+        $this->session->set_flashdata('success', 'Branch Pickup/Delivery Method Successfully updated.');
+        echo redirectPreviousPage();
+    }
+
+
+    function getNearestBranchPickupMethod(){
+        $pickupspeed = $this->input->post('pickupspeed');
+        $city_id = $this->input->post('from_city');
+        $pickupMethod = $this->branch_model->branchPickupMethodByCityId($city_id);
+        $days = $holidays = [];
+
+        if (!empty($pickupMethod)) {
+            $branchId = $pickupMethod->branch_id;
+            $holidaysLists = $this->branch_model->getHolidays($branchId);
+
+            foreach($holidaysLists as $holidaysList){
+                $holidays[] = $holidaysList['from_date'];
+            }
+            if ($pickupMethod->saturday==$pickupspeed) {
+               $days[]=0;
+            }
+            if ($pickupMethod->monday==$pickupspeed) {
+               $days[]=1;
+            }
+            if ($pickupMethod->tuesday==$pickupspeed) {
+               $days[]=2;
+            }
+            if ($pickupMethod->wednesday==$pickupspeed) {
+               $days[]=3;
+            }
+            if ($pickupMethod->thursday==$pickupspeed) {
+               $days[]=4;
+            }
+            if ($pickupMethod->friday==$pickupspeed) {
+               $days[]=5;
+            }
+            if ($pickupMethod->saturday==$pickupspeed) {
+               $days[]=6;
+            }
+            
+        }
+
+        $data = array(
+            "days"=>$days,
+            "holiday" =>$holidays
+        );
+        echo json_encode($data);
+    }
+
+
+
 	/*********************** ADD branch Pickup delivery rules ***********************/
 	public function addpickuprules($id)
     {

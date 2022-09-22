@@ -85,6 +85,16 @@ class User_model extends CI_Model
             return $row;
         }
     }
+
+    public function getUserBranch($user_id)
+    {
+        $this->db->select('bu.*');
+        $this->db->from('branch_users bu');
+        $this->db->where('user_id', $user_id);
+        $this->db->join('branch b', 'bu.branch_id = b.branch_id');
+        $query = $this->db->get();
+        return $row = $query->row();
+    }
 	
 	public function getBranchUsersListbyBranch($branch_id)
     {
@@ -498,11 +508,12 @@ class User_model extends CI_Model
     public function getUserAreaList($id)
     {
         //$query = $this->db->get('tourisms', ['tourCategory' => '1']);
-        $this->db->select('pda.id as pd_boy_areaID, pc.*, u.firstname, u.lastname');
+        $this->db->select('pda.id as pd_boy_areaID, u.firstname, u.lastname, city.name as city_name');
         $this->db->from('pickup_delivery_boy_area pda');
         $this->db->where('pda.user_id', $id);
-		$this->db->join('postal_codes_data_master pc', 'pda.area_id = pc.id');
+		//$this->db->join('postal_codes_data_master pc', 'pda.area_id = pc.id');
 		$this->db->join('users u', 'pda.user_id = u.user_id');
+        $this->db->join('cities_master city', 'city.id = pda.area_id');
         $query  =   $this->db->get();
 		//$query = $this->db->last_query();
         //echo $query; die;
@@ -544,11 +555,11 @@ class User_model extends CI_Model
     
     public function getUserShiftList($id)
     {
-        $this->db->select('psa.*, sm.shift_name, sm.shift_type, sm.time_from, sm.time_to, wd.day');
+        $this->db->select('psa.*, sm.shift_name, sm.shift_type, sm.time_from, sm.time_to');
         $this->db->from('pd_shift_allocation psa');
         $this->db->where('psa.pd_id', $id);
 		$this->db->join('shift_master sm', 'psa.shift_id = sm.id');
-		$this->db->join('week_days wd', 'psa.day = wd.id');
+		//$this->db->join('week_days wd', 'psa.day = wd.id');
 		
 		/*$this->db->select('*');
 		$this->db->from('pd_shift_allocation');*/
@@ -758,9 +769,9 @@ class User_model extends CI_Model
     }
 	
 	
-	public function checkExistShift($shift_id,$pd_id,$day)
+	public function checkExistShift($shift_id,$pd_id,$day=null)
     {
-        $query  =   $this->db->get_where('pd_shift_allocation', array('shift_id' => $shift_id, 'pd_id' => $pd_id, 'day' => $day));
+        $query  =   $this->db->get_where('pd_shift_allocation', array('shift_id' => $shift_id, 'pd_id' => $pd_id));
         $row = $query->num_rows();
         if ($row > 0)
         {

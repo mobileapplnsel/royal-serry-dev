@@ -41,7 +41,7 @@ $this->load->view('admin/include/header');
                     <?php echo form_open(base_url('banner/insertbanner'), array('id' => 'loginF', 'class' => 'contact-form', 'enctype' => 'multipart/form-data')); ?>
                     <div class="box box-primary">
                         <div class="box-header with-border"> Add New Banner </div>
-                        <h4 class="box-header with-border">Resolution: 1380 x 768 px</h4>
+                        <h4 class="box-header with-border">Resolution: 1380 x 538 px</h4>
                         <div class="box-body">
                             <div class="form-group col-md-6 col-md-offset-3"></div>
 

@@ -124,6 +124,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <label for="date_time">Shipment Date/Time<span>*</span> : </label>
                             <input type="datetime-local" class="form-control" placeholder="Shipment Date/Time" name="date_time" id="ship_date_time" value=""  required>
                         </div>
+                        <div class="form-group col-md-6">
+                            <label for="date_time">Tracking Link : </label>
+                            <input type="url" class="form-control" placeholder="Tracking Link" name="tracking_link" id="tracking_link" value="">
+                        </div>
                         <div class="form-group col-md-12">
                             <label for="email">Remarks<span>*</span> : </label>
                             <textarea rows="5" cols="60" class="form-control" name="remarks" style="resize:none;" required></textarea>
