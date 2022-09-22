@@ -16,6 +16,7 @@ class CustomerController extends CI_Controller
         $this->load->helper('admin_helper');
         $this->load->model('shipment_model');
         $this->load->model('order_model');
+        $this->load->model('invoices_model');
 
     }
 
@@ -2257,9 +2258,26 @@ class CustomerController extends CI_Controller
                 'transaction_id'=>$transaction_id
 
             );
-            $add_order = $this->shipment_model->addRescheduled($shipmentData);
+            $orderId = $this->shipment_model->addRescheduled($shipmentData);
 
-            if ($add_order) {
+            if ($orderId) {
+
+                $isExists = $this->invoices_model->checkExist($orderId,2);
+                if (!$isExists) {
+                    $lastInvoice = $this->invoices_model->lastInvoice();
+                    if (!empty($lastInvoice)) {
+                        $invoiceNo = $lastInvoice->invoice_no+1;
+                        $invoiceNo = str_pad($invoiceNo,7,'0',STR_PAD_LEFT);
+                    }else{
+                        $invoiceNo = '0000001';
+                    }
+                    $invoiceDetails = array(
+                        "order_id"=>$orderId,
+                        "invoice_no"=>$invoiceNo,
+                        "order_type"=>2
+                    );
+                    $res = $this->invoices_model->create($invoiceDetails);
+                }
 
                 $updateShipmentMasterData = array(
                         "delivery_mode_id"=>$deliverySpeed,
@@ -2270,9 +2288,10 @@ class CustomerController extends CI_Controller
                     'status' => 1, 'message' => 'Order has been successfully created.',
                     'redirectUrl'   => base_url('/place-order/' . $quote_id_enc),
                 ];
+
             } else {
                 $messageString = [
-                    'status' => 0, 'message' => 'Pincode is not linked to any branch! Order Cannot be placed!',
+                    'status' => 0, 'message' => 'Order Cannot be placed!',
                     'redirectUrl'  => base_url('/place-order/' . $quote_id_enc),
                 ];
             }

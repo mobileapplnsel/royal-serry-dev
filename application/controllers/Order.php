@@ -35,7 +35,7 @@ class Order extends CI_Controller {
         $this->load->model('customer_model');
         $this->load->model('quotation_model');
         $this->load->model('container_model');        
-
+        $this->load->model('invoices_model');
         $this->load->library('image_lib');
         $this->load->library("pagination");
 		$this->load->library("email");
@@ -243,8 +243,29 @@ class Order extends CI_Controller {
         }
         else
         {
-			$data=array('is_invoice'=>'1');
-			$UpdateInvoiceStatus   			= $this->order_model->upadte_invoice_status($order_id, $data);
+			
+            $orderDetails = $this->order_model->orderDetails($order_id);
+            //create Invoice
+            $isExists = $this->invoices_model->checkExist($orderDetails['id'],1);
+            if (!$isExists) {
+                $lastInvoice = $this->invoices_model->lastInvoice();
+                if (!empty($lastInvoice)) {
+                    $invoiceNo = $lastInvoice->invoice_no+1;
+                    $invoiceNo = str_pad($invoiceNo,7,'0',STR_PAD_LEFT);
+                }else{
+                    $invoiceNo = '0000001';
+                }
+                $invoiceDetails = array(
+                    "order_id"=>$orderDetails['id'],
+                    "invoice_no"=>$invoiceNo,
+                    "order_type"=>1
+                );
+                $res = $this->invoices_model->create($invoiceDetails);
+                if ($res) {
+                    $data=array('is_invoice'=>'1');
+                    $UpdateInvoiceStatus = $this->order_model->upadte_invoice_status($order_id, $data);
+                }
+            }
 			$data['quote_details']          = $this->order_model->orderDetails($order_id);
 			$data['quote_from_details']     = $this->order_model->orderFromDetails($order_id);
 			$data['quote_to_details']       = $this->order_model->orderToDetails($order_id);
