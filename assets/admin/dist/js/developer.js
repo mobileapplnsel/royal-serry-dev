@@ -13,7 +13,9 @@ function base_url() {
 
     } else {
 
-        var url = 'https://develop-rss.staqo.com/'; // http://stackoverflow.com
+
+        var url = 'http://staging-rss.staqo.com/'; // http://stackoverflow.com
+
 
     }
    
