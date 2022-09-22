@@ -74,7 +74,7 @@ $this->load->view('admin/include/header');
                                                             </li>
                                                         </ul>
                                                     </td>
-                                                    <td><img src="<?php echo base_url('uploads/banner/mobile/') . $banner->image ?>" /></td>
+                                                    <td><img style="width: 180px;" src="<?php echo base_url('uploads/banner/') . $banner->image ?>" /></td>
                                                     <td><?php echo $banner->heading . ' ' . $banner->heading2 . ' ' . $banner->heading3; ?></td>
                                                     <td><?php echo $banner->sub_heading; ?></td>
                                                 </tr>

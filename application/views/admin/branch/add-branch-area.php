@@ -49,9 +49,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="box-header with-border"> Add New Area </div>
                             <div class="box-body">
                                 <div class="form-group col-md-6 col-md-offset-3"></div>
-                            	<div class="form-group col-md-6">
+                            	<!-- <div class="form-group col-md-6">
                                 <label for="email">Area Postcode<span>*</span> : </label>
                                 <select class="form-control" name="area_id[]" id="area_id" multiple="multiple" style="width: 75%" required>                                 
+                                </select> -->
+                                <div class="form-group col-md-6">
+                                <label for="email">City<span>*</span> : </label>
+                                <select class="form-control select2field" name="city_id[]" id="city_id"style="width: 75%" multiple required>  
+                                <?php foreach ($cities as $key => $citie) { ?>
+                                    <option value="<?php echo $citie->id ?>"><?php echo $citie->name ?></option>
+                                <?php } ?>                               
                                 </select>
                             </div>
                             </div>
@@ -68,10 +75,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <h3 class="box-title">Branch Area List</h3>
                             </div>
                             <div class="box-body">
-                                <table id="example2" class="table table-bordered table-hover">
+                                <table id="example1" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>SN.</th>
                                             <th>Action</th>
                                             <th>Area Name</th>                                            
                                             <th>Branch Name</th>
@@ -80,19 +87,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <tbody>
                                         <?php
                                             if(!empty($branchAreaList)):
-                                            foreach($branchAreaList as $branchArea){
+                                            foreach($branchAreaList as $key=>$branchArea){
                                         ?>
                                         <tr>
-                                            <td><?= $branchArea->branch_areaID ?></td>
+                                            <td><?= $key+1; ?></td>
                                             <td><ul class="admin-action btn btn-default" style="list-style:none;">
                                                 <li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true"> Action <span class="caret"></span> </a>
                                                   <ul class="dropdown-menu dropdown-menu-left">
-                                                    <!--<li role="presentation"> <a role="button" href="<?= base_url('videos/insertseriesvideo') ?>/<?php echo $branchArea->branch_areaID;?>/<?php echo $branchArea->branch_areaID;?>" class="btn" style="text-align: left"><i class="fa fa-pencil text-blue"></i> Edit</a> </li>-->
                                                     <li role="presentation"> <a data-toggle="modal" data-target="#BranchAreaDeleteModal" data-area-id="<?= $branchArea->branch_areaID ?>" class="btn" style="text-align: left"><i class="fa fa-trash text-red"></i> Delete</a> </li>
                                                   </ul>
                                                 </li>
                                               </ul></td>
-                                            <td><?= $branchArea->place_name.', '.$branchArea->state_name.', '.$branchArea->county_name.' - '.$branchArea->postal_code ?></td>
+                                            <!-- <td><?= $branchArea->place_name.', '.$branchArea->state_name.', '.$branchArea->county_name.' - '.$branchArea->postal_code ?></td> -->
+                                            <td><?= $branchArea->city_name;?></td>
                                             <td><?= $branchArea->branch_name ?></td>
                                         </tr>
                                         <?php 

@@ -484,7 +484,8 @@ class Container_model extends CI_Model
 	
 	public function getShipmentDetails_by_locationId($FromBranchId, $vialocationArr, $shipment_mode)
     {
-		$this->db->select('sobt.shipment_id, sobt.to_branch_id, sm.shipment_no, sm.quotation_id, sm.customer_id, sm.payment_mode, sm.transport_type, b.name as branch_name, u.firstname, u.email, u.telephone');
+		
+        $this->db->select('sobt.shipment_id, sobt.to_branch_id, sm.shipment_no, sm.quotation_id, sm.customer_id, sm.payment_mode, sm.transport_type, b.name as branch_name, u.firstname, u.email, u.telephone');
         $this->db->from('shipment_order_branch_tagging sobt');
 		$this->db->join('shipment_master sm', 'sobt.shipment_id = sm.id', 'left');
 		$this->db->join('branch b', 'sobt.to_branch_id = b.branch_id', 'left');
@@ -698,6 +699,26 @@ class Container_model extends CI_Model
         $this->db->where('id', $id);
         $this->db->update('container_shipment', $data);
         return $this->db->affected_rows();
+    }
+
+
+    public function getContainerByshipmentId($shipmentId)
+    {
+        
+        $this->db->select('cs.*');
+        $this->db->join('container_shipment_items csi', 'csi.container_id = cs.id');
+        $this->db->from('container_shipment as cs');
+        $this->db->where('csi.order_id',$shipmentId);
+        $query  =   $this->db->get();
+        $row = $query->num_rows();
+        if ($row > 0)
+        {
+            return $query->row();            
+        }
+        else
+        {
+            return false;
+        }
     }
 
     

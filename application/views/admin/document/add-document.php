@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="form-group col-md-6 col-md-offset-3"></div>
                         <div class="form-group col-md-6">
                             <label for="email">Document Name<span>*</span> : </label>
-                            <input type="text" class="form-control" placeholder="Document Name" name="name" maxlength="20" onKeyUp="this.value=this.value.replace(/[^A-z_ ]/g,'');" value="" required>
+                            <input type="text" class="form-control" placeholder="Document Name" name="name" maxlength="20" value="" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="parent">Document Category<span>*</span> : </label>                        

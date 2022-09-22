@@ -53,15 +53,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <input type="checkbox" class="minimal">
                             </label> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
                             <label>
-                                Normal User&nbsp; &nbsp;                             
+                                Normal Customer&nbsp; &nbsp;                             
                                 <input type="radio" name="user_type" class="minimal-red series" value="NU" <?php if($editUser[0]->user_type=='NU') {echo 'checked';} ?>/>
                             </label>&nbsp; &nbsp;
                             <label>
-                                Business User&nbsp; &nbsp;                            
+                                Business Customer&nbsp; &nbsp;                            
                             <input type="radio" name="user_type" class="minimal-red series" value="BU" <?php if($editUser[0]->user_type=='BU') {echo 'checked';} ?> />
                             </label>&nbsp; &nbsp;
                             <label>
-                                Pickup/Delivery Boy&nbsp; &nbsp;                            
+                                Pickup/Delivery Staff&nbsp; &nbsp;                            
                             <input type="radio" name="user_type" class="minimal-red series" value="PDB" <?php if($editUser[0]->user_type=='PDB') {echo 'checked';} ?> />
                             </label>&nbsp; &nbsp;
                             <label>
@@ -122,10 +122,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php echo fillCombo('cities_master', 'id', 'name', $editUser[0]->city, 'state_id=' . $editUser[0]->state, 'id', 'form-control form-control-new', 'city', 'city', '1'); ?>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="email">Zip Code<span class="required-string"><?php if ($editUser[0]->country!='195') {
-                                echo "*";} ?></span> : </label>
-                            <input type="text" class="form-control" id="zipcode" placeholder="Code" name="zip" value="<?= $editUser[0]->zip ?>" maxlength="8" <?php if ($editUser[0]->country!='195') {
-                                echo "required";} ?>>
+                            <label for="email">Zip Code : </label>
+                            <input type="text" class="form-control" id="zipcode" placeholder="Code" name="zip" value="<?= $editUser[0]->zip ?>" maxlength="8">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="email">Online Status : </label>

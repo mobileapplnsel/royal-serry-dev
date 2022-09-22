@@ -82,10 +82,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php echo fillCombo('cities_master', 'id', 'name', $editBranch[0]->city, 'state_id=' . $editBranch[0]->state, 'id', 'form-control form-control-new', 'city', 'city', '1'); ?>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="email">Zip Code<span class="required-string"><?php if ($editBranch[0]->country!='195') {
-                                echo "*";} ?></span> : </label>
-                            <input type="text" class="form-control" id="zipcode" placeholder="Zip Code" name="zip" maxlength="8" value="<?= $editBranch[0]->zip ?>" <?php if ($editBranch[0]->country!='195') {
-                                echo "required";} ?> >
+                            <label for="email">Zip Code : </label>
+                            <input type="text" class="form-control" id="zipcode" placeholder="Zip Code" name="zip" maxlength="8" value="<?= $editBranch[0]->zip ?>">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="email">Contact Person<span>*</span> : </label>

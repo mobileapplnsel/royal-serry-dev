@@ -135,9 +135,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <input type="date" class="form-control" placeholder="Arrival Date" name="date_of_arrival" id="date_of_arrival" value="<?= $editContainer[0]->date_of_arrival ?>" required>
                         </div>
                         
-                         <div class="form-group col-md-6">
+                        <div class="form-group col-md-6">
                             <label for="date_time">Shipment Date/Time<span>*</span> : </label>
                             <input type="datetime-local" class="form-control" placeholder="Shipment Date/Time" name="date_time" id="ship_date_time" value="<?= $editContainer[0]->date_time ?>" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="date_time">Tracking Link : </label>
+                            <input type="url" class="form-control" placeholder="Tracking Link" name="tracking_link" id="tracking_link" value="<?= $editContainer[0]->tracking_link ?>">
                         </div>
                         <div class="form-group col-md-12">
                             <label for="email">Remarks<span>*</span> : </label>

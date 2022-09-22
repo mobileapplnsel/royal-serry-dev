@@ -9,13 +9,14 @@ function base_url() {
     if (location.host == 'localhost') {
 
         var url = location.origin + '/' + pathparts[1].trim('/') + '/'; // http://localhost/myproject/
+        var url = "http://localhost/project/royal-serry-dev/";
 
     } else {
 
-        var url = 'http://develop-rss.staqo.com/'; // http://stackoverflow.com
+        var url = 'https://develop-rss.staqo.com/'; // http://stackoverflow.com
 
     }
-    //var url = "http://localhost/project/royal-serry-dev/";
+   
     return url;
 
 }

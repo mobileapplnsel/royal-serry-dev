@@ -84,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?= base_url('admin/addbranchholiday/')?><?= $branch->branch_id ?>"><i class="fa fa-calendar"></i> Add Holiday</a></li>
                                                     
                                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?= base_url('admin/addpickuprules/')?><?= $branch->branch_id ?>"><i class="fa fa-truck"></i> Add Pickup-delivery rules</a></li>
-                                                    
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?= base_url('admin/setpickupmethod/')?><?= $branch->branch_id ?>"><i class="fa fa-truck"></i> Set Pickup Method</a></li>
                                                     <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="<?= base_url('admin/addbranchcalendar/')?><?= $branch->branch_id ?>"><i class="fa fa-calendar-o"></i> Shift Calendar</a></li>-->
                                                     <?php //} ?>
                                                     <li class="divider" role="presentation"></li>
