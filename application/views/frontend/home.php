@@ -93,8 +93,7 @@ $this->load->view('frontend/includes/header');
 
 
                                             <!--<label>Address Line1</label>
-                                            <input type="text" name="address" id="autocomplete" value="<?php //echo $profile_details['address'];  
-                                                                                                        ?>" class="form-control name-text" placeholder="Enter location.." required readonly onfocus="geolocate()">-->
+                                            <input type="text" name="address" id="autocomplete" value="<?php //echo $profile_details['address'];?>" class="form-control name-text" placeholder="Enter location.." required readonly onfocus="geolocate()">-->
 
                                             <label>From Address Line1 <span class="star">*</span></label>
                                             <div class="address_from_err" style="display:none"></div>
@@ -762,7 +761,8 @@ $this->load->view('frontend/includes/header');
                                     <div class="col-md-6 col-sm-12">
                                         <h3 class="titelt">Speed Rate: </h3>
                                         <div class="spacer"></div>
-                                        <select class="form-control form-control-new delivery_speed" id="delivery_speed" name="delivery_speed">
+                                        <select class="form-control form-control-new delivery_speed pickup-speed" id="delivery_speed" name="delivery_speed">
+                                            <option>select</option>
                                             <?php
                                             if (!empty($deliveryModeList)) {
                                                 foreach ($deliveryModeList as $key => $value) {
@@ -775,7 +775,9 @@ $this->load->view('frontend/includes/header');
                                         </select>
                                     </div>
                                     <div class="col-md-6 col-sm-12">
-                                        &nbsp;
+                                        <h3 class="titelt">Pickup Date: </h3>
+                                        <div class="spacer"></div>
+                                        <input class="form-control form-control-new pickup-date-picker" type="text" name="pickup_date" readonly required>
                                     </div>
 
                                     <div class="spacer"></div>
@@ -2309,10 +2311,49 @@ $this->load->view('frontend/includes/header');
 
     $(document).on('change', '.delivery_speed', function() {
         finalRateCheckbox();
+
+
     });
 
     $(document).on('change', '.get_final_rate_checkbox', function() {
         finalRateCheckbox();
+    });
+
+    $(document).on('change', '.pickup-speed', function() {
+        
+        var pickupspeed = $('.pickup-speed').find(":selected").val();
+        var fromCity = $('#city').val();
+        var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
+            csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
+        $.ajax({
+            dataType: "json",
+            type: "post",
+            url: '<?php echo base_url('get-branch-pickup-method'); ?>',
+            data: {
+                [csrfName]: csrfHash,
+                pickupspeed: pickupspeed,
+                from_city: fromCity,
+            },
+            success: function(data) {
+                $(".pickup-date-picker" ).datepicker( "destroy" );
+                var days = JSON.stringify(data);
+                $(".pickup-date-picker").datepicker({
+                    dateFormat: 'dd-mm-yy',
+                    minDate: 0,
+                    beforeShowDay: function(date){ 
+                        if (days.includes(date.getDay())) {
+                            return [true, "" ];
+                        } else {
+                            return [false, "" ];
+                        }
+                        
+                    }
+                });
+
+            }
+        });
+
+
     });
 
     function finalRateCheckbox() {

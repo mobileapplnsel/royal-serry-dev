@@ -156,7 +156,9 @@ $route['admin/addbranchshift/(:any)']      = "branch/addbranchshift/$1";
 $route['admin/addbranchholiday/(:any)']  = "branch/addbranchholiday/$1";
 $route['admin/addbranchcalendar/(:any)']  = "branch/addbranchcalendar/$1";
 $route['admin/addpickuprules/(:any)']  = "branch/addpickuprules/$1";
-
+$route['admin/setpickupmethod/(:any)']  = "branch/setpickupmethod/$1";
+$route['admin/branch/add-pickup-method/(:any)'] = "branch/insertBranchPickupMethod";
+$route['get-branch-pickup-method'] = "branch/getNearestBranchPickupMethod";
 
 // Tax routes
 $route['admin/tax-list']               = "tax";
@@ -386,6 +388,11 @@ $route['order-tracking']        = "CustomerController/trackOrder";
 $route['order-tracking-search'] = "CustomerController/getOrderTrackDetails";
 
 $route['tracking-details/(:any)'] = "CustomerController/trackingDetails";
+$route['shipment-rescheduled-pickup/(:any)']    = "CustomerController/rescheduledpickup";
+$route['shipment-rescheduled/(:any)']    = "CustomerController/pickupRescheduled";
+$route['shipment-rescheduled-payment/(:any)']    = "CustomerController/pickupRescheduledPayment";
+
+
 
 $route['admin/role-list']        = 'Role/roleList';
 $route['admin/role-add']         = 'Role/RoleEdit';

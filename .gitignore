@@ -101,4 +101,6 @@ Thumbs.db
 
 *.wmv
 
+#database
+database.php
 

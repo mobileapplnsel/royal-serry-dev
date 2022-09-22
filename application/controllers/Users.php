@@ -30,6 +30,7 @@ class Users extends CI_Controller {
 		$this->load->model('order_model');
         $this->load->library('image_lib');
         $this->load->library("pagination");
+        $this->load->model('branch_model');
         $this->gallery_path = realpath(APPPATH . '../uploads');
     }
 
@@ -847,6 +848,7 @@ class Users extends CI_Controller {
 	public function adduserarea($id)
     {
 		$page = 'add-user-area';
+		$userBranch = $this->user_model->getUserBranch($id);
         if(!$this->session->userdata('logged_in'))
         {
             return redirect('admin/login');
@@ -859,8 +861,10 @@ class Users extends CI_Controller {
             }
             else{
                 $data                   =   [];
+                $data['branchAreaList'] =   $this->branch_model->getBranchAreaList($userBranch->branch_id);
                 $data['userAreaList']   =   $this->user_model->getUserAreaList($id);
-                $data['title']          =   ucfirst($page);                
+                $data['title']          =   ucfirst($page);
+                                
                 $this->load->view('admin/users/' . $page, $data);
             }
         }
@@ -868,8 +872,8 @@ class Users extends CI_Controller {
 	
 	public function insertuserarea()
     {
-		$area_id                      =   $this->input->post('area_id', TRUE);
-		$user_id                      =   $this->input->post('user_id', TRUE);
+		$area_id =   $this->input->post('area_id', TRUE);
+		$user_id =   $this->input->post('user_id', TRUE);
 		$branch_area   =   [];
 		foreach($area_id as $area){
 				$branch_area['area_id']     =  $area;
@@ -1110,15 +1114,17 @@ class Users extends CI_Controller {
 	
 	public function insertusershift()
     {
-		$data                           =   [];
-		$data['shift_id']                       =   $this->input->post('shift_id', TRUE);
-		$data['pd_id']                      	=   $this->input->post('pd_id', TRUE);
-		$data['day']                   			=   $this->input->post('day', TRUE);
+		$data =   [];
+		$data['shift_id'] = $this->input->post('shift_id', TRUE);
+		$data['pd_id'] = $this->input->post('pd_id', TRUE);
+		$data['from_date'] = date('Y-m-d',strtotime($this->input->post('from_date', TRUE)));
+		$data['to_date'] = date('Y-m-d',strtotime($this->input->post('to_date', TRUE)));
+		//$data['day']                   			=   $this->input->post('day', TRUE);
 		
-		$checkAvailablity       =   $this->user_model->checkExistShift($data['shift_id'],$data['pd_id'],$data['day']);
+		$checkAvailablity =   $this->user_model->checkExistShift($data['shift_id'],$data['pd_id']);
 			
             if($checkAvailablity>0){
-                $this->session->set_flashdata('error', 'Shift allocation Already exists!');
+                $this->session->set_flashdata('error', 'Shift already assigned');
                 echo redirectPreviousPage();
                 exit;
             }

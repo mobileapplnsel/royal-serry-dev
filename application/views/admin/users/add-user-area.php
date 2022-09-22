@@ -31,8 +31,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="<?= base_url('admin/adduser') ?>"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add New User</a></li>
-                    <li><a href="<?= base_url('admin/pickup-delivery-boy-list') ?>"><i class="fa fa-dashboard"></i>Pickup/Delivery Boy List</a></li>
-                    <li class="active">Pickup/Delivery Boy Area List</li>
+                    <li><a href="<?= base_url('admin/pickup-delivery-boy-list') ?>"><i class="fa fa-dashboard"></i>Pickup/Delivery Staff List</a></li>
+                    <li class="active">Pickup/Delivery Staff Area List</li>
                 </ol>
             </section>
             <h2></h2>
@@ -50,8 +50,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="box-body">
                                 <div class="form-group col-md-6 col-md-offset-3"></div>
                             	<div class="form-group col-md-6">
-                                <label for="email">Area Postcode<span>*</span> : </label>
-                                <select class="form-control" name="area_id[]" id="user_area_id" multiple="multiple" style="width: 75%" required>                                 
+                                <label for="email">Area <span>*</span> : </label>
+                                <select class="form-control select2field" name="area_id[]" id="user_area_ids" multiple="multiple" style="width: 75%" required>
+                                <?php if($branchAreaList){ ?>    
+                                <?php foreach($branchAreaList as $area){?> 
+                                    <option value="<?=$area->city_id;?>"><?=$area->city_name;?></option>
+
+                                <?php } }?>                             
                                 </select>
                             </div>
                             </div>
@@ -65,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php echo form_close(); ?>
                             
                             <div class="box-header">
-                                <h3 class="box-title">Pickup/Delivery Boy Area List</h3>
+                                <h3 class="box-title">Pickup/Delivery Staff Area List</h3>
                             </div>
                             <div class="box-body">
                                 <table id="example2" class="table table-bordered table-hover">
@@ -74,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <th>ID</th>
                                             <th>Action</th>
                                             <th>Area Name</th>                                            
-                                            <th>Pickup/Delivery Boy Name</th>
+                                            <th>Pickup/Delivery Staff Name</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -92,7 +97,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                   </ul>
                                                 </li>
                                               </ul></td>
-                                            <td><?= $userArea->place_name.', '.$userArea->state_name.', '.$userArea->county_name.' - '.$userArea->postal_code ?></td>
+                                            <td><?= $userArea->city_name ?></td>
                                             <td><?= $userArea->firstname.' '.$userArea->lastname ?></td>
                                         </tr>
                                         <?php 

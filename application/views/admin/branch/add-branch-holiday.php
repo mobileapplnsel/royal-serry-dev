@@ -85,7 +85,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <th>ID</th>
                                             <th>Action</th>
                                             <th>Name</th>                                            
-                                            <th>Date</th>
+                                            <th>From Date</th>
+                                            <th>To Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -104,6 +105,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                               </ul></td>
                                             <td><?= $branchHoliday->name; ?></td>
                                             <td><?= $branchHoliday->from_date ?></td>
+                                            <td><?= $branchHoliday->to_date ?></td>
                                         </tr>
                                         <?php 
                                             }                                            

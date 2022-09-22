@@ -88,19 +88,12 @@ class Branch_model extends CI_Model
         }
     }
 	
-	public function CheckBranchAreaExist($area)
+	public function CheckBranchAreaExist($city_id,$branch_id)
     {
-        //$query = $this->db->get_where('branch_area', array('area_id' => $area, 'branch_id' => $branch_id));
-		$query = $this->db->get_where('branch_area', array('area_id' => $area));
-        $row   = $query->num_rows();
-        if ($row > 0) {
-            //return true;
-            // $row = $query->result();
-            return $row;
-        } else {
-            //return false;
-            return $row;
-        }
+        $query = $this->db->get_where('branch_area', array('city_id' => $city_id, 'branch_id' => $branch_id));
+		//$query = $this->db->get_where('branch_area', array('area_id' => $area));
+        return $row   = $query->num_rows();
+        
     }
 	
 	public function CheckBranchShipment($id)
@@ -200,6 +193,12 @@ class Branch_model extends CI_Model
             //return false;
             return $row;
         }
+    }
+
+    public function getBranch($id)
+    {
+        $query  =   $this->db->get_where('branch', array('branch_id' => $id));
+        return $row = $query->row();
     }
     
     public function updateBranch($id, $data)
@@ -319,6 +318,19 @@ class Branch_model extends CI_Model
             return $row;
         }
     } 
+
+    public function checkShiftAssignToBranch($id)
+    {
+        $this->db->select('*');
+        $this->db->from('branch_shift_allocation');
+        $this->db->where('shift_id', $id);
+        $query  =   $this->db->get();
+        return $row    =   $query->num_rows();
+    } 
+
+
+
+
 	
 	public function getAreadetails($id)
     {
@@ -462,15 +474,15 @@ class Branch_model extends CI_Model
     
     public function getBranchAreaList($id)
     {
-        //$query = $this->db->get('tourisms', ['tourCategory' => '1']);
-        $this->db->select('ba.id as branch_areaID, pc.*, b.name as branch_name, b.email as branch_email');
+        
+        $this->db->select('ba.id as branch_areaID, b.name as branch_name, b.email as branch_email, city.name as city_name,city.id as city_id');
         $this->db->from('branch_area ba');
         $this->db->where('ba.branch_id', $id);
-		$this->db->join('postal_codes_data_master pc', 'ba.area_id = pc.id');
+		//$this->db->join('postal_codes_data_master pc', 'ba.area_id = pc.id');
 		$this->db->join('branch b', 'ba.branch_id = b.branch_id');
+        $this->db->join('cities_master city', 'city.id = ba.city_id');
         $query  =   $this->db->get();
-		//$query = $this->db->last_query();
-        //echo $query; die;
+		
         $row = $query->num_rows();
         if ($row > 0)
         {
@@ -584,11 +596,11 @@ class Branch_model extends CI_Model
     
     public function getBranchShiftList($id)
     {
-        $this->db->select('bsa.*, sm.shift_name, sm.shift_type, sm.time_from, sm.time_to, wd.day');
+        $this->db->select('bsa.*, sm.shift_name, sm.shift_type, sm.time_from, sm.time_to');
         $this->db->from('branch_shift_allocation bsa');
         $this->db->where('bsa.branch_id', $id);
 		$this->db->join('shift_master sm', 'bsa.shift_id = sm.id');
-		$this->db->join('week_days wd', 'bsa.day = wd.id');
+		//$this->db->join('week_days wd', 'bsa.day = wd.id');
 		
 		/*$this->db->select('*');
 		$this->db->from('pd_shift_allocation');*/
@@ -609,9 +621,9 @@ class Branch_model extends CI_Model
         }
     }
 	
-	public function checkExistShift($shift_id,$branch_id,$day)
+	public function checkExistShift($shift_id,$branch_id)
     {
-        $query  =   $this->db->get_where('branch_shift_allocation', array('shift_id' => $shift_id, 'branch_id' => $branch_id, 'day' => $day));
+        $query  =   $this->db->get_where('branch_shift_allocation', array('shift_id' => $shift_id, 'branch_id' => $branch_id));
         $row = $query->num_rows();
         if ($row > 0)
         {
@@ -636,6 +648,8 @@ class Branch_model extends CI_Model
             return $row;
         }
     }
+
+    
 	
 	public function insert_branch_shift($data)
     {
@@ -648,6 +662,39 @@ class Branch_model extends CI_Model
         $this->db->insert('branch_pickup_delivery_rules', $data);
 		//echo $this->db->last_query(); die;
         return $this->db->insert_id();
+    }
+
+    public function branchPickupMethod($branch_id)
+    {
+        $query  =   $this->db->get_where('branch_pickup_method', array('branch_id' => $branch_id));
+        $row = $query->row();
+        return $row;
+    }
+    public function branchPickupMethodByCityId($city_id)
+    {
+        $this->db->select('bpm.*');
+        $this->db->from('branch_area ba');
+        $this->db->join('branch_pickup_method bpm','bpm.branch_id=ba.branch_id');
+        $this->db->where('ba.city_id',$city_id);
+        $query = $this->db->get();
+        $row = $query->row();
+        return $row;
+    }
+    public function checkExistMethod($branch_id)
+    {
+        $query  =   $this->db->get_where('branch_pickup_method', array('branch_id' => $branch_id));
+        $row = $query->num_rows();
+        return $row;
+    }
+    public function insertBranchPickupMethod($data)
+    {
+        $this->db->insert('branch_pickup_method', $data);
+        return $this->db->insert_id();
+    }
+    public function updateBranchPickupMethod($data)
+    {
+        $this->db->update('branch_pickup_method', $data);
+        return $this->db->affected_rows();
     }
 	
 	public function deleteShiftallocation($id)
@@ -774,5 +821,27 @@ class Branch_model extends CI_Model
 	
         echo json_encode(array("events" => $data_events));
 
+    }
+
+    function getHolidays($branch_id) {
+        $this->db->select('from_date');
+        $this->db->from('branch_holiday');
+        $this->db->where('branch_id', $branch_id);
+        $query = $this->db->get();
+        return $dates = $query->result_array();
+       
+
+    }
+
+    public function getDeliveryModeList($param = null)
+    {
+        $this->db->select('*');
+        $this->db->where('status', '1');
+        $query = $this->db->get('delivery_mode');
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
     }
 }
